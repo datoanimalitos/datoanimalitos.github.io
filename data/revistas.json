@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "lastUpdate": "2026-05-21T19:50:18.546248",
+    "lastUpdate": "2026-05-22T08:57:23.275544",
     "totalHipodromos": 8,
     "totalConfigurados": 8,
     "version": "1.0.0"
@@ -15,7 +15,7 @@
         "winnersChoice": "https://pollamacaco.com/Revistas/WinGulfstreamPark.pdf"
       },
       "activo": true,
-      "ultimaActualizacion": "2026-05-21"
+      "ultimaActualizacion": "2026-05-22"
     },
     {
       "id": "santa-anita",
@@ -26,7 +26,7 @@
         "winnersChoice": "https://pollamacaco.com/Revistas/WinSantaAnitaPark.pdf"
       },
       "activo": true,
-      "ultimaActualizacion": "2026-05-21"
+      "ultimaActualizacion": "2026-05-22"
     },
     {
       "id": "aqueduct",
@@ -37,7 +37,7 @@
         "winnersChoice": "https://pollamacaco.com/Revistas/WinAqueduct.pdf"
       },
       "activo": true,
-      "ultimaActualizacion": "2026-05-21"
+      "ultimaActualizacion": "2026-05-22"
     },
     {
       "id": "churchill-downs",
@@ -48,7 +48,7 @@
         "winnersChoice": "https://pollamacaco.com/Revistas/WinChurchillDowns.pdf"
       },
       "activo": true,
-      "ultimaActualizacion": "2026-05-21"
+      "ultimaActualizacion": "2026-05-22"
     },
     {
       "id": "belmont-park",
@@ -59,7 +59,7 @@
         "winnersChoice": "https://pollamacaco.com/Revistas/WinBelmontPark.pdf"
       },
       "activo": true,
-      "ultimaActualizacion": "2026-05-21"
+      "ultimaActualizacion": "2026-05-22"
     },
     {
       "id": "monmouth-park",
@@ -70,7 +70,7 @@
         "winnersChoice": "https://pollamacaco.com/Revistas/WinMonmouthPark.pdf"
       },
       "activo": true,
-      "ultimaActualizacion": "2026-05-21"
+      "ultimaActualizacion": "2026-05-22"
     },
     {
       "id": "woodbine",
@@ -81,7 +81,7 @@
         "winnersChoice": "https://pollamacaco.com/Revistas/WinWoodbine.pdf"
       },
       "activo": true,
-      "ultimaActualizacion": "2026-05-21"
+      "ultimaActualizacion": "2026-05-22"
     },
     {
       "id": "parx-racing",
@@ -92,7 +92,7 @@
         "winnersChoice": "https://pollamacaco.com/Revistas/WinParxRacing.pdf"
       },
       "activo": true,
-      "ultimaActualizacion": "2026-05-21"
+      "ultimaActualizacion": "2026-05-22"
     }
   ],
   "errores": null
