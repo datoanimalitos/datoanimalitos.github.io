@@ -782,39 +782,6 @@
         </div>
     </footer>
 
-     <!-- CAPA DE SEGURIDAD - Protección contra copia y depuración -->
-    <script>
-        (function() {
-            // Bloquear teclas F12, Ctrl+U, Ctrl+S, Ctrl+C, Ctrl+Shift+I
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'F12' || 
-                    (e.ctrlKey && e.shiftKey && e.key === 'I') || 
-                    (e.ctrlKey && e.key === 'u') || 
-                    (e.ctrlKey && e.key === 's') || 
-                    (e.ctrlKey && e.key === 'c') ||
-                    (e.metaKey && e.key === 's')) {
-                    e.preventDefault();
-                    return false;
-                }
-            });
-            
-            // Bloquear clic derecho
-            document.addEventListener('contextmenu', function(e) {
-                e.preventDefault();
-                return false;
-            });
-            
-            // Detectar herramientas de desarrollador abiertas
-            var element = new Image();
-            Object.defineProperty(element, 'id', {
-                get: function() {
-                    window.location.href = 'about:blank';
-                }
-            });
-            console.log(element);
-        })();
-    </script>
-
     <script>
         // Menú móvil
         const menuToggle = document.getElementById('menuToggle');
