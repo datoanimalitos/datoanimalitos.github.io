@@ -186,9 +186,14 @@
             transform: translateY(-2px);
         }
         
+        /* ==================== DROPDOWN CORREGIDO ==================== */
+        .navbar ul li.dropdown {
+            position: relative;
+        }
+        
         .navbar ul li.dropdown ul {
             position: absolute;
-            top: 45px;
+            top: 100%;
             left: 0;
             background: #1E293B;
             min-width: 220px;
@@ -197,20 +202,22 @@
             opacity: 0;
             visibility: hidden;
             transition: all 0.3s ease;
-            z-index: 100;
+            z-index: 1000;
             flex-direction: column;
             border: 1px solid rgba(245, 158, 11, 0.3);
             backdrop-filter: blur(10px);
+            margin-top: 8px;
+            padding: 8px 0;
         }
         
         .navbar ul li.dropdown:hover ul {
             opacity: 1;
             visibility: visible;
-            top: 40px;
         }
         
         .navbar ul li.dropdown ul li {
             margin: 0;
+            width: 100%;
         }
         
         .navbar ul li.dropdown ul li a {
@@ -219,6 +226,7 @@
             border-radius: 0;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             justify-content: flex-start;
+            white-space: nowrap;
         }
         
         .navbar ul li.dropdown ul li a::before {
@@ -233,6 +241,15 @@
         
         .navbar ul li.dropdown ul li:last-child a {
             border-bottom: none;
+        }
+        
+        .navbar ul li.dropdown > a i.bi-chevron-down {
+            font-size: 12px;
+            transition: transform 0.3s ease;
+        }
+        
+        .navbar ul li.dropdown:hover > a i.bi-chevron-down {
+            transform: rotate(180deg);
         }
         
         @media (max-width: 768px) {
@@ -277,6 +294,10 @@
                 border-radius: 12px;
             }
             
+            .navbar ul li.dropdown {
+                position: static;
+            }
+            
             .navbar ul li.dropdown ul {
                 position: static;
                 opacity: 1;
@@ -287,6 +308,7 @@
                 margin-top: 8px;
                 border-radius: 12px;
                 border: 1px solid rgba(255, 255, 255, 0.1);
+                width: 100%;
             }
             
             .navbar ul li.dropdown.open ul {
@@ -294,7 +316,16 @@
             }
             
             .navbar ul li.dropdown ul li a {
-                padding-left: 40px;
+                padding: 12px 20px 12px 40px;
+                white-space: normal;
+            }
+            
+            .navbar ul li.dropdown > a i.bi-chevron-down {
+                margin-left: auto;
+            }
+            
+            .navbar ul li.dropdown.open > a i.bi-chevron-down {
+                transform: rotate(180deg);
             }
         }
 
@@ -831,14 +862,80 @@
                 font-size: 8px;
             }
         }
+        /* Estilos para la sección solicitada */
+.container-fluid.py-5 .container .row .col-lg-10.text-center {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.container-fluid.py-5 .container .row .col-lg-10.text-center h1 {
+    color: #FFFFFF;
+    font-size: 2.2rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.container-fluid.py-5 .container .row .col-lg-10.text-center h6 {
+    color: #FFFFFF;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.container-fluid.py-5 .container .row .col-lg-10.text-center p {
+    color: #FFFFFF;
+    font-size: 1.1rem;
+    line-height: 1.8rem;
+    text-align: justify;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.galeria-animales .grid-imagenes .animal-img img {
+    max-width: 180px;
+    object-fit: cover;
+    width: auto;
+    height: auto;
+    display: block;
+}
+
+@media (max-width: 768px) {
+    .container-fluid.py-5 .container .row .col-lg-10.text-center {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+    
+    .container-fluid.py-5 .container .row .col-lg-10.text-center h1 {
+        font-size: 1.6rem;
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+    
+    .container-fluid.py-5 .container .row .col-lg-10.text-center p {
+        font-size: 1rem;
+        line-height: 1.5rem;
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+    
+    .container-fluid.py-5 .container .row .col-lg-10.text-center h6 {
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+
+    .galeria-animales .grid-imagenes .animal-img img {
+        max-width: 140px;
+        margin: 0 auto;
+    }
+}
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
             <h1>
-                🌾 DATOANIMALITOS
-                <small>ESTADÍSTICAS GRANJA MILLONARIA (0-75 + 00)</small>
+                 DATOANIMALITOS
             </h1>
             <button class="mobile-nav-toggle" id="mobileNavToggle">
                 <i class="bi bi-grid-3x3-gap-fill"></i>
@@ -848,15 +945,15 @@
                     <li><a href="index.html"><i class="bi bi-house-door-fill"></i> Inicio</a></li>
                     <li><a href="nosotros.html"><i class="bi bi-people-fill"></i> Nosotros</a></li>
                     <li class="dropdown">
-                        <a href="#"><i class="bi bi-bar-chart-steps"></i> Estadísticas <i class="bi bi-chevron-down"></i></a>
+                        <a href="javascript:void(0)"><i class="bi bi-bar-chart-steps"></i> Estadísticas <i class="bi bi-chevron-down"></i></a>
                         <ul>
-                            <li><a href="analisis_guacharo.html">🐦 Guacharo Activo</a></li>
-                            <li><a href="analisis_loto.html">🌾 Loto Activo</a></li>
-                            <li><a href="analisis_granjazo.html">⚡ Granjazo</a></li>
+                            <li><a href="analisis_guacharo.html"> Guacharo Activo</a></li>
+                            <li><a href="analisis_loto.html"> Loto Activo</a></li>
+                            <li><a href="analisis_granjazo.html"> Granjazo</a></li>
                         </ul>
                     </li>
-                         <li class="dropdown" id="dropdownItem">
-                        <a href="#"><i class="bi bi-bar-chart-steps"></i>  Pronostico<i class="bi bi-chevron-down"></i></a>
+                         <li class="dropdown">
+                        <a href="javascript:void(0)"><i class="bi bi-bar-chart-steps"></i>  Pronostico<i class="bi bi-chevron-down"></i></a>
                         <ul>
                             <li><a href="dato_loto.html"> Loto Activo</a></li>
                             <li><a href="dato_guacharo.html"> Guacharo Activo</a></li>
@@ -867,6 +964,30 @@
                 </ul>
             </nav>
         </div>
+
+              <div class="container-fluid py-5">
+        <div class="container py-3">
+            <div class="row justify-content-center">
+                <div class="galeria-animales">
+                <div class="grid-imagenes">
+                    <div class="animal-img">
+                        <img src="img/bloc/logo_granja.webp" style="object-fit: cover; max-width: 180px;" alt="Delfín - Número 0">
+                    </div>
+                </div>
+              </div>
+                <div class="col-lg-10 text-center">
+                    <h1 class="font-weight-bold mb-4" style="font-size: 2.2rem; color: #FFFFFF;">Estudio Estadístico y Proyecciones de Estadisticas Granja Millonaria</h1>
+                    <p class="text-muted style-text" style="font-size: 1.1rem; line-height: 1.8rem; text-align: justify;">
+                        Bienvenido a <strong>datoanimalitos</strong>, una plataforma de auditoría y análisis matemático estructurada para el seguimiento metódico de los sorteos por tabla de figuras en Venezuela. Nuestro enfoque no reside en la especulación o el azar intuitivo, sino en la aplicación estricta de la teoría de la probabilidad y el análisis de patrones históricos sobre los sistemas de extracción diaria más influyentes del país, tales como Lotto Activo, La Granja Millonaria, Guácharo Activo y El Granjazo.
+                    </p>
+                    <p class="text-muted style-text" style="font-size: 1.1rem; line-height: 1.8rem; text-align: justify;">
+                        En el ecosistema analítico moderno, las extracciones numéricas repetitivas responden a leyes de distribución de frecuencia. Cuando un terminal o figura acumula un retraso prolongado, los auditores de datos estudian el concepto de <strong>umbrales de saturación</strong>. La saturación estadística ocurre cuando la varianza del sistema se desplaza temporalmente de su media, generando acumulaciones secuenciales en ventanas horarias específicas. A través de este portal, desglosamos estas tendencias lógicas para proveer a los investigadores y aficionados herramientas métricas de alto nivel descriptivo.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
         <script>
             (function() {
@@ -891,8 +1012,12 @@
                 }
                 
                 document.querySelectorAll('#navbar a').forEach(link => {
-                    link.addEventListener('click', function() {
-                        if (navbar && navbar.classList.contains('show')) {
+                    link.addEventListener('click', function(e) {
+                        const parent = this.closest('.dropdown');
+                        if (parent && window.innerWidth <= 768) {
+                            e.preventDefault();
+                            parent.classList.toggle('open');
+                        } else if (navbar && navbar.classList.contains('show')) {
                             navbar.classList.remove('show');
                             const icon = mobileNavToggle?.querySelector('i');
                             if (icon) {
@@ -903,16 +1028,20 @@
                     });
                 });
                 
-                const dropdowns = document.querySelectorAll('#navbar .dropdown');
-                dropdowns.forEach(dropdown => {
-                    const link = dropdown.querySelector('a');
-                    if (link) {
-                        link.addEventListener('click', function(e) {
-                            if (window.innerWidth <= 768) {
-                                e.preventDefault();
-                                dropdown.classList.toggle('open');
+                document.addEventListener('click', function(event) {
+                    if (window.innerWidth <= 768) {
+                        const navbar = document.getElementById('navbar');
+                        const toggle = document.getElementById('mobileNavToggle');
+                        if (navbar && navbar.classList.contains('show')) {
+                            if (!navbar.contains(event.target) && !toggle.contains(event.target)) {
+                                navbar.classList.remove('show');
+                                const icon = toggle?.querySelector('i');
+                                if (icon) {
+                                    icon.classList.remove('bi-x-lg');
+                                    icon.classList.add('bi-grid-3x3-gap-fill');
+                                }
                             }
-                        });
+                        }
                     }
                 });
             })();
@@ -922,7 +1051,7 @@
             <div id="statsBanner" class="stats-banner hidden"></div>
             <div id="errorMessage" class="error-message hidden"></div>
             <div id="emptyState" class="empty-state">
-                <div style="font-size: 56px; margin-bottom: 20px;">🌾</div>
+                <div style="font-size: 56px; margin-bottom: 20px;">✅</div>
                 <h3>Cargando datos avanzados...</h3>
                 <p>Analizando estadísticas de Granja Millonaria</p>
             </div>

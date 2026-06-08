@@ -3,7 +3,7 @@
 
 <head>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7995132393364853"
-     crossorigin="anonymous"></script>
+    crossorigin="anonymous"></script>
     <meta charset="utf-8">
     <meta name="google-adsense-account" content="ca-pub-7995132393364853">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
@@ -25,6 +25,82 @@
     <link href="css/style.css" rel="stylesheet">
     
     <style>
+        /* ===== ESTILOS PARA EL MENÚ DESPLEGABLE ===== */
+        nav.navbar ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+        nav.navbar ul li {
+            position: relative;
+            margin: 0 10px;
+        }
+        nav.navbar ul li a {
+            display: block;
+            padding: 10px 15px;
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+        nav.navbar ul li a:hover {
+            color: #ff0000;
+        }
+        /* Submenú oculto */
+        nav.navbar ul li ul {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            min-width: 200px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            flex-direction: column;
+        }
+        /* Mostrar submenú al pasar el mouse */
+        nav.navbar ul li:hover > ul {
+            opacity: 1;
+            visibility: visible;
+        }
+        nav.navbar ul li ul li {
+            margin: 0;
+        }
+        nav.navbar ul li ul li a {
+            padding: 10px 20px;
+            border-bottom: 1px solid #eee;
+        }
+        nav.navbar ul li ul li:last-child a {
+            border-bottom: none;
+        }
+        /* Para dispositivos táctiles: clic para abrir */
+        @media (max-width: 991px) {
+            nav.navbar ul {
+                flex-direction: column;
+                width: 100%;
+            }
+            nav.navbar ul li {
+                margin: 0;
+            }
+            nav.navbar ul li ul {
+                position: static;
+                box-shadow: none;
+                opacity: 1;
+                visibility: hidden;
+                display: none;
+                padding-left: 20px;
+            }
+            nav.navbar ul li.open > ul {
+                visibility: visible;
+                display: block;
+            }
+        }
+        
+        /* Resto de tus estilos existentes */
         .video-section {
             padding: 60px 0;
             background: #f8f9fa;
@@ -326,7 +402,7 @@
                 padding: 6px 18px;
             }
         }
-         .disclaimer {
+        .disclaimer {
             background: #fff3cd;
             border-left: 4px solid #ffc107;
             padding: 15px;
@@ -350,58 +426,37 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
-                    <div class="navbar-nav ml-auto py-0">
-                        <a href="analisis_loto.html" class="nav-item nav-link">Ver Análisis Loto</a>
-                    </div>
                     <a href="index.html" class="navbar-brand mx-5 d-none d-lg-block">
-                        <h1 class="m-0 display-4 text-primary"><span class="text-secondary">DATO</span>ANIMALITOS</h1>
+                        <h1 class="m-0 display-4 text-primary"><span class="text-secondary"></span>ANIMALITOS</h1>
                     </a>
+                    <nav id="navbar" class="navbar">
+                        <ul>
+                            <li><a href="winner.html">WINNER</a></li>
+                            <li><a href="tripletas.html">TRIPLETAS</a></li>
+                            <li><a href="tuloteria.html">LOTERIAS</a></li>
+                            <li class="dropdown">
+                                <a href="#">ESTADISTICAS</a>
+                                <ul>
+                                    <li><a href="analisis_loto.html">Loto Activo</a></li>
+                                    <li><a href="analisis_guacharo.html">Guacharo Activo</a></li>
+                                    <li><a href="analisis_granja.html">Granja Millonaria</a></li>
+                                    <li><a href="analisis_granjazo.html">Granjazo</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </nav>
                     <div class="navbar-nav mr-auto py-0">
                         <a href="about.html" class="nav-item nav-link">Somos</a>
-                        <a href="contact.html" class="nav-item nav-link">Contacto</a>
                     </div>
                 </div>
             </nav>
         </div>
     </div>
-    <div class="container-fluid p-0 mb-5 pb-5">
-        <div id="header-carousel" class="carousel slide" data-ride="carousel">
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <img class="w-100" src="img/bloc/mini4.webp" alt="Estadísticas de Lotería de Animalitos">
-                    <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
-                        <div class="p-3" style="max-width: 900px;">
-                            <h2 class="text-white text-uppercase mb-md-3">Análisis de Probabilidades</h2>
-                            <p class="display-5 text-white mb-md-4">Descubre tendencias numéricas basadas en datos históricos reales.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <img class="w-100" src="img/bloc/mini2.webp" alt="Resultados Lotoanimalitos">
-                    <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
-                        <div class="p-3" style="max-width: 900px;">
-                            <h2 class="text-white text-uppercase mb-md-3">Sistemas Estadísticos</h2>
-                            <p class="display-5 text-white mb-md-4">Herramientas lógicas para el estudio de sorteos diarios en Venezuela.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <a class="carousel-control-prev" href="#header-carousel" data-slide="prev">
-                <div class="btn btn-secondary px-0" style="width: 45px; height: 45px;">
-                    <span class="carousel-control-prev-icon mb-n1"></span>
-                </div>
-            </a>
-            <a class="carousel-control-next" href="#header-carousel" data-slide="next">
-                <div class="btn btn-secondary px-0" style="width: 45px; height: 45px;">
-                    <span class="carousel-control-prev-icon mb-n1"></span>
-                </div>
-            </a>
-        </div>
-    </div>
+
     <div class="datetime-visible">
         <div class="datetime-sutil" id="fechaHoraActual"></div>
         <div id="resultado-contenido">
-            <div class="no-data" style="color: white; margin-top: 10px;">Consultando actualizaciones y proyecciones de sorteos...</div>
+            <div class="no-data" style="color: white; margin-top: 10px;"><p>Consultando actualizaciones y proyecciones de sorteos...</p> </div>
         </div>
     </div>
 
@@ -452,29 +507,25 @@
                                 </tbody>
                             </table>
                         </div>
-                    </div>
+                    </div><br>
                     <p> Nuestra asesoría se ajusta a los estándares y lógicas en programación; cada una de nuestras orientaciones está sustentada por más de 12 años de experiencias en este maravilloso mundo de la numerología. Detrás de cada estrategia hay una lógica programada por expertos informáticos, plasmando nuestra experiencia. No son estadísticas creadas por inteligencia artificial. Son estrategias, técnicas sustentadas por más de 12 años de experiencias, plasmadas en esta maravillosa página web, datoanimalitos.github.io. ¿Por qué "GitHub"? Este potente servidor nos garantiza seguridad, confianza y un entorno agradable para cubrir todas las necesidades de nuestra comunidad.  </p>
                 </div>
             </div>
         </div>
-         <div class="disclaimer">
-            <i class="fas fa-shield-alt mr-2"></i> 
-            Las estrategias y técnicas presentadas tienen fines informativos y educativos. Los análisis probabilísticos no garantizan resultados infalibles. Se recomienda estudiar los datos con responsabilidad.
-        </div>
     </div>
-    </div>
+</div>
 
-    <div class="container-fluid py-5 bg-light">
-        <div class="container py-5">
-            <div class="row text-center justify-content-center">
-                <div class="col-lg-10">
-                    <h2 class="font-weight-bold mb-3">Monitoreo de Pronósticos del Día</h2>
-                    <p class="text-dark lead mb-3 font-weight-normal" style="font-size: 1.15rem; line-height: 1.7rem;">
-                        En esta sección encontrarás los 4 animalitos con más probabilidad de salir en los próximos resultados. ¿Cómo obtenemos esta orientación? Analizamos los últimos 7 días de la operadora, es decir, sus últimos 84 resultados. Nuestro análisis es muy profesional y aplica las últimas técnicas y conocimientos. Contamos con más de 12 años de experiencia en el comportamiento de secuencias.
-                    </p>
-                    <p class="text-muted mb-5">Explora las secciones de análisis dedicadas a evaluar las probabilidades matemáticas según cada sorteo.</p>
-                </div>
-                <div class="container">
+<div class="container-fluid py-5 bg-light">
+    <div class="container py-5">
+        <div class="row text-center justify-content-center">
+            <div class="col-lg-10">
+                <h2 class="font-weight-bold mb-3">Monitoreo de Pronósticos del Día</h2>
+                <p class="text-dark lead mb-3 font-weight-normal" style="font-size: 1.15rem; line-height: 1.7rem;">
+                    En esta sección encontrarás los 4 animalitos con más probabilidad de salir en los próximos resultados. ¿Cómo obtenemos esta orientación? Analizamos los últimos 7 días de la operadora, es decir, sus últimos 84 resultados. Nuestro análisis es muy profesional y aplica las últimas técnicas y conocimientos. Contamos con más de 12 años de experiencia en el comportamiento de secuencias.
+                </p>
+                <p class="text-muted mb-5">Explora las secciones de análisis dedicadas a evaluar las probabilidades matemáticas según cada sorteo.</p>
+            </div>
+            <div class="container">
             </div>
             <div class="row justify-content-center">
                 <div class="col-lg-4 col-md-6 mb-5">
@@ -484,8 +535,13 @@
                         </div>
                         <h5 class="font-weight-bold mb-3">LOTO ACTIVO</h5>
                         <p class="text-muted">Proyecciones basadas en algoritmos de frecuencia para el sorteo tradicional diario.</p>
-                        <a href="dato_loto.html" class="btn-borde-super-fijos">Ver análisis de secuencia</a>
-                    </div>
+                        <a href="dato_loto.html" class="btn-borde-super-fijos">Ver Pronosticos</a>
+                    </div><br>
+                    <p class="text-muted">Lotto activo es un juego de azar basado en la extracción aleatoria de 1 de las 38 figuras disponibles para este juego. Las figuras corresponden a animales previamente establecidos y asociados a un número que van del 0 al 36 incluyendo el 00. Los sorteos se realizan de lunes a domingo, ofreciendo a sus participantes 2 modalidades de juego la primera denominada "animal" qué consiste en acertar la figura sorteada para un día y fecha específica, la segunda modalidad se denomina "dupleta" qué consiste en el acierto de 2 animales en 2 sorteos distintos y consecutivos efectuado un mismo día. La modalidad "animal" cuenta con 8 sorteos/ día y la modalidad "dupleta" con 7 sorteos/ día.</p>
+                    <p>(0)Delfín, (00) ballena, (1) carnero, (2) toro , (3) ciempiés, (4) alacrán, (5) león, (6) rana, (7) perico, (8) ratón, (9) águila, (10) tigre, (11) gato, (12) caballo, (13) mono, (14) paloma, (15) zorro, (16) oso, (17) pavo, (18) burro, (19) chivo, (20) cochino, (21) gallo, (22) camello, (23) cebra, (24) iguana, (25) gallina, (26) vaca, (27) perro, (28) zamuro, (29) elefante, (30) caimán, (31) lapa, (32) ardilla, (33) pescado, (34) venado, (35) jirafa y (36) culebra</p>
+                    <p>Lo sorteo de la modalidad animal se realizan los 7 días de la semana en los siguientes horarios:
+                        Mañana: 10:00 am (loto activo A) y 11:00 am (loto activo B).
+                    Tarde: 12:00 m (loto activo C), 1:00 pm (loto activo D), 4:00 pm (loto activo E), 5:00 pm (loto activo F) y 6:00 pm (loto activo G) Noche: 7:00 pm (loto activo H).</p>
                 </div>
                 <div class="col-lg-4 col-md-6 mb-5">
                     <div class="service-item bg-white rounded shadow-sm p-4 text-center">
@@ -494,8 +550,12 @@
                         </div>
                         <h5 class="font-weight-bold mb-3">GRANJA MILLONARIA</h5>
                         <p class="text-muted">Estudio de tendencias y repetición de terminales para la Granja Millonaria.</p>
-                        <a href="dato_granja.html" class="btn-borde-super-fijos">Ver análisis de secuencia</a>
-                    </div>
+                        <a href="dato_granja.html" class="btn-borde-super-fijos">Ver Pronosticos</a><br>
+                    </div><br>
+                    <p class="text-muted">La Granja Millonaria es un juego basado en ruleta, que consta de dos sorteos diferentes, con variaciones en la cantidad de posibilidades que ofrece y sus respectivos impactos en los premios. Los premios varían de acuerdo con la probabilidad de éxitos, siendo el mayor premio correspondiente a la menor probabilidad de éxito.</p>
+                    <p>Es uno de los juegos más populares y extendidos en Venezuela, contando con un gran numero de seguidores y jugadores a nivel nacional. Además, cuenta con un importante prestigio entre los seguidores y apostadores locales.</p>
+                    <p>El juego NO cuenta con la conocida como “Ventaja de la Casa”, o el 00 (Doble cero) representado por la ballena, esta modalidad corresponde a la variante de la ruleta americana, en su lugar el juego pretende ser mas transparente respecto a las probabilidades, ya que los animales son numerados iniciando en 1 posibilitando el cálculo rápido de las probabilidades de éxito.</p>
+                    <p>El juego “Granja Millonaria” es operado por “Operadora y Comercializadora F&J, CA”, con sede en la ciudad de Cabimas, Estado Zulia. Si embargo el juego esta registrado en la junta de beneficencia publica y bienestar social del estado Cojedes. Esta empresa esta debidamente registrada en el Servicio Desconcentrado de Normalización, Calidad, Metrología y Reglamentos Técnicos (SENCAMER), con los softwares “Next Ganador” y “Suerte Digital” para sorteos electrónicos de loterias.</p>
                 </div>
                 <div class="col-lg-4 col-md-6 mb-5">
                     <div class="service-item bg-white rounded shadow-sm p-4 text-center">
@@ -504,343 +564,421 @@
                         </div>
                         <h5 class="font-weight-bold mb-3">GUÁCHARO ACTIVO</h5>
                         <p class="text-muted">Análisis de datos recientes y cálculo probabilístico aplicado a Guácharo Activo.</p>
-                        <a href="dato_guacharo.html" class="btn-borde-super-fijos">Ver análisis de secuencia</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-         <div class="disclaimer">
-            <i class="fas fa-shield-alt mr-2"></i> 
-            Las estrategias y técnicas presentadas tienen fines informativos y educativos. Los análisis probabilísticos no garantizan resultados infalibles. Se recomienda estudiar los datos con responsabilidad.
-        </div>
-    </div>
-    </div>
-
-    <div class="container-fluid py-5">
-        <div class="container py-5">
-            <div class="row justify-content-center text-center mb-5">
-                <div class="col-lg-8">
-                    <h2 class="font-weight-bold">Guías Educativas de Numerología Aplicada</h2>
-                    <p class="text-muted">Aprende la lógica analítica detrás de los sistemas de acumulación y probabilidades.</p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-4 mb-4">
-                    <h4 class="font-weight-bold mb-3">Metodología de las Tripletas</h4>
-                    <h5 class="text-muted mb-3" style="font-size: 1rem;">Cálculo de combinaciones en rangos de sorteos</h5>
-                    <p class="text-muted" style="text-align: justify;">El sistema de tripletas analiza la aparición conjunta de tres figuras en ventanas predefinidas de sorteos continuos. Estudiar estos intervalos ayuda a identificar periodos de alta volatilidad estadística en los resultados.</p>
-                    <a href="aprende1.html" class="btn-borde-super-fijos">Ver Guía Completa</a>
-                </div>
-                <div class="col-lg-4 mb-4">
-                    <h4 class="font-weight-bold mb-3">Estudio de Proyecciones Fijas</h4>
-                    <h5 class="text-muted mb-3" style="font-size: 1rem;">Identificación de retrasos y simetías numéricas</h5>
-                    <p class="text-muted" style="text-align: justify;">Los analistas denominan proyecciones fijas a aquellos números o figuras que reflejan una desviación estándar significativa o un retraso prolongado respecto a su media matemática de aparición diaria.</p>
-                    <a href="aprende2.html" class="btn-borde-super-fijos">Ver Método Técnico</a>
-                </div>
-                <div class="col-lg-4 mb-4">
-                    <h4 class="font-weight-bold mb-3">Gestión de Probabilidades</h4>
-                    <h5 class="text-muted mb-3" style="font-size: 1rem;">Administración lógica de expectativas</h5>
-                    <p class="text-muted" style="text-align: justify;">Un análisis profesional requiere mantener una bitácora estricta de resultados pasados. El uso de enfoques estadísticos racionales previene la toma de decisiones impulsivas basadas en corazonadas.</p>
-                    <a href="info1.html" class="btn-borde-super-fijos">Ver Estrategia</a>
+                        <a href="dato_guacharo.html" class="btn-borde-super-fijos">Ver Pronosticos</a><br>
+                    </div><br>
+                    <p class="text-muted">Es una de las varias alternativas dispuesta por la lotería de Oriente para juegos de azar, la cual consiste en predecir cuál de los 77 animales previamente establecidos y enumerados será sorteado por medio de un software especialmente elaborado para este fin. Guácharo activo presenta la particularidad de tener un animal comodín que ese identifica con el guácharo número 75, el cual confiere a sus apostadores la posibilidad de duplicar el valor de su premio, en caso de que el guácharo sea el animal escogido en el sorteo. Guácharo puede jugarse los siete días de la semana en cualquiera de sus 11 sorteos diarios qué inician a las 9 de la mañana y finalizan a las 7 de la noche con un intervalo de una hora entre cada sorteo.</p>
+                    <p>¿Cuáles son las figuras animal que participan en guácharo activo?
+                    Delfín (00), ballena (0), carnero (1), toro (2), ciempiés (3), alacrán (4), León (5), ranas (6), perico (7), ratón (8) águila (9), tigre (10), gato (11), caballo (12), mono (13), paloma (14), zorro (15), oso (16), pavo (17), burro (18), chivo (19), cochino (20), gallo (21), camello(22), cebra (23), iguana (24), gallina (25), vaca (26), perro (27), zamuro (28), elefante (29), caimán (30), lapa (31), ardilla (32), pescado (33), venado (34), jirafa (35), culebra (36), tortuga (37), búfalo (38), lechuza (39), avispa (40), canguro (41), tucán (42), mariposa (43), chigüire (44), garza (45), puma (46), pavo real (47), puercoespín (48), pereza (49), canario (50), pelícano (51), pulpo (52), caracol (53), grillo (54), oso hormiguero (55), tiburón (56), pato (57), hormiga (58), pantera (59), camaleón (60), panda (61), cachicamo (62), cangrejo (63), gavilán (64), araña (65), lobo (66), avestruz (67), jaguar (68), conejo (69), bisonte (70), guacamaya (71), gorila (72), hipopótamo (73), turpial (74) y guácharo (75).</p>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <div class="container-fluid py-5 bg-light">
-        <div class="container">
-            <div class="section-title text-center mb-5">
-                <h2 class="font-weight-bold">Video-Tutoriales y Análisis de Tendencias</h2>
-                <p class="text-muted">Clases didácticas multimedia para comprender la estructura de los datos estadísticos.</p>
+<div class="container-fluid py-5">
+    <div class="container py-5">
+        <div class="row justify-content-center text-center mb-5">
+            <div class="col-lg-8">
+                <h2 class="font-weight-bold">Guías Educativas de Numerología Aplicada</h2>
+                <p class="text-muted">Aprende la lógica analítica detrás de los sistemas de acumulación y probabilidades.</p>
+                <h2>¿Qué ocurre con un ticket ganador extraviado o deteriorado?</h2>
+                <p>Para todos los jugadores que realizan sus apuestas por medios electrónicos, es posible realizar la impresión de su ticket de juego tantas veces como lo consideren necesario y así solucionar su inconveniente en caso de extravió o deterioro de su boleto de juego. Ahora si en apostador cuenta con un único boleto de juego y este se extravía o se encuentra con perforaciones, enmiendas, ilegible, impreso por un centro no autorizado, presentado luego de los 3 días hábiles luego de realizado el sorteo o en posesión de un menor de edad, la casa de apuestas ni la lotería de Oriente procederán a cancelar el premio. Sin embargo la lotería de Oriente deja abierta la posibilidad a sus participantes para que introduzcan un reclamo formal si lo consideran necesario. Estos reclamos deberán ser canalizados de forma escrita en la oficina de la operadora, que para efectos del juego guácharo activo es Inversiones unida plus C.A R.I.F J-500182015.</p>
+                <h2>¿Cuáles son las obligaciones de los participantes de guácharo activo?</h2>
+                <p>De acuerdo al reglamento vigente de la lotería de Oriente, los participantes se convierten en el único responsable de preservar en buen estado los tickets juego, los cuáles constituyen el único documento probatorio y válido para realizar los reclamos de un premio. A diferencia de otros juegos de azar guácharo activo no establece en sus reglas de juego que los ganadores deban participar con carácter obligatorio en actividades publicitarias.</p>
             </div>
-            <div class="row">
-                <div class="col-lg-4 col-md-6">
-                    <div class="video-card" id="video-card-1">
-                        <div class="thumbnail-container" onclick="loadYouTubeVideo('N28B6IwVc24', 'video-card-1')">
-                            <img class="thumbnail-img" src="img/bloc/mini1.webp" alt="Video por qué se repiten las figuras">
-                            <div class="play-overlay">
-                                <div class="play-btn">▶</div>
-                            </div>
-                            <div class="youtube-badge">YouTube</div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4 mb-4">
+               <div class="galeria-animales">
+                <div class="grid-imagenes">
+                    <!-- Aquí irían las imágenes, ejemplo: -->
+                    <div class="animal-img">
+                        <img src="img/bloc/logo_guacharito.webp" style="object-fit: cover; max-width: 180px;" alt="Delfín - Número 0">
+                    </div>
+                </div>
+            </div>
+            <h4 class="font-weight-bold mb-3">Aprende a Hacer Tripletas</h4>
+            <h5 class="text-muted mb-3" style="font-size: 1rem;">Cálculo de combinaciones en rangos de sorteos</h5>
+            <p class="text-muted" style="text-align: justify;">El sistema de tripletas analiza la aparición conjunta de tres figuras en ventanas predefinidas de sorteos continuos. Estudiar estos intervalos ayuda a identificar periodos de alta volatilidad estadística en los resultados.</p>
+            <a href="aprende1.html" class="btn-borde-super-fijos">Ver Guía Completa</a>
+        </div>
+        <div class="col-lg-4 mb-4">
+          <div class="galeria-animales">
+            <div class="grid-imagenes">
+                <!-- Aquí irían las imágenes, ejemplo: -->
+                <div class="animal-img">
+                    <img src="img/bloc/logo_selva.webp" style="object-fit: cover; max-width: 180px;" alt="Delfín - Número 0">
+
+                </div>
+            </div>
+        </div>  
+        <h4 class="font-weight-bold mb-3">Aprende a Sacar Súper Fijos</h4>
+        <h5 class="text-muted mb-3" style="font-size: 1rem;">Identificación de retrasos y simetías numéricas</h5>
+        <p class="text-muted" style="text-align: justify;">Los analistas denominan proyecciones fijas a aquellos números o figuras que reflejan una desviación estándar significativa o un retraso prolongado respecto a su media matemática de aparición diaria.</p>
+        <a href="aprende2.html" class="btn-borde-super-fijos">Ver Método Técnico</a>
+    </div>
+    <div class="col-lg-4 mb-4">
+       <div class="galeria-animales">
+        <div class="grid-imagenes">
+            <!-- Aquí irían las imágenes, ejemplo: -->
+            <div class="animal-img">
+                <img src="img/bloc/logo_granjita.webp" style="object-fit: cover; max-width: 180px;" alt="Delfín - Número 0">
+                
+            </div>
+        </div>
+    </div>
+    <h4 class="font-weight-bold mb-3">Estrategias y Técnicas</h4>
+    <h5 class="text-muted mb-3" style="font-size: 1rem;">Administración lógica de expectativas</h5>
+    <p class="text-muted" style="text-align: justify;">Un análisis profesional requiere mantener una bitácora estricta de resultados pasados. El uso de enfoques estadísticos racionales previene la toma de decisiones impulsivas basadas en corazonadas.</p>
+    <a href="info1.html" class="btn-borde-super-fijos">Ver Estrategia</a>
+</div>
+</div>
+</div>
+</div>
+
+<div class="container-fluid py-5 bg-light">
+    <div class="container">
+        <div class="section-title text-center mb-5">
+            <h2 class="font-weight-bold">Video-Tutoriales y Análisis de Tendencias</h2>
+            <p class="text-muted">Clases didácticas multimedia para comprender la estructura de los datos estadísticos.</p>
+            <h6>Las claves para ganar los animalitos</h6>
+            <p>El estudio se realizó en los establecimientos de juego de LONATO en la ciudad de Lomé. Los jugadores fueron seleccionados de 20 establecimientos ubicados en 20 barrios específicos. La selección de estos 20 establecimientos, pertenecientes a los 5 distritos de Lomé y sus aglomeraciones, no fue aleatoria y se basó en la frecuencia de asistencia de los jugadores. La selección de jugadores por establecimiento se realizó mediante un muestreo por conveniencia (se incluyeron todos los jugadores que se presentaron en los establecimientos seleccionados el día y la hora de la recolección de datos).</p>
+        </div>
+        <div class="row">
+            <div class="col-lg-4 col-md-6">
+                <div class="video-card" id="video-card-1">
+                    <div class="thumbnail-container" onclick="loadYouTubeVideo('N28B6IwVc24', 'video-card-1')">
+                        <img class="thumbnail-img" src="img/bloc/mini1.webp" alt="Video por qué se repiten las figuras">
+                        <div class="play-overlay">
+                            <div class="play-btn">▶</div>
                         </div>
-                        <div class="video-info">
-                            <h3>¿Por qué se repiten los números?</h3>
-                            <p class="text-muted">Explicación sobre la distribución de probabilidad y la saturación en los sorteos continuos.</p>
-                            <span class="video-tag">Análisis Estadístico</span>
+                        <div class="youtube-badge">YouTube</div>
+                    </div>
+                    <div class="video-info">
+                        <h3>¿Por qué se repiten los números?</h3>
+                        <p class="text-muted">Explicación sobre la distribución de probabilidad y la saturación en los sorteos continuos.</p>
+                        <span class="video-tag">Análisis Estadístico</span>
+                    </div>
+                </div>
+                <p>Animalitos una modalidad de juego y azar que sustituye los tradicionales sorteo de números por figura de animales atrayendo la atención de gran número de apostadores. Fuentes sugieren su inicio en Venezuela en el año 1926 por el consejo municipal de Valera con sorteos públicos realizados a plena luz del día en la plaza Bolívar, ganando la atención de mucho más adeptos con la llegada de la radio. Ahora en pleno Siglo XXI con el internet y las redes sociales tienen un alcance global para los amantes de las apuestas, con amplia variedad de opciones, algunas con altas probabilidades de acierto y otras con atrayentes sumas para sus ganadores.</p>
+                <p>Para quienes buscan altas posibilidades de acierto existen opciones como la ofrecida por la lotería de Cojedes a través de su juego la "granjita", donde participan 38 animales por sorteo dando así una probabilidad de acierto de 2,63% por cada figura de animal que se apuesta y entregando un premio de 30 veces el valor de la apuesta.
+                Si el objetivo principal está en las ganancias lotto activo un juego de la lotería del estado Cojedes ofrece la opción "dupleta animalito" donde se ofrece a los ganadores un monto de 1.000 veces el valor de la apuesta y con una probabilidad de acierto muy aceptable de 1,31%. Para ello los participantes deben acertar el animal sorteado en 2 sorteos distintos y consecutivos efectuados el mismo día.</p>
+            </div>
+
+            <div class="col-lg-4 col-md-6">
+                <div class="video-card" id="video-card-2">
+                    <div class="thumbnail-container" onclick="loadYouTubeVideo('vIeULHiR2Tc', 'video-card-2')">
+                        <img class="thumbnail-img" src="img/bloc/mini2.webp" alt="Video cómo calcular tripletas">
+                        <div class="play-overlay">
+                            <div class="play-btn">▶</div>
+                        </div>
+                        <div class="youtube-badge">YouTube</div>
+                    </div>
+                    <div class="video-info">
+                        <h3>Lógica de Combinatorias Fijas</h3>
+                        <p class="text-muted">Descubre el trasfondo matemático para expresar combinaciones basadas en rezago numérico.</p>
+                        <span class="video-tag">Combinatorias</span>
+                    </div>
+                </div>
+                <p>Opciones similares son ofrecidas por la lotería de Oriente con su modalidad "morocho animal" que tiene una probabilidad de acierto de 1,31% y un premio para quienes acierten de 800 veces el valor de la apuesta para ellos los participantes deben acertar dos animales sorteados de manera consecutiva en su modalidad "morocho animal".
+                Cuando se trata de la mejor relación probabilidad de acierto vs beneficio, el "granjazo" de la lotería de Cojedes ofrece entre sus 76 animales disponible una figura llamada comodín, se trata del dragón. Que en caso de ser sorteado ofrécelo a los participantes que apostaron por esta figura 120 veces el valor de la apuesta con una probabilidad de acierto de 1,31%.</p>
+                <p>"Guacharo activo" de la lotería de Oriente también se muestra como una opción atractiva en cuanto a la relación probabilidad de acierto vs beneficio económico, con su figura comodín el guacharo, que tiene una probabilidad de acierto 1,31% y un beneficio económico de 120 veces el valor de la apuesta.</p>
+            </div>
+
+            <div class="col-lg-4 col-md-6">
+                <div class="video-card" id="video-card-3">
+                    <div class="thumbnail-container" onclick="loadYouTubeVideo('CieyyhPgOpA', 'video-card-3')">
+                        <img class="thumbnail-img" src="img/bloc/mini3.webp" alt="Video proyecciones Loto Activo">
+                        <div class="play-overlay">
+                            <div class="play-btn">▶</div>
+                        </div>
+                        <div class="youtube-badge">YouTube</div>
+                    </div>
+                    <div class="video-info">
+                        <h3>Proyecciones para Loto Activo</h3>
+                        <p class="text-muted">Revisión de históricos y herramientas digitales de seguimiento para el sorteo líder.</p>
+                        <span class="video-tag">Monitoreo</span>
+                    </div>
+                </div>
+                <p>Una opción similar es la que ofrece la lotería del Táchira en su modalidad de juego "Combinado FT", en la cual se sortea una fruta de 38 disponibles más una figura animal de 38 disponibles, los participantes que logren acertar la fruta más el animal obtienen un premio de 800 veces el valor de la apuestacon una probabilidad de acierto por cada jugada combinada (fruta más animal) de 1,31% la nota interesante ocurre cuando se acierta solamente la fruta o el animal ya que existe la posibilidad de reclamar un premio de 25 veces el valor de la apuesta por el mérito de acertar una de las dos figuras la fruta o el animal.</p>
+                <p>Bien sea que los apostadores busquen sorteo sencillos y tradicionales, dobles, combinados, con atractivos premios para quienes acierten o con altas posibilidades de acierto la lotería de animalitos ofrece alternativa para cada uno de ellos, ocupando un lugar importante dentro del mercado global de las loterías y el azar y con la facilidad que ofrece la tecnología se convierte en una opción de fácil acceso para quienes gustan de este tipo de juego.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid py-5">
+    <div class="container">
+        <div class="section-title text-center mb-5">
+            <h2 class="font-weight-bold mb-3">Historial de Probabilidades por Sorteo</h2>
+            <p class="text-muted">Informes detallados mensuales del comportamiento del sistema numérico de cada lotería.</p>
+            <p>La estadística es la rama de las matemáticas y ciencia de los datos encargada de recopilar, organizar, analizar e interpretar información. Su objetivo principal es describir fenómenos, entender tendencias y facilitar la toma de decisiones informadas basadas en evidencia, en lugar de en conjeturas.</p>
+        </div>
+        <div class="row">
+            <div class="col-lg-4 col-md-6">
+                <div class="article-card shadow-sm">
+                    <img class="article-img" src="img/bloc/analicis1.webp" alt="Estadísticas Lotto Activo">
+                    <div class="article-info">
+                        <div class="article-category">Lotto Activo</div>
+                        <h3 class="article-title">
+                            <a href="#">Estadísticas y Probabilidades de Lotto Activo</a>
+                        </h3>
+                        <a href="analisis_loto.html" class="btn-borde-super-fijos">Ver Estadisticas</a><br>
+                        <div class="article-meta">
+                            <span>Redacción Analítica</span> | <span>2026</span>
                         </div>
                     </div>
                 </div>
+                <h2>Estadísticas Lotto Activo</h2>
+                <p>Consulta las Estadísticas de los Animalitos de la Lotería Lotto Activo en el rango de fechas de tu preferencia y ordénalas descendente o ascendentemente obteniendo así los mejores pronósticos para que estés bien actualizado. ¿Listo?</p>
+                <p> Sacar tus propias Estadísticas de Lotto Activo es muy fácil, solo elige el intervalo de fechas que desees consultar y listo, obtienes las estadísticas de los animalitos que más repitieron y aquellos que no.</p>
+            </div>
 
-                <div class="col-lg-4 col-md-6">
-                    <div class="video-card" id="video-card-2">
-                        <div class="thumbnail-container" onclick="loadYouTubeVideo('vIeULHiR2Tc', 'video-card-2')">
-                            <img class="thumbnail-img" src="img/bloc/mini2.webp" alt="Video cómo calcular tripletas">
-                            <div class="play-overlay">
-                                <div class="play-btn">▶</div>
-                            </div>
-                            <div class="youtube-badge">YouTube</div>
-                        </div>
-                        <div class="video-info">
-                            <h3>Lógica de Combinatorias Fijas</h3>
-                            <p class="text-muted">Descubre el trasfondo matemático para expresar combinaciones basadas en rezago numérico.</p>
-                            <span class="video-tag">Combinatorias</span>
+            <div class="col-lg-4 col-md-6">
+                <div class="article-card shadow-sm">
+                    <img class="article-img" src="img/bloc/analicis2.webp" alt="Estadísticas Guácharo Activo">
+                    <div class="article-info">
+                        <div class="article-category">Guácharo Activo</div>
+                        <h3 class="article-title">
+                            <a href="#">Comportamiento Simétrico en Guácharo Activo</a>
+                        </h3>
+                        <a href="analisis_guacharo.html" class="btn-borde-super-fijos">Ver Estadisticas</a><br>
+                        <div class="article-meta">
+                            <span>Redacción Analítica</span> | <span>2026</span>
                         </div>
                     </div>
                 </div>
+                <h2>Números de lotería y estadísticas ordenadas</h2>
+                <p>La lotería ha cautivado durante mucho tiempo la imaginación de jugadores de todo el mundo, ofreciendo la tentadora posibilidad de ganar premios que cambian la vida. Si bien ganar la lotería depende en gran medida del azar, ya que los sorteos suelen ser aleatorios e impredecibles, algunos jugadores utilizan la terminal de lotería para generar números al azar, otros eligen números con un significado personal, como cumpleaños, aniversarios u otras fechas importantes, y algunos aficionados recurren al análisis estadístico para analizar los números ganadores anteriores e identificar patrones o frecuencias. En este artículo, utilizamos estadísticas de orden para estimar la probabilidad de que un orden específico de números o combinaciones de números aparezca en sorteos futuros.</p>
+            </div>
 
-                <div class="col-lg-4 col-md-6">
-                    <div class="video-card" id="video-card-3">
-                        <div class="thumbnail-container" onclick="loadYouTubeVideo('CieyyhPgOpA', 'video-card-3')">
-                            <img class="thumbnail-img" src="img/bloc/mini3.webp" alt="Video proyecciones Loto Activo">
-                            <div class="play-overlay">
-                                <div class="play-btn">▶</div>
-                            </div>
-                            <div class="youtube-badge">YouTube</div>
+            <div class="col-lg-4 col-md-6">
+                <div class="article-card shadow-sm">
+                    <img class="article-img" src="img/bloc/analicis3.webp" alt="Estadísticas Granja Millonaria">
+                    <div class="article-info">
+                        <div class="article-category">Granja Millonaria</div>
+                        <h3 class="article-title">
+                            <a href="#">Frecuencia de Aciertos en Granja Millonaria</a>
+                        </h3>
+                        <a href="analisis_granja.html" class="btn-borde-super-fijos">Ver Estadisticas</a><br>
+                        <div class="article-meta">
+                            <span>Redacción Analítica</span> | <span>2026</span>
                         </div>
-                        <div class="video-info">
-                            <h3>Proyecciones para Loto Activo</h3>
-                            <p class="text-muted">Revisión de históricos y herramientas digitales de seguimiento para el sorteo líder.</p>
-                            <span class="video-tag">Monitoreo</span>
+                    </div>
+                </div>
+                <h2>Estadísticas ordenadas</h2>
+                <p>Es importante tener en cuenta que, si bien el análisis estadístico puede brindar información sobre patrones y frecuencias, los sorteos de lotería siguen siendo aleatorios y no existe un método infalible para predecir los números ganadores. Estos métodos deben utilizarse con fines informativos y para ayudar a tomar decisiones informadas, pero el factor azar siempre predomina en los juegos de lotería. Además, los sistemas de lotería son complejos e involucran diversos factores como las máquinas de bolas, el estado de las bolas, los métodos de selección de números y múltiples juegos dentro de una misma lotería. Puede resultar difícil capturar con precisión todas las complejidades y variables en un modelo estadístico. Finalmente, los juegos de lotería son juegos de azar y las probabilidades de ganar suelen ser muy bajas. Es fundamental abordar el juego de lotería entendiendo que es puramente para entretenimiento.</p>
+            </div>
+        </div>
+    </div>
+    <div class="alert alert-warning border-0 mx-auto mb-4 text-dark" style="max-width: 850px; font-size: 0.95rem; line-height: 1.5rem; background-color: #fff3cd; border-radius: 6px;">
+        <i class="fas fa-info-circle text-warning mr-2"></i>Todo el material aquí encontrado es exclusivamente con fines educativos; no promueve ni incentiva a nuestros usuarios a los juegos de azar. Está totalmente prohibido promover o incentivar cualquier actividad relacionada con el juego que infrinja las normas de nuestra comunidad.
+    </div>
+</div>
+
+<div class="container-fluid py-5 bg-light">
+    <div class="container">
+        <div class="section-title text-center mb-5">
+            <h2 class="font-weight-bold">Artículos de Gestión y Análisis Técnico</h2>
+            <h6>Estudia y aprende las mejores técnicas y estrategias, implementadas por los expertos y profesionales en la materia.</h6>
+            <p> Contenido educativo no promueve ni incentiva los juegos de azar.</p>
+            <p class="text-muted">Material pedagógico exclusivo enfocado en la disciplina y administración estadística.</p>
+            <p>La adicción a los juegos de azar y dinero es frecuente entre algunos jugadores. El juego ocupa así un lugar central en la vida de la persona, en detrimento de otras actividades habituales que marcan su vida, y por lo tanto tiene repercusiones a nivel profesional, relacional, social y financiero. La prevalencia mundial del juego patológico varía del 2% al 6% [ 1 ]. Hoy en día, se observa que en cada esquina, cada vez más togoleses, y especialmente jóvenes, se entregan a los juegos de azar y dinero. Este comportamiento se ve facilitado por la multiplicidad de lugares de juego en los diferentes distritos y en todo el territorio nacional. La falta de datos sobre el impacto real de estos juegos en la población de Togo parece enmascarar la magnitud del problema y, por lo tanto, no permite una buena orientación de las acciones a tomar. El objetivo general de este estudio fue describir el nivel de adicción al juego entre los jugadores de la Lotería Nacional Togolesa (LONATO) en la ciudad de Lomé y sus aglomeraciones.</p>
+        </div>
+        <div class="row">
+            <div class="col-lg-4 col-md-6">
+                <div class="article-card shadow-sm">
+                    <img class="article-img" src="img/bloc/blog-1.webp" alt="Sistemas de progresión estadística">
+                    <div class="article-info">
+                        <div class="article-category">Teoría Numérica</div>
+                        <h3 class="article-title">
+                            <a href="#">Sistemas Estadísticos de Progresión Aplicada</a>
+                        </h3>
+                        <p class="text-muted" style="font-size: 0.9rem;">Cómo evaluar la varianza matemática en muestras secuenciales limitadas.</p>
+                        <a href="info1.html#progresion-aplicada" class="btn-borde-super-fijos">Leer mas</a><br>
+                        <div class="article-meta">
+                            <span>Dr. Animalitos</span> | <span>2026</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6">
+                <div class="article-card shadow-sm">
+                    <img class="article-img" src="img/bloc/blog-2.webp" alt="Gestión de capital en análisis">
+                    <div class="article-info">
+                        <div class="article-category">Control de Capital</div>
+                        <h3 class="article-title">
+                            <a href="#">Gestión del Bankroll en Modelos Probabilísticos</a>
+                        </h3>
+                        <p class="text-muted" style="font-size: 0.9rem;">Estrategias de distribución eficiente de recursos para mitigar rachas adversas.</p>
+                        <a href="info1.html#gestion-bankroll" class="btn-borde-super-fijos">Leer mas</a><br>
+                        <div class="article-meta">
+                            <span>Dr. Animalitos</span> | <span>2026</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="article-card shadow-sm">
+                    <img class="article-img" src="img/bloc/blog-3.webp" alt="Psicología de análisis numérico">
+                    <div class="article-info">
+                        <div class="article-category">Sesgos Cognitivos</div>
+                        <h3 class="article-title">
+                            <a href="#">Control Emocional y Evitación de Sesgos en Sorteos</a>
+                        </h3>
+                        <p class="text-muted" style="font-size: 0.9rem;">Análisis psicológico para neutralizar la falacia del jugador en la toma de decisiones.</p>
+                        <a href="info1.html#control-emocional" class="btn-borde-super-fijos">Leer mas</a><br>
+                        <div class="article-meta">
+                            <span>Dr. Animalitos</span> | <span>2026</span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
+</div>
 
-    <div class="container-fluid py-5">
-        <div class="container">
-            <div class="section-title text-center mb-5">
-                <h2 class="font-weight-bold mb-3">Historial de Probabilidades por Sorteo</h2>
-                <p class="text-muted">Informes detallados mensuales del comportamiento del sistema numérico de cada lotería.</p>
-                <p>La estadística es la rama de las matemáticas y ciencia de los datos encargada de recopilar, organizar, analizar e interpretar información. Su objetivo principal es describir fenómenos, entender tendencias y facilitar la toma de decisiones informadas basadas en evidencia, en lugar de en conjeturas.</p>
-            </div>
-            <div class="row">
-                <div class="col-lg-4 col-md-6">
-                    <div class="article-card shadow-sm">
-                        <img class="article-img" src="img/bloc/analicis1.webp" alt="Estadísticas Lotto Activo">
-                        <div class="article-info">
-                            <div class="article-category">Lotto Activo</div>
-                            <h3 class="article-title">
-                                <a href="analisis_loto.html">Estadísticas y Probabilidades de Lotto Activo</a>
-                            </h3>
-                            <div class="article-meta">
-                                <span>Redacción Analítica</span> | <span>2026</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-6">
-                    <div class="article-card shadow-sm">
-                        <img class="article-img" src="img/bloc/analicis2.webp" alt="Estadísticas Guácharo Activo">
-                        <div class="article-info">
-                            <div class="article-category">Guácharo Activo</div>
-                            <h3 class="article-title">
-                                <a href="analisis_guacharo.html">Comportamiento Simétrico en Guácharo Activo</a>
-                            </h3>
-                            <div class="article-meta">
-                                <span>Redacción Analítica</span> | <span>2026</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-6">
-                    <div class="article-card shadow-sm">
-                        <img class="article-img" src="img/bloc/analicis3.webp" alt="Estadísticas Granja Millonaria">
-                        <div class="article-info">
-                            <div class="article-category">Granja Millonaria</div>
-                            <h3 class="article-title">
-                                <a href="analisis_granja.html">Frecuencia de Aciertos en Granja Millonaria</a>
-                            </h3>
-                            <div class="article-meta">
-                                <span>Redacción Analítica</span> | <span>2026</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+<div class="container-fluid py-5">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center mb-5">
+                <h2 class="font-weight-bold">Dirección de Análisis e Informática</h2>
+                <p class="text-muted">Especialistas a cargo de la recopilación y estructuración de la data del portal.</p>
+                <h3>Un enfoque alternativo al método de la lotería en la teoría de la utilidad para la teoría de juegos.</h3>
+                <p>En teoría de juegos, para utilizar correctamente estrategias mixtas, estrategias de igualación o el método de arbitraje de Nash, se requieren pagos cardinales. Presentamos un método alternativo al posible y tedioso método de lotería de von Neumann y Morgenstern para transformar valores ordinales en cardinales mediante el proceso de jerarquía analítica. Sugerimos utilizar la comparación por pares de Saaty con estrategias combinadas como criterio para los jugadores involucrados en un juego repetitivo. Presentamos e ilustramos una metodología para pasar de pagos ordinales a pagos cardinales. Resumimos el impacto en la obtención de las soluciones.</p>
             </div>
         </div>
-         <div class="alert alert-warning border-0 mx-auto mb-4 text-dark" style="max-width: 850px; font-size: 0.95rem; line-height: 1.5rem; background-color: #fff3cd; border-radius: 6px;">
-                    <i class="fas fa-info-circle text-warning mr-2"></i>Todo el material aquí encontrado es exclusivamente con fines educativos; no promueve ni incentiva a nuestros usuarios a los juegos de azar. Está totalmente prohibido promover o incentivar cualquier actividad relacionada con el juego que infrinja las normas de nuestra comunidad.
-                </div>
-    </div>
-
-    <div class="container-fluid py-5 bg-light">
-        <div class="container">
-            <div class="section-title text-center mb-5">
-                <h2 class="font-weight-bold">Artículos de Gestión y Análisis Técnico</h2>
-                <h6>Estudia y aprende las mejores técnicas y estrategias, implementadas por los expertos y profesionales en la materia.</h6>
-                <p> Contenido educativo no promueve ni incentiva los juegos de azar.</p>
-                <p class="text-muted">Material pedagógico exclusivo enfocado en la disciplina y administración estadística.</p>
-            </div>
-            <div class="row">
-                <div class="col-lg-4 col-md-6">
-                    <div class="article-card shadow-sm">
-                        <img class="article-img" src="img/bloc/blog-1.webp" alt="Sistemas de progresión estadística">
-                        <div class="article-info">
-                            <div class="article-category">Teoría Numérica</div>
-                            <h3 class="article-title">
-                                <a href="info1.html#progresion-aplicada">Sistemas Estadísticos de Progresión Aplicada</a>
-                            </h3>
-                            <p class="text-muted" style="font-size: 0.9rem;">Cómo evaluar la varianza matemática en muestras secuenciales limitadas.</p>
-                            <div class="article-meta">
-                                <span>Dr. Animalitos</span> | <span>2026</span>
-                            </div>
-                        </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-5">
+                <div class="team-item bg-light rounded text-center p-4">
+                    <div class="team-img mx-auto mb-4">
+                        <img class="rounded-circle w-100 h-100" src="img/chanet.webp" style="object-fit: cover; max-width: 180px;">
+                    </div>
+                    <h3 class="font-weight-bold mb-2">Dr. Animalitos</h3>
+                    <p class="text-primary text-uppercase mb-3" style="letter-spacing: 1px; font-size: 0.9rem;">Analista Estadístico & Desarrollador</p>
+                    <p class="text-muted px-3">Especialista en estructuración de bases de datos lógicas con más de una década de experiencia analizando dinámicas de sorteos nacionales.</p>
+                    <div class="d-flex justify-content-center pt-2">
+                        <a class="btn btn-outline-secondary btn-social mr-2" href="https://www.instagram.com/dr.animalitos/" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
+                        <a class="btn btn-outline-secondary btn-social mr-2" href="https://www.facebook.com/Dr.Aniamlitos/" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook-f"></i></a>
+                        <a class="btn btn-outline-secondary btn-social mr-2" href="https://www.tiktok.com/@animalitotiktok" target="_blank" rel="noopener noreferrer"><i class="fab fa-twitter"></i></a>
                     </div>
                 </div>
-
-                <div class="col-lg-4 col-md-6">
-                    <div class="article-card shadow-sm">
-                        <img class="article-img" src="img/bloc/blog-2.webp" alt="Gestión de capital en análisis">
-                        <div class="article-info">
-                            <div class="article-category">Control de Capital</div>
-                            <h3 class="article-title">
-                                <a href="info1.html#gestion-bankroll">Gestión del Bankroll en Modelos Probabilísticos</a>
-                            </h3>
-                            <p class="text-muted" style="font-size: 0.9rem;">Estrategias de distribución eficiente de recursos para mitigar rachas adversas.</p>
-                            <div class="article-meta">
-                                <span>Dr. Animalitos</span> | <span>2026</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6">
-                    <div class="article-card shadow-sm">
-                        <img class="article-img" src="img/bloc/blog-3.webp" alt="Psicología de análisis numérico">
-                        <div class="article-info">
-                            <div class="article-category">Sesgos Cognitivos</div>
-                            <h3 class="article-title">
-                                <a href="info1.html#control-emocional">Control Emocional y Evitación de Sesgos en Sorteos</a>
-                            </h3>
-                            <p class="text-muted" style="font-size: 0.9rem;">Análisis psicológico para neutralizar la falacia del jugador en la toma de decisiones.</p>
-                            <div class="article-meta">
-                                <span>Dr. Animalitos</span> | <span>2026</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-         <div class="disclaimer">
-            <i class="fas fa-shield-alt mr-2"></i> 
-            Las estrategias y técnicas presentadas tienen fines informativos y educativos. Los análisis probabilísticos no garantizan resultados infalibles. Se recomienda estudiar los datos con responsabilidad.
+            </div><br>
+            <h2>Aprendizaje estadístico en la teoría de juegos</h2>
+            <p>El uso de la teoría de juegos se centra principalmente en el ámbito económico. El concepto de juego de suma cero, un tipo especial de juego de suma general, donde lo que un jugador gana es igual a lo que el otro pierde, se relaciona con el término económico de escasez. Este concepto se remonta a los inicios de la historia estadounidense. Cuando los conquistadores europeos desembarcaron en las costas americanas, adoptaron un modelo económico conocido como mercantilismo. Este modelo económico se deriva de teorías que sugieren que los países tienen recursos naturales limitados que requieren importaciones. En el mundo moderno, los políticos sugieren que la reducción de impuestos facilitará el crecimiento económico, mientras que algunos economistas argumentan que la disminución del gasto público debido a la reducción de impuestos disminuirá la cantidad de oportunidades laborales. Este fenómeno se alinea con el modelo de juego de suma cero, que establece que "es probable que esta reducción del gasto reduzca la demanda en el estado tanto como la reducción de impuestos puede estimularla" [ 1 ]. La solución típica a estos problemas económicos es establecer un modelo de juego de suma cero y calcular el equilibrio de Nash. En este artículo, demostraremos diferentes tipos de soluciones en juegos de suma general utilizando modelos económicos, políticos y deportivos.</p>
+            <p>La mayoría de la gente cree que la lotería es cuestión de azar y de suerte. Sin embargo, los más escépticos prefieren recurrir a las matemáticas, la estadística y la probabilidad a la hora de elegir sus números. Los primeros recurren a amuletos o fechas concretas, mientras que los segundos recurren a los libros y el estudio. En cualquiera de los casos, todos tienen en común el deseo y la ilusión de que les toque la lotería. ¿Y quién no?</p>
+            <p>La suerte existe, eso es algo que todos hemos podido comprobar o ver alguna vez en nuestra vida. En parte sigue unos parámetros especulativos y ciertamente desconocidos, pero con unas coincidencias o ritmos que en su vertiente más científica enlazan con los matemáticos cálculos de probabilidades.</p>
         </div>
     </div>
-    </div>
+</div>
 
-    <div class="container-fluid py-5">
-        <div class="container py-5">
-            <div class="row justify-content-center">
-                <div class="col-lg-8 text-center mb-5">
-                    <h2 class="font-weight-bold">Dirección de Análisis e Informática</h2>
-                    <p class="text-muted">Especialistas a cargo de la recopilación y estructuración de la data del portal.</p>
-                </div>
+<div class="container-fluid footer bg-light py-5" style="margin-top: 90px; border-top: 1px solid #ddd;">
+    <div class="container text-center py-4">
+        <div class="row">
+            <div class="col-12 mb-4">
+                <a href="index.html" class="navbar-brand m-0">
+                    <h1 class="m-0 mt-n2 display-4 text-primary"><span class="text-secondary">DATO</span>ANIMALITOS</h1>
+                </a>
             </div>
-            <div class="row justify-content-center">
-                <div class="col-lg-5">
-                    <div class="team-item bg-light rounded text-center p-4">
-                        <div class="team-img mx-auto mb-4">
-                            <img class="rounded-circle w-100 h-100" src="img/chanet.webp" style="object-fit: cover; max-width: 180px;">
-                        </div>
-                        <h3 class="font-weight-bold mb-2">Dr. Animalitos</h3>
-                        <p class="text-primary text-uppercase mb-3" style="letter-spacing: 1px; font-size: 0.9rem;">Analista Estadístico & Desarrollador</p>
-                        <p class="text-muted px-3">Especialista en estructuración de bases de datos lógicas con más de una década de experiencia analizando dinámicas de sorteos nacionales.</p>
-                        <div class="d-flex justify-content-center pt-2">
-                            <a class="btn btn-outline-secondary btn-social mr-2" href="https://www.instagram.com/dr.animalitos/" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
-                            <a class="btn btn-outline-secondary btn-social mr-2" href="https://www.facebook.com/Dr.Aniamlitos/" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook-f"></i></a>
-                            <a class="btn btn-outline-secondary btn-social mr-2" href="https://www.tiktok.com/@animalitotiktok" target="_blank" rel="noopener noreferrer"><i class="fab fa-twitter"></i></a>
-                        </div>
-                    </div>
+            <div class="col-12 mb-4">
+                <a class="btn btn-outline-secondary btn-social mr-2" href="https://www.instagram.com/dr.animalitos/" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
+                <a class="btn btn-outline-secondary btn-social mr-2" href="https://www.facebook.com/Dr.Aniamlitos/" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook-f"></i></a>
+                <a class="btn btn-outline-secondary btn-social mr-2" href="https://www.tiktok.com/@animalitotiktok" target="_blank" rel="noopener noreferrer"><i class="fab fa-twitter"></i></a>
+                <a class="btn btn-outline-secondary btn-social mr-2" href="https://www.youtube.com/@mishellealexandermatavera" target="_blank" rel="noopener noreferrer"><i class="fab fa-youtube"></i></a>
+            </div>
+            <div class="col-12 mb-3" style="display: flex; justify-content: center; gap: 15px; font-size: 14px;">
+                <a href="politica.html" class="text-secondary text-decoration-none">Política de Privacidad</a> | 
+                <a href="contact.html" class="text-secondary text-decoration-none">Contacto</a> |
+                <a href="about.html" class="text-secondary text-decoration-none">Términos del Servicio</a>
+            </div>
+            <div class="col-12 text-muted" style="font-size: 13px;">
+                <p>&copy; Copyright <strong><span>Dr. Animalitos</span></strong>. Todos los derechos reservados 2026.<br>
+                    Soporte técnico: <a href="mailto:alexandermata834@gmail.com">alexandermata834@gmail.com</a></p>
                 </div>
             </div>
         </div>
     </div>
+    <a href="#" class="btn btn-secondary px-2 back-to-top"><i class="fa fa-angle-double-up"></i></a>
 
-    <div class="container-fluid footer bg-light py-5" style="margin-top: 90px; border-top: 1px solid #ddd;">
-        <div class="container text-center py-4">
-            <div class="row">
-                <div class="col-12 mb-4">
-                    <a href="index.html" class="navbar-brand m-0">
-                        <h1 class="m-0 mt-n2 display-4 text-primary"><span class="text-secondary">DATO</span>ANIMALITOS</h1>
-                    </a>
-                </div>
-                <div class="col-12 mb-4">
-                    <a class="btn btn-outline-secondary btn-social mr-2" href="https://www.instagram.com/dr.animalitos/" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
-                    <a class="btn btn-outline-secondary btn-social mr-2" href="https://www.facebook.com/Dr.Aniamlitos/" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook-f"></i></a>
-                    <a class="btn btn-outline-secondary btn-social mr-2" href="https://www.tiktok.com/@animalitotiktok" target="_blank" rel="noopener noreferrer"><i class="fab fa-twitter"></i></a>
-                    <a class="btn btn-outline-secondary btn-social mr-2" href="https://www.youtube.com/@mishellealexandermatavera" target="_blank" rel="noopener noreferrer"><i class="fab fa-youtube"></i></a>
-                </div>
-                <div class="col-12 mb-3" style="display: flex; justify-content: center; gap: 15px; font-size: 14px;">
-                    <a href="politica.html" class="text-secondary text-decoration-none">Política de Privacidad</a> | 
-                    <a href="contact.html" class="text-secondary text-decoration-none">Contacto</a> |
-                    <a href="about.html" class="text-secondary text-decoration-none">Términos del Servicio</a>
-                </div>
-                <div class="col-12 text-muted" style="font-size: 13px;">
-                    <p>&copy; Copyright <strong><span>Dr. Animalitos</span></strong>. Todos los derechos reservados 2026.<br>
-                        Soporte técnico: <a href="mailto:alexandermata834@gmail.com">alexandermata834@gmail.com</a></p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <a href="#" class="btn btn-secondary px-2 back-to-top"><i class="fa fa-angle-double-up"></i></a>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/easing/easing.min.js"></script>
+    <script src="lib/waypoints/waypoints.min.js"></script>
+    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="lib/isotope/isotope.pkgd.min.js"></script>
+    <script src="lib/lightbox/js/lightbox.min.js"></script>
 
-        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-        <script src="lib/easing/easing.min.js"></script>
-        <script src="lib/waypoints/waypoints.min.js"></script>
-        <script src="lib/owlcarousel/owl.carousel.min.js"></script>
-        <script src="lib/isotope/isotope.pkgd.min.js"></script>
-        <script src="lib/lightbox/js/lightbox.min.js"></script>
+    <script src="js/main.js"></script>
 
-        <script src="js/main.js"></script>
-
-        <script>
+    <script>
         // CARGA DINÁMICA DE VIDEOS DE YOUTUBE (SIN POPUPS ACCESIBILIDAD)
-            window.loadYouTubeVideo = function(videoId, containerId) {
-                const container = document.getElementById(containerId);
-                if (!container) return;
+        window.loadYouTubeVideo = function(videoId, containerId) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
 
-                const thumbnailContainer = container.querySelector('.thumbnail-container');
-                if (!thumbnailContainer) return;
+            const thumbnailContainer = container.querySelector('.thumbnail-container');
+            if (!thumbnailContainer) return;
 
-                if (container.querySelector('.youtube-container')) return;
+            if (container.querySelector('.youtube-container')) return;
 
-                const videoContainer = document.createElement('div');
-                videoContainer.className = 'youtube-container';
+            const videoContainer = document.createElement('div');
+            videoContainer.className = 'youtube-container';
 
-                const iframe = document.createElement('iframe');
-                iframe.src = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&controls=1&rel=0&modestbranding=1&playsinline=1`;
-                iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
-                iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
-                iframe.allowFullscreen = true;
-                iframe.loading = "lazy";
-                iframe.title = "Análisis Estadístico Multimedia";
+            const iframe = document.createElement('iframe');
+            iframe.src = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&controls=1&rel=0&modestbranding=1&playsinline=1`;
+            iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+            iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+            iframe.allowFullscreen = true;
+            iframe.loading = "lazy";
+            iframe.title = "Análisis Estadístico Multimedia";
 
-                videoContainer.appendChild(iframe);
-                thumbnailContainer.style.opacity = '0';
-                setTimeout(() => {
-                    thumbnailContainer.replaceWith(videoContainer);
-                }, 100);
-            };
+            videoContainer.appendChild(iframe);
+            thumbnailContainer.style.opacity = '0';
+            setTimeout(() => {
+                thumbnailContainer.replaceWith(videoContainer);
+            }, 100);
+        };
 
-            $(document).ready(function() {
-                function actualizarFechaHora() {
-                    const ahora = new Date();
-                    const opcionesFecha = { year: 'numeric', month: '2-digit', day: '2-digit' };
-                    const opcionesHora = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
-                    const fechaStr = ahora.toLocaleDateString('es-ES', opcionesFecha);
-                    const horaStr = ahora.toLocaleTimeString('es-ES', opcionesHora);
-                    const elemento = document.getElementById('fechaHoraActual');
-                    if (elemento) {
-                        elemento.textContent = `${fechaStr} | ${horaStr}`;
-                    }
+        $(document).ready(function() {
+            function actualizarFechaHora() {
+                const ahora = new Date();
+                const opcionesFecha = { year: 'numeric', month: '2-digit', day: '2-digit' };
+                const opcionesHora = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
+                const fechaStr = ahora.toLocaleDateString('es-ES', opcionesFecha);
+                const horaStr = ahora.toLocaleTimeString('es-ES', opcionesHora);
+                const elemento = document.getElementById('fechaHoraActual');
+                if (elemento) {
+                    elemento.textContent = `${fechaStr} | ${horaStr}`;
                 }
-                actualizarFechaHora();
-                setInterval(actualizarFechaHora, 1000);
+            }
+            actualizarFechaHora();
+            setInterval(actualizarFechaHora, 1000);
+
+            // ===== SCRIPT PARA MENÚ DESPLEGABLE EN MÓVIL =====
+            // Para que funcione con clic en pantallas táctiles
+            if (window.innerWidth <= 991) {
+                $('nav.navbar ul li.dropdown > a').on('click', function(e) {
+                    e.preventDefault();
+                    var parentLi = $(this).parent('li');
+                    parentLi.toggleClass('open');
+                });
+            }
+            // También manejar resize para quitar la clase open si se cambia de tamaño
+            $(window).on('resize', function() {
+                if (window.innerWidth > 991) {
+                    $('nav.navbar ul li.dropdown').removeClass('open');
+                } else {
+                    // Re-asignar evento click si es necesario (evitar duplicados)
+                    $('nav.navbar ul li.dropdown > a').off('click').on('click', function(e) {
+                        e.preventDefault();
+                        var parentLi = $(this).parent('li');
+                        parentLi.toggleClass('open');
+                    });
+                }
             });
-        </script>
-    </body>
-    </html>
+        });
+    </script>
+</body>
+</html>
