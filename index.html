@@ -431,15 +431,9 @@
                     </a>
                     <nav id="navbar" class="navbar">
                         <ul>
-                            <li><a href="winner.html">WINNER CHOICE</a></li>
-                               <li class="dropdown">
-                                <a href="#">SUPER FIJOS</a>
-                                <ul>
-                                    <li><a href="dato_loto.html">Loto Activo</a></li>
-                                    <li><a href="dato_guacharo.html">Guacharo Activo</a></li>
-                                    <li><a href="dato_granja.html">Granja Millonaria</a></li>
-                                </ul>
-                            </li>
+                            <li><a href="winner.html">WINNER</a></li>
+                            <li><a href="tripletas.html">TRIPLETAS</a></li>
+                            <li><a href="tuloteria.html">LOTERIAS</a></li>
                             <li class="dropdown">
                                 <a href="#">ESTADISTICAS</a>
                                 <ul>
@@ -469,62 +463,82 @@
     <div class="container-fluid py-5">
         <div class="container py-3">
             <div class="row justify-content-center">
-                <div class="col-lg-10 text-center">
-                    <h1 class="font-weight-bold mb-4" style="font-size: 2.2rem; color: #333;">Estudio Estadístico y Proyecciones de Loterías de Animalitos</h1>
-                    <p class="text-muted style-text" style="font-size: 1.1rem; line-height: 1.8rem; text-align: justify;">
-                        Bienvenido a <strong>datoanimalitos</strong>, una plataforma de auditoría y análisis matemático estructurada para el seguimiento metódico de los sorteos por tabla de figuras en Venezuela. Nuestro enfoque no reside en la especulación o el azar intuitivo, sino en la aplicación estricta de la teoría de la probabilidad y el análisis de patrones históricos sobre los sistemas de extracción diaria más influyentes del país, tales como Lotto Activo, La Granja Millonaria, Guácharo Activo y El Granjazo.
-                    </p>
-                    <p class="text-muted style-text" style="font-size: 1.1rem; line-height: 1.8rem; text-align: justify;">
-                        En el ecosistema analítico moderno, las extracciones numéricas repetitivas responden a leyes de distribución de frecuencia. Cuando un terminal o figura acumula un retraso prolongado, los auditores de datos estudian el concepto de <strong>umbrales de saturación</strong>. La saturación estadística ocurre cuando la varianza del sistema se desplaza temporalmente de su media, generando acumulaciones secuenciales en ventanas horarias específicas. A través de este portal, desglosamos estas tendencias lógicas para proveer a los investigadores y aficionados herramientas métricas de alto nivel descriptivo.
-                    </p>
 
-                    <div class="tabla-mapeo-contenedor text-left mt-5">
-                        <h3 class="font-weight-bold mb-3" style="font-size: 1.4rem; color: #764ba2;"><i class="fas fa-table mr-2"></i> Estructura de Datos Estándar y Conversiones Especiales</h3>
-                        <p class="text-muted mb-4" style="font-size: 0.95rem;">Estructura utilizada por nuestros algoritmos para mapear el comportamiento histórico de los 38 terminales reglamentarios.</p>
-                        <div class="table-responsive">
-                            <table class="table table-mapeo">
-                                <thead>
-                                    <tr>
-                                        <th>Rango Operativo</th>
-                                        <th>Inicio de Serie</th>
-                                        <th>Cierre de Serie</th>
-                                        <th>Regla de Conversión Obligatoria</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td><strong>Bloque Inicial (01 - 25)</strong></td>
-                                        <td>01: Carnero</td>
-                                        <td>25: Gallina</td>
-                                        <td><span class="badge-conversion">Delfín = ID 0</span> (Base de Varianza)</td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Bloque Secundario (26 - 50)</strong></td>
-                                        <td>26: Vaca</td>
-                                        <td>50: Alacrán</td>
-                                        <td><span class="badge-conversion">Ballena = ID 00</span> (Terminal Especial)</td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Bloque de Cierre (51 - 75)</strong></td>
-                                        <td>51: PavReal</td>
-                                        <td>75: Guácharo</td>
-                                        <td>Monitoreo Simétrico Acumulado</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                <div class="col-lg-10 text-center">
+                  <div class="galeria-animales">
+                    <div class="grid-imagenes">
+                        <!-- Aquí irían las imágenes, ejemplo: -->
+                        <div class="animal-img">
+                            <img src="img/bloc/logo_guacharo.webp" style="object-fit: cover; max-width: 180px;" alt="Delfín - Número 0">
                         </div>
-                    </div><br>
-                    <p> Nuestra asesoría se ajusta a los estándares y lógicas en programación; cada una de nuestras orientaciones está sustentada por más de 12 años de experiencias en este maravilloso mundo de la numerología. Detrás de cada estrategia hay una lógica programada por expertos informáticos, plasmando nuestra experiencia. No son estadísticas creadas por inteligencia artificial. Son estrategias, técnicas sustentadas por más de 12 años de experiencias, plasmadas en esta maravillosa página web, datoanimalitos.github.io. ¿Por qué "GitHub"? Este potente servidor nos garantiza seguridad, confianza y un entorno agradable para cubrir todas las necesidades de nuestra comunidad.  </p>
+                    </div>
                 </div>
+
+                <h1 class="font-weight-bold mb-4" style="font-size: 2.2rem; color: #333;">Estudio Estadístico y Proyecciones de Loterías de Animalitos</h1>
+                <p class="text-muted style-text" style="font-size: 1.1rem; line-height: 1.8rem; text-align: justify;">
+                    Bienvenido a <strong>datoanimalitos</strong>, una plataforma de auditoría y análisis matemático estructurada para el seguimiento metódico de los sorteos por tabla de figuras en Venezuela. Nuestro enfoque no reside en la especulación o el azar intuitivo, sino en la aplicación estricta de la teoría de la probabilidad y el análisis de patrones históricos sobre los sistemas de extracción diaria más influyentes del país, tales como Lotto Activo, La Granja Millonaria, Guácharo Activo y El Granjazo.
+                </p>
+                <p class="text-muted style-text" style="font-size: 1.1rem; line-height: 1.8rem; text-align: justify;">
+                    En el ecosistema analítico moderno, las extracciones numéricas repetitivas responden a leyes de distribución de frecuencia. Cuando un terminal o figura acumula un retraso prolongado, los auditores de datos estudian el concepto de <strong>umbrales de saturación</strong>. La saturación estadística ocurre cuando la varianza del sistema se desplaza temporalmente de su media, generando acumulaciones secuenciales en ventanas horarias específicas. A través de este portal, desglosamos estas tendencias lógicas para proveer a los investigadores y aficionados herramientas métricas de alto nivel descriptivo.
+                </p>
+
+                <div class="tabla-mapeo-contenedor text-left mt-5">
+                    <h3 class="font-weight-bold mb-3" style="font-size: 1.4rem; color: #764ba2;"><i class="fas fa-table mr-2"></i> Estructura de Datos Estándar y Conversiones Especiales</h3>
+                    <p class="text-muted mb-4" style="font-size: 0.95rem;">Estructura utilizada por nuestros algoritmos para mapear el comportamiento histórico de los 38 terminales reglamentarios.</p>
+                    <div class="table-responsive">
+                        <table class="table table-mapeo">
+                            <thead>
+                                <tr>
+                                    <th>Rango Operativo</th>
+                                    <th>Inicio de Serie</th>
+                                    <th>Cierre de Serie</th>
+                                    <th>Regla de Conversión Obligatoria</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Bloque Inicial (01 - 25)</strong></td>
+                                    <td>01: Carnero</td>
+                                    <td>25: Gallina</td>
+                                    <td><span class="badge-conversion">Delfín = ID 0</span> (Base de Varianza)</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Bloque Secundario (26 - 50)</strong></td>
+                                    <td>26: Vaca</td>
+                                    <td>50: Alacrán</td>
+                                    <td><span class="badge-conversion">Ballena = ID 00</span> (Terminal Especial)</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Bloque de Cierre (51 - 75)</strong></td>
+                                    <td>51: PavReal</td>
+                                    <td>75: Guácharo</td>
+                                    <td>Monitoreo Simétrico Acumulado</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div><br>
+                <p> Nuestra asesoría se ajusta a los estándares y lógicas en programación; cada una de nuestras orientaciones está sustentada por más de 12 años de experiencias en este maravilloso mundo de la numerología. Detrás de cada estrategia hay una lógica programada por expertos informáticos, plasmando nuestra experiencia. No son estadísticas creadas por inteligencia artificial. Son estrategias, técnicas sustentadas por más de 12 años de experiencias, plasmadas en esta maravillosa página web, datoanimalitos.github.io. ¿Por qué "GitHub"? Este potente servidor nos garantiza seguridad, confianza y un entorno agradable para cubrir todas las necesidades de nuestra comunidad.  </p>
             </div>
         </div>
     </div>
+</div>
 </div>
 
 <div class="container-fluid py-5 bg-light">
     <div class="container py-5">
         <div class="row text-center justify-content-center">
             <div class="col-lg-10">
+
+                <div class="galeria-animales">
+                    <div class="grid-imagenes">
+                        <!-- Aquí irían las imágenes, ejemplo: -->
+                        <div class="animal-img">
+                            <img src="img/bloc/logo_loto.webp" style="object-fit: cover; max-width: 180px;" alt="Delfín - Número 0">
+                        </div>
+                    </div>
+                </div>
+
                 <h2 class="font-weight-bold mb-3">Monitoreo de Pronósticos del Día</h2>
                 <p class="text-dark lead mb-3 font-weight-normal" style="font-size: 1.15rem; line-height: 1.7rem;">
                     En esta sección encontrarás los 4 animalitos con más probabilidad de salir en los próximos resultados. ¿Cómo obtenemos esta orientación? Analizamos los últimos 7 días de la operadora, es decir, sus últimos 84 resultados. Nuestro análisis es muy profesional y aplica las últimas técnicas y conocimientos. Contamos con más de 12 años de experiencia en el comportamiento de secuencias.
@@ -585,17 +599,8 @@
     <div class="container py-5">
         <div class="row justify-content-center text-center mb-5">
             <div class="col-lg-8">
-                <h2 class="font-weight-bold">Guías Educativas de Numerología Aplicada</h2>
-                <p class="text-muted">Aprende la lógica analítica detrás de los sistemas de acumulación y probabilidades.</p>
-                <h2>¿Qué ocurre con un ticket ganador extraviado o deteriorado?</h2>
-                <p>Para todos los jugadores que realizan sus apuestas por medios electrónicos, es posible realizar la impresión de su ticket de juego tantas veces como lo consideren necesario y así solucionar su inconveniente en caso de extravió o deterioro de su boleto de juego. Ahora si en apostador cuenta con un único boleto de juego y este se extravía o se encuentra con perforaciones, enmiendas, ilegible, impreso por un centro no autorizado, presentado luego de los 3 días hábiles luego de realizado el sorteo o en posesión de un menor de edad, la casa de apuestas ni la lotería de Oriente procederán a cancelar el premio. Sin embargo la lotería de Oriente deja abierta la posibilidad a sus participantes para que introduzcan un reclamo formal si lo consideran necesario. Estos reclamos deberán ser canalizados de forma escrita en la oficina de la operadora, que para efectos del juego guácharo activo es Inversiones unida plus C.A R.I.F J-500182015.</p>
-                <h2>¿Cuáles son las obligaciones de los participantes de guácharo activo?</h2>
-                <p>De acuerdo al reglamento vigente de la lotería de Oriente, los participantes se convierten en el único responsable de preservar en buen estado los tickets juego, los cuáles constituyen el único documento probatorio y válido para realizar los reclamos de un premio. A diferencia de otros juegos de azar guácharo activo no establece en sus reglas de juego que los ganadores deban participar con carácter obligatorio en actividades publicitarias.</p>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-4 mb-4">
-               <div class="galeria-animales">
+
+              <div class="galeria-animales">
                 <div class="grid-imagenes">
                     <!-- Aquí irían las imágenes, ejemplo: -->
                     <div class="animal-img">
@@ -603,19 +608,45 @@
                     </div>
                 </div>
             </div>
-            <h4 class="font-weight-bold mb-3">Aprende a Hacer Tripletas</h4>
-            <h5 class="text-muted mb-3" style="font-size: 1rem;">Cálculo de combinaciones en rangos de sorteos</h5>
-            <p class="text-muted" style="text-align: justify;">El sistema de tripletas analiza la aparición conjunta de tres figuras en ventanas predefinidas de sorteos continuos. Estudiar estos intervalos ayuda a identificar periodos de alta volatilidad estadística en los resultados.</p>
-            <a href="aprende1.html" class="btn-borde-super-fijos">Ver Guía Completa</a>
+            
+            <h2 class="font-weight-bold">Guías Educativas de Numerología Aplicada</h2>
+            <p class="text-muted">Aprende la lógica analítica detrás de los sistemas de acumulación y probabilidades.</p>
+            <h2>¿Qué ocurre con un ticket ganador extraviado o deteriorado?</h2>
+            <p>Para todos los jugadores que realizan sus apuestas por medios electrónicos, es posible realizar la impresión de su ticket de juego tantas veces como lo consideren necesario y así solucionar su inconveniente en caso de extravió o deterioro de su boleto de juego. Ahora si en apostador cuenta con un único boleto de juego y este se extravía o se encuentra con perforaciones, enmiendas, ilegible, impreso por un centro no autorizado, presentado luego de los 3 días hábiles luego de realizado el sorteo o en posesión de un menor de edad, la casa de apuestas ni la lotería de Oriente procederán a cancelar el premio. Sin embargo la lotería de Oriente deja abierta la posibilidad a sus participantes para que introduzcan un reclamo formal si lo consideran necesario. Estos reclamos deberán ser canalizados de forma escrita en la oficina de la operadora, que para efectos del juego guácharo activo es Inversiones unida plus C.A R.I.F J-500182015.</p>
+            <h2>¿Cuáles son las obligaciones de los participantes de guácharo activo?</h2>
+            <p>De acuerdo al reglamento vigente de la lotería de Oriente, los participantes se convierten en el único responsable de preservar en buen estado los tickets juego, los cuáles constituyen el único documento probatorio y válido para realizar los reclamos de un premio. A diferencia de otros juegos de azar guácharo activo no establece en sus reglas de juego que los ganadores deban participar con carácter obligatorio en actividades publicitarias.</p>
         </div>
+    </div>
+    <div class="row">
         <div class="col-lg-4 mb-4">
-          <div class="galeria-animales">
-            <div class="grid-imagenes">
-                <!-- Aquí irían las imágenes, ejemplo: -->
-                <div class="animal-img">
-                    <img src="img/bloc/logo_selva.webp" style="object-fit: cover; max-width: 180px;" alt="Delfín - Número 0">
-
-                </div>
+          <div class="row justify-content-center text-center mb-5">
+            <div class="col-lg-8">
+                <div class="galeria-animales">
+                    <div class="grid-imagenes">
+                        <!-- Aquí irían las imágenes, ejemplo: -->
+                        <div class="animal-img">
+                            <img src="img/bloc/logo_granja.webp" style="object-fit: cover; max-width: 180px;" alt="Delfín - Número 0">
+                        </div>
+                    </div>
+                </div>  
+            </div>
+        </div>
+        <h4 class="font-weight-bold mb-3">Aprende a Hacer Tripletas</h4>
+        <h5 class="text-muted mb-3" style="font-size: 1rem;">Cálculo de combinaciones en rangos de sorteos</h5>
+        <p class="text-muted" style="text-align: justify;">El sistema de tripletas analiza la aparición conjunta de tres figuras en ventanas predefinidas de sorteos continuos. Estudiar estos intervalos ayuda a identificar periodos de alta volatilidad estadística en los resultados.</p>
+        <a href="aprende1.html" class="btn-borde-super-fijos">Ver Guía Completa</a>
+    </div>
+    <div class="col-lg-4 mb-4">
+        <div class="row justify-content-center text-center mb-5">
+            <div class="col-lg-8">
+                <div class="galeria-animales">
+                    <div class="grid-imagenes">
+                        <!-- Aquí irían las imágenes, ejemplo: -->
+                        <div class="animal-img">
+                            <img src="img/bloc/logo_selva.webp" style="object-fit: cover; max-width: 180px;" alt="Delfín - Número 0">
+                        </div>
+                    </div>
+                </div>  
             </div>
         </div>  
         <h4 class="font-weight-bold mb-3">Aprende a Sacar Súper Fijos</h4>
@@ -624,13 +655,16 @@
         <a href="aprende2.html" class="btn-borde-super-fijos">Ver Método Técnico</a>
     </div>
     <div class="col-lg-4 mb-4">
-       <div class="galeria-animales">
-        <div class="grid-imagenes">
-            <!-- Aquí irían las imágenes, ejemplo: -->
-            <div class="animal-img">
-                <img src="img/bloc/logo_granjita.webp" style="object-fit: cover; max-width: 180px;" alt="Delfín - Número 0">
-                
-            </div>
+      <div class="row justify-content-center text-center mb-5">
+        <div class="col-lg-8">
+            <div class="galeria-animales">
+                <div class="grid-imagenes">
+                    <!-- Aquí irían las imágenes, ejemplo: -->
+                    <div class="animal-img">
+                        <img src="img/bloc/logo_loto.webp" style="object-fit: cover; max-width: 180px;" alt="Delfín - Número 0">
+                    </div>
+                </div>
+            </div>  
         </div>
     </div>
     <h4 class="font-weight-bold mb-3">Estrategias y Técnicas</h4>
@@ -785,64 +819,74 @@
 <div class="container-fluid py-5 bg-light">
     <div class="container">
         <div class="section-title text-center mb-5">
-            <h2 class="font-weight-bold">Artículos de Gestión y Análisis Técnico</h2>
-            <h6>Estudia y aprende las mejores técnicas y estrategias, implementadas por los expertos y profesionales en la materia.</h6>
-            <p> Contenido educativo no promueve ni incentiva los juegos de azar.</p>
-            <p class="text-muted">Material pedagógico exclusivo enfocado en la disciplina y administración estadística.</p>
-            <p>La adicción a los juegos de azar y dinero es frecuente entre algunos jugadores. El juego ocupa así un lugar central en la vida de la persona, en detrimento de otras actividades habituales que marcan su vida, y por lo tanto tiene repercusiones a nivel profesional, relacional, social y financiero. La prevalencia mundial del juego patológico varía del 2% al 6% [ 1 ]. Hoy en día, se observa que en cada esquina, cada vez más togoleses, y especialmente jóvenes, se entregan a los juegos de azar y dinero. Este comportamiento se ve facilitado por la multiplicidad de lugares de juego en los diferentes distritos y en todo el territorio nacional. La falta de datos sobre el impacto real de estos juegos en la población de Togo parece enmascarar la magnitud del problema y, por lo tanto, no permite una buena orientación de las acciones a tomar. El objetivo general de este estudio fue describir el nivel de adicción al juego entre los jugadores de la Lotería Nacional Togolesa (LONATO) en la ciudad de Lomé y sus aglomeraciones.</p>
-        </div>
-        <div class="row">
-            <div class="col-lg-4 col-md-6">
-                <div class="article-card shadow-sm">
-                    <img class="article-img" src="img/bloc/blog-1.webp" alt="Sistemas de progresión estadística">
-                    <div class="article-info">
-                        <div class="article-category">Teoría Numérica</div>
-                        <h3 class="article-title">
-                            <a href="#">Sistemas Estadísticos de Progresión Aplicada</a>
-                        </h3>
-                        <p class="text-muted" style="font-size: 0.9rem;">Cómo evaluar la varianza matemática en muestras secuenciales limitadas.</p>
-                        <a href="info1.html#progresion-aplicada" class="btn-borde-super-fijos">Leer mas</a><br>
-                        <div class="article-meta">
-                            <span>Dr. Animalitos</span> | <span>2026</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <div class="col-lg-4 col-md-6">
-                <div class="article-card shadow-sm">
-                    <img class="article-img" src="img/bloc/blog-2.webp" alt="Gestión de capital en análisis">
-                    <div class="article-info">
-                        <div class="article-category">Control de Capital</div>
-                        <h3 class="article-title">
-                            <a href="#">Gestión del Bankroll en Modelos Probabilísticos</a>
-                        </h3>
-                        <p class="text-muted" style="font-size: 0.9rem;">Estrategias de distribución eficiente de recursos para mitigar rachas adversas.</p>
-                        <a href="info1.html#gestion-bankroll" class="btn-borde-super-fijos">Leer mas</a><br>
-                        <div class="article-meta">
-                            <span>Dr. Animalitos</span> | <span>2026</span>
-                        </div>
+           <div class="galeria-animales">
+            <div class="grid-imagenes">
+                <!-- Aquí irían las imágenes, ejemplo: -->
+                <div class="animal-img">
+                    <img src="img/bloc/logo_selva.webp" style="object-fit: cover; max-width: 180px;" alt="Delfín - Número 0">
+                </div>
+            </div>
+        </div>
+
+        <h2 class="font-weight-bold">Artículos de Gestión y Análisis Técnico</h2>
+        <h6>Estudia y aprende las mejores técnicas y estrategias, implementadas por los expertos y profesionales en la materia.</h6>
+        <p> Contenido educativo no promueve ni incentiva los juegos de azar.</p>
+        <p class="text-muted">Material pedagógico exclusivo enfocado en la disciplina y administración estadística.</p>
+        <p>La adicción a los juegos de azar y dinero es frecuente entre algunos jugadores. El juego ocupa así un lugar central en la vida de la persona, en detrimento de otras actividades habituales que marcan su vida, y por lo tanto tiene repercusiones a nivel profesional, relacional, social y financiero. La prevalencia mundial del juego patológico varía del 2% al 6% [ 1 ]. Hoy en día, se observa que en cada esquina, cada vez más togoleses, y especialmente jóvenes, se entregan a los juegos de azar y dinero. Este comportamiento se ve facilitado por la multiplicidad de lugares de juego en los diferentes distritos y en todo el territorio nacional. La falta de datos sobre el impacto real de estos juegos en la población de Togo parece enmascarar la magnitud del problema y, por lo tanto, no permite una buena orientación de las acciones a tomar. El objetivo general de este estudio fue describir el nivel de adicción al juego entre los jugadores de la Lotería Nacional Togolesa (LONATO) en la ciudad de Lomé y sus aglomeraciones.</p>
+    </div>
+    <div class="row">
+        <div class="col-lg-4 col-md-6">
+            <div class="article-card shadow-sm">
+                <img class="article-img" src="img/bloc/blog-1.webp" alt="Sistemas de progresión estadística">
+                <div class="article-info">
+                    <div class="article-category">Teoría Numérica</div>
+                    <h3 class="article-title">
+                        <a href="#">Sistemas Estadísticos de Progresión Aplicada</a>
+                    </h3>
+                    <p class="text-muted" style="font-size: 0.9rem;">Cómo evaluar la varianza matemática en muestras secuenciales limitadas.</p>
+                    <a href="info1.html#progresion-aplicada" class="btn-borde-super-fijos">Leer mas</a><br>
+                    <div class="article-meta">
+                        <span>Dr. Animalitos</span> | <span>2026</span>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-6">
-                <div class="article-card shadow-sm">
-                    <img class="article-img" src="img/bloc/blog-3.webp" alt="Psicología de análisis numérico">
-                    <div class="article-info">
-                        <div class="article-category">Sesgos Cognitivos</div>
-                        <h3 class="article-title">
-                            <a href="#">Control Emocional y Evitación de Sesgos en Sorteos</a>
-                        </h3>
-                        <p class="text-muted" style="font-size: 0.9rem;">Análisis psicológico para neutralizar la falacia del jugador en la toma de decisiones.</p>
-                        <a href="info1.html#control-emocional" class="btn-borde-super-fijos">Leer mas</a><br>
-                        <div class="article-meta">
-                            <span>Dr. Animalitos</span> | <span>2026</span>
-                        </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+            <div class="article-card shadow-sm">
+                <img class="article-img" src="img/bloc/blog-2.webp" alt="Gestión de capital en análisis">
+                <div class="article-info">
+                    <div class="article-category">Control de Capital</div>
+                    <h3 class="article-title">
+                        <a href="#">Gestión del Bankroll en Modelos Probabilísticos</a>
+                    </h3>
+                    <p class="text-muted" style="font-size: 0.9rem;">Estrategias de distribución eficiente de recursos para mitigar rachas adversas.</p>
+                    <a href="info1.html#gestion-bankroll" class="btn-borde-super-fijos">Leer mas</a><br>
+                    <div class="article-meta">
+                        <span>Dr. Animalitos</span> | <span>2026</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+            <div class="article-card shadow-sm">
+                <img class="article-img" src="img/bloc/blog-3.webp" alt="Psicología de análisis numérico">
+                <div class="article-info">
+                    <div class="article-category">Sesgos Cognitivos</div>
+                    <h3 class="article-title">
+                        <a href="#">Control Emocional y Evitación de Sesgos en Sorteos</a>
+                    </h3>
+                    <p class="text-muted" style="font-size: 0.9rem;">Análisis psicológico para neutralizar la falacia del jugador en la toma de decisiones.</p>
+                    <a href="info1.html#control-emocional" class="btn-borde-super-fijos">Leer mas</a><br>
+                    <div class="article-meta">
+                        <span>Dr. Animalitos</span> | <span>2026</span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </div>
 </div>
 
