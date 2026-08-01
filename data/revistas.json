@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "lastUpdate": "2026-08-01T08:05:53.017167-04:00",
+    "lastUpdate": "2026-08-01T10:37:42.357423-04:00",
     "fechaCartelera": "2026-08-01",
     "totalHipodromos": 25
   },
@@ -10,9 +10,9 @@
       "nombre": "Belterra Park",
       "logo": "img/winner/hip1.webp",
       "revistas": {
-        "espanol": "#"
+        "espanol": "pdfs/btp.pdf"
       },
-      "activo": false,
+      "activo": true,
       "ultimaActualizacion": "2026-08-01"
     },
     {
@@ -20,9 +20,9 @@
       "nombre": "Charles Town",
       "logo": "img/winner/hip2.webp",
       "revistas": {
-        "espanol": "#"
+        "espanol": "pdfs/ct.pdf"
       },
-      "activo": false,
+      "activo": true,
       "ultimaActualizacion": "2026-08-01"
     },
     {
@@ -30,9 +30,9 @@
       "nombre": "Delaware Park",
       "logo": "img/winner/hip3.webp",
       "revistas": {
-        "espanol": "#"
+        "espanol": "pdfs/del.pdf"
       },
-      "activo": false,
+      "activo": true,
       "ultimaActualizacion": "2026-08-01"
     },
     {
@@ -50,9 +50,9 @@
       "nombre": "Evangeline Downs",
       "logo": "img/winner/hip5.webp",
       "revistas": {
-        "espanol": "#"
+        "espanol": "pdfs/evd.pdf"
       },
-      "activo": false,
+      "activo": true,
       "ultimaActualizacion": "2026-08-01"
     },
     {
@@ -110,9 +110,9 @@
       "nombre": "Gulfstream Park",
       "logo": "img/winner/hip11.webp",
       "revistas": {
-        "espanol": "#"
+        "espanol": "pdfs/gp.pdf"
       },
-      "activo": false,
+      "activo": true,
       "ultimaActualizacion": "2026-08-01"
     },
     {
@@ -190,9 +190,9 @@
       "nombre": "Woodbine T-bred",
       "logo": "img/winner/hip19.webp",
       "revistas": {
-        "espanol": "#"
+        "espanol": "pdfs/wo.pdf"
       },
-      "activo": false,
+      "activo": true,
       "ultimaActualizacion": "2026-08-01"
     },
     {
@@ -210,9 +210,9 @@
       "nombre": "Los Alamitos QH",
       "logo": "img/winner/hip21.webp",
       "revistas": {
-        "espanol": "#"
+        "espanol": "pdfs/la.pdf"
       },
-      "activo": false,
+      "activo": true,
       "ultimaActualizacion": "2026-08-01"
     },
     {
@@ -220,9 +220,9 @@
       "nombre": "Monmouth Park",
       "logo": "img/winner/hip22.webp",
       "revistas": {
-        "espanol": "#"
+        "espanol": "pdfs/mth.pdf"
       },
-      "activo": false,
+      "activo": true,
       "ultimaActualizacion": "2026-08-01"
     },
     {
@@ -230,9 +230,9 @@
       "nombre": "Saratoga",
       "logo": "img/winner/hip23.webp",
       "revistas": {
-        "espanol": "#"
+        "espanol": "pdfs/sar.pdf"
       },
-      "activo": false,
+      "activo": true,
       "ultimaActualizacion": "2026-08-01"
     },
     {
