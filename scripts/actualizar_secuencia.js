@@ -1,6 +1,7 @@
 /**
  * SCRIPT PARA ACTUALIZAR SECUENCIA.JSON
- * Basado en la lógica de Gsm con >= 5 repeticiones
+ * Extrae SOLO los números que se repiten entre los 2 días más recientes de lotto.json
+ * Y los guarda como una nueva secuencia
  */
 
 const fs = require('fs');
@@ -17,21 +18,23 @@ const RUTA_SECUENCIA = path.join(__dirname, '../data/secuencia.json');
 // ============================================
 
 /**
- * Cuenta cuántos números se repiten entre dos arrays
+ * Encuentra los números que se repiten entre dos arrays
+ * Devuelve un array con los números únicos que aparecen en ambos
  */
-function contarRepeticiones(ultimo, penultimo) {
+function encontrarRepetidos(ultimo, penultimo) {
     if (!ultimo || !penultimo || !Array.isArray(ultimo) || !Array.isArray(penultimo)) {
-        return 0;
+        return [];
     }
 
     // Convertir a Set para comparación eficiente
     const setUltimo = new Set(ultimo.map(String));
     const setPenultimo = new Set(penultimo.map(String));
 
-    let repetidos = 0;
+    const repetidos = [];
     for (let val of setUltimo) {
         if (setPenultimo.has(val)) {
-            repetidos++;
+            // Mantener el valor original (si es "00" se queda como string)
+            repetidos.push(val);
         }
     }
     return repetidos;
@@ -39,7 +42,7 @@ function contarRepeticiones(ultimo, penultimo) {
 
 /**
  * Aplica la regla de secuencia:
- * - Si repeticiones >= 5: elimina la más antigua y agrega la más reciente
+ * - Si hay 5 o más repeticiones: elimina la más antigua y agrega los números repetidos
  * - Mantiene máximo 3 secuencias
  */
 function aplicarReglaSecuencia(lottoResultados, secuenciaActual) {
@@ -52,15 +55,19 @@ function aplicarReglaSecuencia(lottoResultados, secuenciaActual) {
     const ultimo = lottoResultados[lottoResultados.length - 1];
     const penultimo = lottoResultados[lottoResultados.length - 2];
 
-    const repeticiones = contarRepeticiones(ultimo, penultimo);
-    console.log(`📊 Repeticiones encontradas: ${repeticiones}`);
+    // Encontrar los números que se repiten
+    const numerosRepetidos = encontrarRepetidos(ultimo, penultimo);
+    const cantidadRepetidos = numerosRepetidos.length;
+    
+    console.log(`📊 Repeticiones encontradas: ${cantidadRepetidos}`);
+    console.log(`   Números repetidos: [${numerosRepetidos.join(', ')}]`);
 
     // Copia de seguridad de la secuencia actual
     let nuevaSecuencia = secuenciaActual ? [...secuenciaActual] : [];
 
-    // ✅ CAMBIO AQUÍ: De >= 6 a >= 5
-    if (repeticiones >= 5) {
-        console.log(`✅ ${repeticiones} repeticiones >= 5 → Aplicando rotación`);
+    // ✅ Si hay 5 o más repeticiones, actualizar la secuencia
+    if (cantidadRepetidos >= 5) {
+        console.log(`✅ ${cantidadRepetidos} repeticiones >= 5 → Aplicando rotación`);
 
         // 1. Eliminar la más antigua (primer elemento)
         if (nuevaSecuencia.length > 0) {
@@ -70,12 +77,13 @@ function aplicarReglaSecuencia(lottoResultados, secuenciaActual) {
             console.log('   ℹ️ No había secuencias para eliminar');
         }
 
-        // 2. Agregar la más reciente (último sorteo de lotto)
-        nuevaSecuencia.push([...ultimo]);
-        console.log(`   ➕ Secuencia agregada: [${ultimo.join(', ')}]`);
+        // 2. Agregar SOLO los números repetidos como nueva secuencia
+        nuevaSecuencia.push([...numerosRepetidos]);
+        console.log(`   ➕ Secuencia agregada: [${numerosRepetidos.join(', ')}]`);
 
     } else {
-        console.log(`ℹ️ ${repeticiones} repeticiones < 5 → No se aplica rotación`);
+        console.log(`ℹ️ ${cantidadRepetidos} repeticiones < 5 → No se aplica rotación`);
+        console.log('   Manteniendo secuencias actuales');
     }
 
     // Limitar a máximo 3 secuencias
@@ -127,7 +135,7 @@ function escribirJSON(ruta, data) {
 // ============================================
 
 function actualizarSecuencia() {
-    console.log('🔄 ACTUALIZANDO SECUENCIA.JSON');
+    console.log('🔄 ACTUALIZANDO SECUENCIA.JSON (SOLO REPETIDOS)');
     console.log('==========================================');
     console.log(`📅 ${new Date().toLocaleString('es-VE')}`);
     console.log('');
@@ -201,4 +209,4 @@ if (require.main === module) {
     process.exit(success ? 0 : 1);
 }
 
-module.exports = { actualizarSecuencia, contarRepeticiones, aplicarReglaSecuencia };
+module.exports = { actualizarSecuencia, encontrarRepetidos, aplicarReglaSecuencia };
