@@ -1,9 +1,6 @@
 /**
  * SCRIPT PARA ACTUALIZAR SECUENCIA.JSON
- * Basado en la lógica de Gsm:
- * - Analiza los 2 resultados más recientes de lotto.json
- * - Si hay 6 o más números repetidos, elimina la secuencia más antigua
- *   y agrega la más reciente (el último sorteo de lotto)
+ * Basado en la lógica de Gsm con >= 5 repeticiones
  */
 
 const fs = require('fs');
@@ -42,7 +39,7 @@ function contarRepeticiones(ultimo, penultimo) {
 
 /**
  * Aplica la regla de secuencia:
- * - Si repeticiones >= 6: elimina la más antigua y agrega la más reciente
+ * - Si repeticiones >= 5: elimina la más antigua y agrega la más reciente
  * - Mantiene máximo 3 secuencias
  */
 function aplicarReglaSecuencia(lottoResultados, secuenciaActual) {
@@ -61,8 +58,9 @@ function aplicarReglaSecuencia(lottoResultados, secuenciaActual) {
     // Copia de seguridad de la secuencia actual
     let nuevaSecuencia = secuenciaActual ? [...secuenciaActual] : [];
 
-    if (repeticiones >= 6) {
-        console.log(`✅ ${repeticiones} repeticiones >= 6 → Aplicando rotación`);
+    // ✅ CAMBIO AQUÍ: De >= 6 a >= 5
+    if (repeticiones >= 5) {
+        console.log(`✅ ${repeticiones} repeticiones >= 5 → Aplicando rotación`);
 
         // 1. Eliminar la más antigua (primer elemento)
         if (nuevaSecuencia.length > 0) {
@@ -77,7 +75,7 @@ function aplicarReglaSecuencia(lottoResultados, secuenciaActual) {
         console.log(`   ➕ Secuencia agregada: [${ultimo.join(', ')}]`);
 
     } else {
-        console.log(`ℹ️ ${repeticiones} repeticiones < 6 → No se aplica rotación`);
+        console.log(`ℹ️ ${repeticiones} repeticiones < 5 → No se aplica rotación`);
     }
 
     // Limitar a máximo 3 secuencias
