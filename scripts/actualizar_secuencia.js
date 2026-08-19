@@ -1,7 +1,8 @@
 /**
  * SCRIPT PARA ACTUALIZAR SECUENCIA.JSON
- * Extrae SOLO los números que se repiten entre los 2 días más recientes de lotto.json
- * Y los guarda como una nueva secuencia
+ * Cuenta números ÚNICOS que se repiten:
+ * - Un número que aparece 2 o más veces (en cualquier combinación) se cuenta UNA VEZ
+ * - Ejemplo: si el 21 aparece 3 veces, se cuenta como 1 repetición
  */
 
 const fs = require('fs');
@@ -18,31 +19,104 @@ const RUTA_SECUENCIA = path.join(__dirname, '../data/secuencia.json');
 // ============================================
 
 /**
- * Encuentra los números que se repiten entre dos arrays
- * Devuelve un array con los números únicos que aparecen en ambos
+ * Encuentra TODOS los números que se repiten (único por número)
+ * Un número que aparece 2+ veces se cuenta UNA VEZ
  */
-function encontrarRepetidos(ultimo, penultimo) {
+function encontrarNumerosRepetidosUnicos(ultimo, penultimo) {
     if (!ultimo || !penultimo || !Array.isArray(ultimo) || !Array.isArray(penultimo)) {
         return [];
     }
 
-    // Convertir a Set para comparación eficiente
-    const setUltimo = new Set(ultimo.map(String));
-    const setPenultimo = new Set(penultimo.map(String));
-
-    const repetidos = [];
-    for (let val of setUltimo) {
-        if (setPenultimo.has(val)) {
-            // Mantener el valor original (si es "00" se queda como string)
-            repetidos.push(val);
+    // Contar frecuencia de cada número en ambos días combinados
+    const frecuencia = {};
+    
+    // Contar en el último día
+    for (let val of ultimo) {
+        const key = String(val);
+        frecuencia[key] = (frecuencia[key] || 0) + 1;
+    }
+    
+    // Contar en el penúltimo día
+    for (let val of penultimo) {
+        const key = String(val);
+        frecuencia[key] = (frecuencia[key] || 0) + 1;
+    }
+    
+    // Seleccionar números que aparecen 2 o más veces (en total)
+    const numerosRepetidos = [];
+    for (let [key, count] of Object.entries(frecuencia)) {
+        if (count >= 2) {
+            // Mantener el formato original
+            numerosRepetidos.push(key === "00" ? "00" : parseInt(key));
         }
     }
-    return repetidos;
+    
+    return numerosRepetidos;
+}
+
+/**
+ * Cuenta cuántos números ÚNICOS se repiten (2 o más veces en total)
+ */
+function contarRepeticionesUnicas(ultimo, penultimo) {
+    if (!ultimo || !penultimo || !Array.isArray(ultimo) || !Array.isArray(penultimo)) {
+        return {
+            total: 0,
+            numeros: [],
+            detalle: 'No hay datos suficientes'
+        };
+    }
+
+    // Contar frecuencia de cada número en ambos días combinados
+    const frecuencia = {};
+    
+    // Contar en el último día
+    for (let val of ultimo) {
+        const key = String(val);
+        frecuencia[key] = (frecuencia[key] || 0) + 1;
+    }
+    
+    // Contar en el penúltimo día
+    for (let val of penultimo) {
+        const key = String(val);
+        frecuencia[key] = (frecuencia[key] || 0) + 1;
+    }
+    
+    // Seleccionar números que aparecen 2 o más veces
+    const numerosRepetidos = [];
+    let totalRepeticiones = 0;
+    
+    for (let [key, count] of Object.entries(frecuencia)) {
+        if (count >= 2) {
+            const numero = key === "00" ? "00" : parseInt(key);
+            numerosRepetidos.push(numero);
+            totalRepeticiones++;
+        }
+    }
+    
+    // Estadísticas detalladas
+    const stats = {
+        total: totalRepeticiones,
+        numeros: numerosRepetidos,
+        detalle: `Total de números únicos que se repiten: ${totalRepeticiones}`
+    };
+    
+    // Agregar información de frecuencia
+    const detalleFrecuencia = [];
+    for (let [key, count] of Object.entries(frecuencia)) {
+        if (count >= 2) {
+            const numero = key === "00" ? "00" : parseInt(key);
+            detalleFrecuencia.push(`${numero} (${count} veces)`);
+        }
+    }
+    stats.detalleFrecuencia = detalleFrecuencia.join(', ');
+    
+    return stats;
 }
 
 /**
  * Aplica la regla de secuencia:
- * - Si hay 5 o más repeticiones: elimina la más antigua y agrega los números repetidos
+ * - Cuenta números ÚNICOS que se repiten (2+ veces en total)
+ * - Si total >= 5: elimina la más antigua y agrega los números repetidos
  * - Mantiene máximo 3 secuencias
  */
 function aplicarReglaSecuencia(lottoResultados, secuenciaActual) {
@@ -55,19 +129,22 @@ function aplicarReglaSecuencia(lottoResultados, secuenciaActual) {
     const ultimo = lottoResultados[lottoResultados.length - 1];
     const penultimo = lottoResultados[lottoResultados.length - 2];
 
-    // Encontrar los números que se repiten
-    const numerosRepetidos = encontrarRepetidos(ultimo, penultimo);
-    const cantidadRepetidos = numerosRepetidos.length;
+    // CONTAR NÚMEROS ÚNICOS QUE SE REPITEN (2+ veces en total)
+    const estadisticas = contarRepeticionesUnicas(ultimo, penultimo);
+    const totalRepeticiones = estadisticas.total;
+    const numerosRepetidos = estadisticas.numeros;
     
-    console.log(`📊 Repeticiones encontradas: ${cantidadRepetidos}`);
+    console.log(`📊 Estadísticas de repeticiones (números únicos):`);
+    console.log(`   Total de números que se repiten: ${totalRepeticiones}`);
+    console.log(`   Detalle de frecuencia: ${estadisticas.detalleFrecuencia || 'Ninguno'}`);
     console.log(`   Números repetidos: [${numerosRepetidos.join(', ')}]`);
 
     // Copia de seguridad de la secuencia actual
     let nuevaSecuencia = secuenciaActual ? [...secuenciaActual] : [];
 
-    // ✅ Si hay 5 o más repeticiones, actualizar la secuencia
-    if (cantidadRepetidos >= 5) {
-        console.log(`✅ ${cantidadRepetidos} repeticiones >= 5 → Aplicando rotación`);
+    // ✅ Si hay 5 o más números ÚNICOS que se repiten, actualizar la secuencia
+    if (totalRepeticiones >= 5) {
+        console.log(`✅ ${totalRepeticiones} números únicos se repiten (>= 5) → Aplicando rotación`);
 
         // 1. Eliminar la más antigua (primer elemento)
         if (nuevaSecuencia.length > 0) {
@@ -82,7 +159,7 @@ function aplicarReglaSecuencia(lottoResultados, secuenciaActual) {
         console.log(`   ➕ Secuencia agregada: [${numerosRepetidos.join(', ')}]`);
 
     } else {
-        console.log(`ℹ️ ${cantidadRepetidos} repeticiones < 5 → No se aplica rotación`);
+        console.log(`ℹ️ ${totalRepeticiones} números únicos se repiten (< 5) → No se aplica rotación`);
         console.log('   Manteniendo secuencias actuales');
     }
 
@@ -135,7 +212,7 @@ function escribirJSON(ruta, data) {
 // ============================================
 
 function actualizarSecuencia() {
-    console.log('🔄 ACTUALIZANDO SECUENCIA.JSON (SOLO REPETIDOS)');
+    console.log('🔄 ACTUALIZANDO SECUENCIA.JSON (NÚMEROS ÚNICOS REPETIDOS)');
     console.log('==========================================');
     console.log(`📅 ${new Date().toLocaleString('es-VE')}`);
     console.log('');
@@ -209,4 +286,4 @@ if (require.main === module) {
     process.exit(success ? 0 : 1);
 }
 
-module.exports = { actualizarSecuencia, encontrarRepetidos, aplicarReglaSecuencia };
+module.exports = { actualizarSecuencia, encontrarNumerosRepetidosUnicos, contarRepeticionesUnicas, aplicarReglaSecuencia };
