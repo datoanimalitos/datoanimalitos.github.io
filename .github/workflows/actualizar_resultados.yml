@@ -2,8 +2,8 @@ name: 🤖 Actualización Automática de Resultados
 
 on:
   schedule:
-    - cron: '0 3 * * *'  # 11:00 PM hora Venezuela (03:00 UTC)
-  workflow_dispatch:  # Esto permite que lo pruebes manualmente ahora mismo
+    - cron: '0 3 * * *'  # 11:00 PM hora Venezuela (3:00 UTC)
+  workflow_dispatch:  # Permite ejecución manual
 
 permissions:
   contents: write
@@ -23,17 +23,24 @@ jobs:
       - name: 📦 Instalar dependencias
         run: |
           mkdir -p scripts
-          echo '{"dependencies":{"node-fetch":"^3.3.2"}}' > scripts/package.json
-          cd scripts && npm install
+          cd scripts
+          echo '{"dependencies":{"node-fetch":"^3.3.2"}}' > package.json
+          npm install
 
-      - name: 🔍 Ejecutar Script de Actualización
+      - name: 🔍 Obtener resultados de la API (Lotto, Guácharo, Granja, Granjazo)
+        id: obtener
         run: node scripts/obtener_de_api.js
-        env:
-          NODE_TLS_REJECT_UNAUTHORIZED: '0'
+        continue-on-error: true
 
-      - name: 📤 Guardar cambios (Commit y Push)
+      - name: 🔄 Actualizar secuencia.json con la lógica de Gsm
+        if: success()
+        run: node scripts/actualizar_secuencia.js
+        continue-on-error: true
+
+      - name: 📤 Commit y push de todos los cambios
         run: |
           git config --global user.name "Dr. Animalitos Bot"
-          git config --global user.email "bot@datoanimalitos.github.io"
+          git config --global user.email "bot@tuanimalito.github.io"
           git add data/*.json
-          git diff --quiet && git diff --staged --quiet || (git commit -m "🤖 Actualización automática $(date +'%d/%m/%Y')" && git push)
+          git diff --quiet && git diff --staged --quiet || git commit -m "🤖 Actualización automática $(date +'%d/%m/%Y')"
+          git push
