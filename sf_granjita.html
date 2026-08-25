@@ -13,8 +13,8 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>Datos de Granjita Millonaria</title>
-    <meta name="description" content="Pronósticos y resultados de Granjita Millonaria.">
+    <title>Datos de La Granjita</title>
+    <meta name="description" content="Pronósticos y resultados de La Granjita.">
     <link rel="canonical" href="https://tuanimalito.github.io/sf_granjita.html" />
     <link rel="icon" href="./favicon.ico" type="image/x-icon">
     <link rel="icon" href="./favicon.webp" type="image/webp" sizes="512x512">
@@ -1489,13 +1489,13 @@
                     <a href="tripletas.html"><i class="bi bi-feather"></i> Tripletas</a>
                     <a href="estadisticas_loto.html"><i class="bi bi-feather"></i> Estadísticas</a>
                     <a href="sf_loto.html"><i class="bi bi-dice-6-fill"></i> Lotto Activo</a>
-                    <a href="sf_granjita.html"><i class="bi bi-flower2"></i> Granjita Millonaria</a>
+                    <a href="sf_granjita.html"><i class="bi bi-flower2"></i> La Granjita</a>
                     <a href="sf_granjazo.html"><i class="bi bi-feather"></i> Granjazo</a>
                     <a href="sf_guacharo.html"><i class="bi bi-feather"></i> Guácharo Activo</a>
                 </div>
             </div>
 
-            <h1>Datos de Granjita Millonaria</h1>
+            <h1>Datos de La Granjita</h1>
             <div class="sub">SISTEMA EN LÍNEA</div>
         </div>
 
@@ -1546,7 +1546,7 @@
             <div class="tarjeta-cortesia tarjeta-dato">
                 <h3><i class="bi bi-info-circle-fill"></i> Los mas Calientes para Hoy</h3>
                 <div style="text-align: center; color: #8ab8ff; font-size: 0.8rem; margin-bottom: 10px;">
-                    <i class="bi bi-gift-fill"></i> Dr.animalitos <i class="bi bi-lock-fill"></i> solo Granjita Millonaria
+                    <i class="bi bi-gift-fill"></i> Dr.animalitos <i class="bi bi-lock-fill"></i> solo La Granjita
                 </div>
                 <div id="cortesia-contenido" style="min-height: 150px;">
                     <div class="no-data">Cargando cortesía...</div>
@@ -1555,7 +1555,7 @@
 
             <!-- TRIPLETAS - PÚRPURA (PREMIUM BLOQUEADO) - 4 números -->
             <div class="tarjeta-tripletas tarjeta-dato" id="tripletasCard">
-                <h3><i class="bi bi-grid-3x3-gap-fill"></i> Tripletas Granjita Millonaria</h3>
+                <h3><i class="bi bi-grid-3x3-gap-fill"></i> Tripletas La Granjita</h3>
                 <div style="text-align: center; color: #d1b3ff; font-size: 0.8rem; margin-bottom: 10px;">
                     <i class="bi bi-arrow-right"></i> Bases + Acompañantes de Super Fijos
                 </div>
@@ -1650,7 +1650,7 @@
             <div class="tarjeta-gsm tarjeta-dato" id="gsmCard">
                 <h3><i class="bi bi-robot"></i> Generador de Secuencias</h3>
                 <div style="text-align: center; color: #ffd700; font-size: 0.8rem; margin-bottom: 12px;">
-                    <i class="bi bi-arrow-right"></i> Secuencias solo para Granjita Millonaria
+                    <i class="bi bi-arrow-right"></i> Secuencias solo para La Granjita
                 </div>
 
                 <!-- Overlay Premium para GSM -->
@@ -1724,7 +1724,7 @@
                     <div class="gsm-instrucciones">
                         <h4><i class="bi bi-question-circle-fill"></i> ¿Cómo usar esta herramienta?</h4>
                         <p><i class="bi bi-1-circle-fill"></i> Los pronósticos se hacen en calientes.</p>
-                        <p><i class="bi bi-2-circle-fill"></i> Se debe hacer seguimiento a los resultados que va generando la operadora Granjita Millonaria.</p>
+                        <p><i class="bi bi-2-circle-fill"></i> Se debe hacer seguimiento a los resultados que va generando la operadora La Granjita.</p>
                         <p><i class="bi bi-3-circle-fill"></i> Al ingresar el número, la herramienta se conecta con una base de datos analizando los últimos 1000 resultados de la operadora (los últimos 3 meses), buscando comportamientos, patrones y ciclos de apariciones.</p>
                         <p><i class="bi bi-4-circle-fill"></i> La herramienta le devolverá una serie de números que son los que tienen todas las probabilidades de salir en los próximos resultados.</p>
                     </div>
@@ -1814,7 +1814,7 @@
     </div>
 
     <div style="padding: 15px; font-size: 0.8rem; color: #8fa095; text-align: center;">
-        <p>Nuestros <strong>Super Fijos</strong> se generan mediante un algoritmo de análisis, identificando patrones secuenciales en Granjita Millonaria.</p>
+        <p>Nuestros <strong>Super Fijos</strong> se generan mediante un algoritmo de análisis, identificando patrones secuenciales en La Granjita.</p>
     </div>
 
     <footer class="footer">
@@ -1850,7 +1850,7 @@
 
         let usuarioAutenticado = false;
         const JSON_URL = 'data/granjita.json';
-        const SECUENCIA_URL = 'data/secuencia.json';
+        const SECUENCIA_URL = 'data/secuencia_granjita.json';
 
         const animales = {
             '00': 'ballena',
@@ -2617,18 +2617,18 @@
             try {
                 const response = await fetch(`${SECUENCIA_URL}?_=${new Date().getTime()}`);
                 if (!response.ok) {
-                    console.warn('⚠️ No se pudo cargar secuencia.json, usando datos de respaldo');
+                    console.warn('⚠️ No se pudo cargar secuencia_granjita.json, usando datos de respaldo');
                     return false;
                 }
                 const data = await response.json();
                 if (data && data.resultados && Array.isArray(data.resultados)) {
                     gsmSecuenciaResultados = data.resultados;
-                    console.log(`✅ secuencia.json cargado: ${gsmSecuenciaResultados.length} secuencias`);
+                    console.log(`✅ secuencia_granjita.json cargado: ${gsmSecuenciaResultados.length} secuencias`);
                     return true;
                 }
                 return false;
             } catch (error) {
-                console.error('❌ Error al cargar secuencia.json:', error);
+                console.error('❌ Error al cargar secuencia_granjita.json:', error);
                 return false;
             }
         }
