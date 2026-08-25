@@ -1,26 +1,32 @@
 {
   "resultados": [
     [
+      29,
       17,
-      23,
-      9,
-      22,
-      29
-    ],
-    [
-      4,
-      16,
       11,
       14,
-      17
+      23
     ],
     [
-      33,
-      22,
+      "00",
+      18,
+      34,
+      4,
+      16
+    ],
+    [
+      9,
       29,
-      19,
-      5
+      7,
+      "00",
+      33
     ]
   ],
-  "fecha_actualizacion": "2026-08-22T03:41:32.608Z"
+  "fecha_actualizacion": "2026-08-25T04:28:21.631Z",
+  "metadata": {
+    "origen": "granjita.json",
+    "numeros_por_secuencia": 5,
+    "total_secuencias": 3,
+    "generado_por": "actualizar_secuencia_granjita.js"
+  }
 }
