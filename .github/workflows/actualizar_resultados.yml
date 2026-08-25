@@ -27,7 +27,7 @@ jobs:
           echo '{"dependencies":{"node-fetch":"^3.3.2"}}' > package.json
           npm install
 
-      - name: 🔍 Obtener resultados de la API (Lotto, Guácharo, Granja, Granjazo, Granjita)
+      - name: 🔍 Obtener resultados de la API
         id: obtener
         run: node scripts/obtener_de_api.js
         continue-on-error: true
@@ -45,6 +45,11 @@ jobs:
       - name: 🔄 Actualizar secuencia_granjita.json (La Granjita)
         if: success()
         run: node scripts/actualizar_secuencia_granjita.js
+        continue-on-error: true
+
+      - name: 🔄 Actualizar secuencia_selva.json (Selva Plus)
+        if: success()
+        run: node scripts/actualizar_secuencia_selva.js
         continue-on-error: true
 
       - name: 📤 Commit y push de todos los cambios
