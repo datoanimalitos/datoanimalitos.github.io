@@ -4,9 +4,9 @@
  * - Guácharo Activo (12 números) ✅ API oficial
  * - Granja Millonaria (10 números) ✅ API oficial
  * - Granjazo Millonario (10 números) ✅ API oficial
- * - La Granjita (12 números) ✅ API oficial
+ * - La Granjita (12 números) ✅ API oficial CORREGIDA
  * - Lotto Activo (12 números) ✅ API OFICIAL con orden correcto
- * - Selva Plus (12 números) ✅ NUEVA API oficial
+ * - Selva Plus (12 números) ✅ API oficial CORREGIDA
  * 
  * MI REY, CON ESTA VERSIÓN LOS 3 DÍAS QUEDAN CORRECTAMENTE ROTADOS 🚀
  */
@@ -130,7 +130,7 @@ const CONFIG = {
     }
   },
 
-  // 🌱 LA GRANJITA (12 números)
+  // 🌱 LA GRANJITA (12 números) - CORREGIDO
   granjita: {
     apiUrl: 'https://lagranjita.com/Resource?a=la-granjita-lista',
     numeros: 12,
@@ -144,33 +144,48 @@ const CONFIG = {
       
       console.log(`   📡 Buscando fecha: ${fechaStr}`);
       
-      const response = await fetch(CONFIG.granjita.apiUrl, {
-        headers: {
-          'User-Agent': 'DrAnimalitosBot/1.0',
-          'Accept': 'application/json'
+      try {
+        const response = await fetch(CONFIG.granjita.apiUrl, {
+          headers: {
+            'User-Agent': 'DrAnimalitosBot/1.0',
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        if (!response.ok) {
+          console.log(`   ⚠️ HTTP ${response.status}: ${response.statusText}`);
+          return null;
         }
-      });
-      
-      if (!response.ok) return null;
-      const data = await response.json();
-      
-      const diaData = data.find(d => d.fecha === fechaStr);
-      if (!diaData || !diaData.rss) {
-        console.log(`   ⚠️ No hay datos para ${fechaStr}`);
+        
+        // Verificar si la respuesta es JSON válido
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+          console.log(`   ⚠️ La API no devuelve JSON, probando con fetch directo...`);
+          // Intentar con fetch directo sin headers estrictos
+          const fallbackResponse = await fetch(CONFIG.granjita.apiUrl);
+          if (!fallbackResponse.ok) return null;
+          const text = await fallbackResponse.text();
+          try {
+            const data = JSON.parse(text);
+            return procesarGranjitaData(data, fechaStr);
+          } catch (e) {
+            console.log(`   ❌ No se pudo parsear la respuesta`);
+            return null;
+          }
+        }
+        
+        const data = await response.json();
+        return procesarGranjitaData(data, fechaStr);
+        
+      } catch (error) {
+        console.log(`   ❌ Error de conexión: ${error.message}`);
         return null;
       }
-      
-      const numeros = diaData.rss
-        .filter(item => item.nu)
-        .map(item => parseInt(item.nu))
-        .slice(0, 12);
-      
-      console.log(`   ✅ Encontrados ${numeros.length} números`);
-      return numeros.length === 12 ? numeros : null;
     }
   },
 
-  // 🐆 SELVA PLUS (12 números) - NUEVA Lotería
+  // 🐆 SELVA PLUS (12 números) - CORREGIDO
   selva: {
     apiUrl: 'https://www.selvaplus.com/Resource?a=selva-plus-lista',
     numeros: 12,
@@ -184,30 +199,44 @@ const CONFIG = {
       
       console.log(`   📡 Buscando fecha: ${fechaStr}`);
       
-      const response = await fetch(CONFIG.selva.apiUrl, {
-        headers: {
-          'User-Agent': 'DrAnimalitosBot/1.0',
-          'Accept': 'application/json'
+      try {
+        const response = await fetch(CONFIG.selva.apiUrl, {
+          headers: {
+            'User-Agent': 'DrAnimalitosBot/1.0',
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        if (!response.ok) {
+          console.log(`   ⚠️ HTTP ${response.status}: ${response.statusText}`);
+          return null;
         }
-      });
-      
-      if (!response.ok) return null;
-      const data = await response.json();
-      
-      const diaData = data.find(d => d.fecha === fechaStr);
-      if (!diaData || !diaData.rss) {
-        console.log(`   ⚠️ No hay datos para ${fechaStr}`);
+        
+        // Verificar si la respuesta es JSON válido
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+          console.log(`   ⚠️ La API no devuelve JSON, probando con fetch directo...`);
+          // Intentar con fetch directo sin headers estrictos
+          const fallbackResponse = await fetch(CONFIG.selva.apiUrl);
+          if (!fallbackResponse.ok) return null;
+          const text = await fallbackResponse.text();
+          try {
+            const data = JSON.parse(text);
+            return procesarSelvaData(data, fechaStr);
+          } catch (e) {
+            console.log(`   ❌ No se pudo parsear la respuesta`);
+            return null;
+          }
+        }
+        
+        const data = await response.json();
+        return procesarSelvaData(data, fechaStr);
+        
+      } catch (error) {
+        console.log(`   ❌ Error de conexión: ${error.message}`);
         return null;
       }
-      
-      // Selva Plus tiene 12 sorteos diarios
-      const numeros = diaData.rss
-        .filter(item => item.nu)
-        .map(item => parseInt(item.nu))
-        .slice(0, 12);
-      
-      console.log(`   ✅ Encontrados ${numeros.length} números`);
-      return numeros.length === 12 ? numeros : null;
     }
   },
 
@@ -273,6 +302,42 @@ const CONFIG = {
     }
   }
 };
+
+// ============================================
+// FUNCIONES AUXILIARES PARA PROCESAR DATOS
+// ============================================
+
+function procesarGranjitaData(data, fechaStr) {
+  const diaData = data.find(d => d.fecha === fechaStr);
+  if (!diaData || !diaData.rss) {
+    console.log(`   ⚠️ No hay datos para ${fechaStr}`);
+    return null;
+  }
+  
+  const numeros = diaData.rss
+    .filter(item => item.nu)
+    .map(item => parseInt(item.nu))
+    .slice(0, 12);
+  
+  console.log(`   ✅ Encontrados ${numeros.length} números`);
+  return numeros.length === 12 ? numeros : null;
+}
+
+function procesarSelvaData(data, fechaStr) {
+  const diaData = data.find(d => d.fecha === fechaStr);
+  if (!diaData || !diaData.rss) {
+    console.log(`   ⚠️ No hay datos para ${fechaStr}`);
+    return null;
+  }
+  
+  const numeros = diaData.rss
+    .filter(item => item.nu)
+    .map(item => parseInt(item.nu))
+    .slice(0, 12);
+  
+  console.log(`   ✅ Encontrados ${numeros.length} números`);
+  return numeros.length === 12 ? numeros : null;
+}
 
 // ============================================
 // FUNCIONES AUXILIARES
@@ -345,7 +410,6 @@ async function main() {
   console.log('');
 
   const resultados = {};
-  // AGREGAMOS 'selva' a la lista
   const loterias = ['guacharo', 'granja', 'granjazo', 'granjita', 'selva', 'lotto'];
   const numerosEsperados = { guacharo: 12, granja: 10, granjazo: 10, granjita: 12, selva: 12, lotto: 12 };
 
