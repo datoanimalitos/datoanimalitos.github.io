@@ -1,11 +1,12 @@
 /**
  * SCRIPT DEFINITIVO - Dr. Animalitos
- * CONFIGURACIÓN PARA LAS 4 LOTERÍAS:
+ * CONFIGURACIÓN PARA LAS 6 LOTERÍAS:
  * - Guácharo Activo (12 números) ✅ API oficial
  * - Granja Millonaria (10 números) ✅ API oficial
  * - Granjazo Millonario (10 números) ✅ API oficial
- * - La Granjita (12 números) ✅ NUEVA API oficial
+ * - La Granjita (12 números) ✅ API oficial
  * - Lotto Activo (12 números) ✅ API OFICIAL con orden correcto
+ * - Selva Plus (12 números) ✅ NUEVA API oficial
  * 
  * MI REY, CON ESTA VERSIÓN LOS 3 DÍAS QUEDAN CORRECTAMENTE ROTADOS 🚀
  */
@@ -14,7 +15,7 @@ const fs = require('fs');
 const path = require('path');
 
 // ============================================
-// CONFIGURACIÓN DE LAS 5 LOTERÍAS
+// CONFIGURACIÓN DE LAS 6 LOTERÍAS
 // ============================================
 const CONFIG = {
   // 🦜 GUÁCHARO ACTIVO (12 números)
@@ -129,7 +130,7 @@ const CONFIG = {
     }
   },
 
-  // 🌱 LA GRANJITA (12 números) - NUEVA Lotería
+  // 🌱 LA GRANJITA (12 números)
   granjita: {
     apiUrl: 'https://lagranjita.com/Resource?a=la-granjita-lista',
     numeros: 12,
@@ -159,7 +160,47 @@ const CONFIG = {
         return null;
       }
       
-      // La Granjita tiene 12 sorteos: 8am, 9am, 10am, 11am, 12pm, 1pm, 2pm, 3pm, 4pm, 5pm, 6pm, 7pm
+      const numeros = diaData.rss
+        .filter(item => item.nu)
+        .map(item => parseInt(item.nu))
+        .slice(0, 12);
+      
+      console.log(`   ✅ Encontrados ${numeros.length} números`);
+      return numeros.length === 12 ? numeros : null;
+    }
+  },
+
+  // 🐆 SELVA PLUS (12 números) - NUEVA Lotería
+  selva: {
+    apiUrl: 'https://www.selvaplus.com/Resource?a=selva-plus-lista',
+    numeros: 12,
+    nombre: 'Selva Plus',
+    archivo: 'selva.json',
+    procesar: async (fecha) => {
+      const dia = String(fecha.getDate()).padStart(2, '0');
+      const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+      const año = fecha.getFullYear();
+      const fechaStr = `${dia}/${mes}/${año}`;
+      
+      console.log(`   📡 Buscando fecha: ${fechaStr}`);
+      
+      const response = await fetch(CONFIG.selva.apiUrl, {
+        headers: {
+          'User-Agent': 'DrAnimalitosBot/1.0',
+          'Accept': 'application/json'
+        }
+      });
+      
+      if (!response.ok) return null;
+      const data = await response.json();
+      
+      const diaData = data.find(d => d.fecha === fechaStr);
+      if (!diaData || !diaData.rss) {
+        console.log(`   ⚠️ No hay datos para ${fechaStr}`);
+        return null;
+      }
+      
+      // Selva Plus tiene 12 sorteos diarios
       const numeros = diaData.rss
         .filter(item => item.nu)
         .map(item => parseInt(item.nu))
@@ -304,9 +345,9 @@ async function main() {
   console.log('');
 
   const resultados = {};
-  // AGREGAMOS 'granjita' a la lista
-  const loterias = ['guacharo', 'granja', 'granjazo', 'granjita', 'lotto'];
-  const numerosEsperados = { guacharo: 12, granja: 10, granjazo: 10, granjita: 12, lotto: 12 };
+  // AGREGAMOS 'selva' a la lista
+  const loterias = ['guacharo', 'granja', 'granjazo', 'granjita', 'selva', 'lotto'];
+  const numerosEsperados = { guacharo: 12, granja: 10, granjazo: 10, granjita: 12, selva: 12, lotto: 12 };
 
   for (const loteria of loterias) {
     console.log(`\n🔍 Buscando ${CONFIG[loteria].nombre}...`);
