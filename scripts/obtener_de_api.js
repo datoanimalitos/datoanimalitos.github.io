@@ -1,10 +1,11 @@
 /**
  * SCRIPT DEFINITIVO - Dr. Animalitos
- * CONFIGURACIÓN PARA LAS 6 LOTERÍAS - CON RESPALDO PARA LA GRANJITA
+ * CONFIGURACIÓN PARA LAS 6 LOTERÍAS - CON PUPPETEER PARA LA GRANJITA
  */
 
 const fs = require('fs');
 const path = require('path');
+const puppeteer = require('puppeteer');
 
 // ============================================
 // FUNCIONES PARA FORMATEAR FECHA
@@ -22,17 +23,6 @@ function formatearFechaGranjita(fecha) {
   const mes = String(fecha.getMonth() + 1).padStart(2, '0');
   const dia = String(fecha.getDate()).padStart(2, '0');
   return `${año}-${mes}-${dia}`;
-}
-
-// ============================================
-// DATOS DE RESPALDO PARA LA GRANJITA
-// ============================================
-
-function obtenerDatosRespaldoGranjita(fecha) {
-  // Datos de respaldo de La Granjita
-  const datosRespaldo = [25, 1, 4, 9, 5, 32, 29, 12, 11, 15, 9, 18];
-  console.log(`   📋 Usando datos de respaldo: ${datosRespaldo.join(', ')}`);
-  return datosRespaldo;
 }
 
 // ============================================
@@ -116,58 +106,72 @@ const CONFIG = {
     }
   },
 
-  // 🌱 LA GRANJITA - INTENTANDO CON LOTTERLY + RESPALDO
+  // 🌱 LA GRANJITA - CON PUPPETEER PARA COOKIE FRESCA
   granjita: {
-    apiUrl: 'https://api.lotterly.co/v1/results/la-granjita/',
     numeros: 12,
     nombre: 'La Granjita',
     archivo: 'granjita.json',
     procesar: async (fecha) => {
-      const fechaStr = formatearFechaAPI(fecha);
+      const fechaStr = formatearFechaGranjita(fecha);
       
-      // Nombres posibles para La Granjita en Lotterly
-      const nombres = ['la-granjita', 'granjita', 'la_granjita', 'granjita-millonaria'];
-      
-      for (const nombre of nombres) {
-        const url = `https://api.lotterly.co/v1/results/${nombre}/?exact_date=${fechaStr}&extended=true&_t=${Date.now()}`;
-        console.log(`   📡 Probando: ${url}`);
+      try {
+        console.log(`   📡 Usando Puppeteer para obtener cookie fresca...`);
         
-        try {
-          const response = await fetch(url, { 
-            headers: {
-              ...HEADERS,
-              'Origin': 'https://lagranjita.com',
-              'Referer': 'https://lagranjita.com/'
-            }
-          });
-          
-          if (!response.ok) {
-            console.log(`   ⚠️ HTTP ${response.status} - Intentando otro nombre...`);
-            continue;
-          }
-          
-          const data = await response.json();
-          
-          if (Array.isArray(data) && data.length === 12) {
-            const numeros = data.map(sorteo => {
-              const resultado = sorteo.results?.[0]?.result;
-              return resultado === "00" ? "00" : parseInt(resultado);
-            });
-            console.log(`   ✅ Encontrados ${numeros.length} números desde Lotterly (${nombre})`);
-            return numeros;
-          }
-          
-          if (Array.isArray(data) && data.length === 12 && data.every(n => typeof n === 'number' || n === "00")) {
-            console.log(`   ✅ Encontrados ${data.length} números desde Lotterly (${nombre})`);
-            return data.map(n => n === "00" ? "00" : parseInt(n));
-          }
-        } catch (error) {
-          console.log(`   ❌ Error con ${nombre}: ${error.message}`);
+        const browser = await puppeteer.launch({ 
+          headless: 'new',
+          args: ['--no-sandbox', '--disable-setuid-sandbox']
+        });
+        
+        const page = await browser.newPage();
+        await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36');
+        
+        // Ir a la página principal para obtener la cookie
+        await page.goto('https://lagranjita.com/', { waitUntil: 'networkidle2' });
+        await page.waitForTimeout(3000);
+        
+        // Obtener la cookie
+        const cookies = await page.cookies();
+        const cfCookie = cookies.find(c => c.name === 'cf_clearance');
+        
+        if (!cfCookie) {
+          console.log(`   ⚠️ No se pudo obtener la cookie de Cloudflare`);
+          await browser.close();
+          return null;
         }
+        
+        console.log(`   ✅ Cookie obtenida: ${cfCookie.value.substring(0, 30)}...`);
+        
+        // Ahora hacer la petición a la API con la cookie fresca
+        const url = `https://lagranjita.com/api/results.json?date=${fechaStr}&productId=1&t=${Date.now()}`;
+        console.log(`   📡 URL: ${url}`);
+        
+        // Configurar la cookie en la página
+        await page.setCookie(cfCookie);
+        
+        const response = await page.goto(url, { waitUntil: 'networkidle2' });
+        const data = await response.json();
+        
+        await browser.close();
+        
+        // Extraer los números
+        const resultados = data["LA GRANJITA"] || [];
+        const numeros = resultados.map(item => {
+          const valor = item.result_value;
+          return valor === "00" ? "00" : parseInt(valor);
+        });
+        
+        if (numeros.length === 12) {
+          console.log(`   ✅ Encontrados ${numeros.length} números desde La Granjita`);
+          console.log(`   📊 Números: ${numeros.join(', ')}`);
+          return numeros;
+        } else {
+          console.log(`   ⚠️ Solo ${numeros.length} números, esperando 12`);
+          return null;
+        }
+      } catch (error) {
+        console.log(`   ❌ Error: ${error.message}`);
+        return null;
       }
-      
-      // Si todo falla, usar datos de respaldo
-      return obtenerDatosRespaldoGranjita(fecha);
     }
   },
 
