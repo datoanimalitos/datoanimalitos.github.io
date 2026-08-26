@@ -1,11 +1,11 @@
 {
   "resultados": [
     [
-      "00",
-      30,
-      12,
-      0,
-      1
+      5,
+      24,
+      19,
+      28,
+      27
     ],
     [
       5,
@@ -22,7 +22,7 @@
       27
     ]
   ],
-  "fecha_actualizacion": "2026-08-26T00:35:54.710Z",
+  "fecha_actualizacion": "2026-08-26T00:41:30.368Z",
   "metadata": {
     "origen": "selva.json",
     "numeros_por_secuencia": 5,
