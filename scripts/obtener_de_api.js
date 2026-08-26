@@ -34,11 +34,6 @@ const HEADERS = {
 };
 
 // ============================================
-// COOKIE PARA LA GRANJITA (actualizada)
-// ============================================
-const COOKIE_GRANJITA = 'cf_clearance=zhADwaNc4.k_3SNGTDAFUhjXG3GjPnWoK5HGHImP5Oo-1787710201-1.2.1.1-KrEEvMuMmnyfHrPgBYn1wc3UkXt3lJ5S1bsvl3IOoVs3jNWyj4rPfyFuCeanBMc2F3plwkHThLUkojKBenLPuebNLQSCovaiYGsOX9WNDqBPU7bNX2P7z_bvAcLqZzQVG0S3TMXgRVbx_p2k6TR_eZIxV8uruZg_BNOkoxvJzMRWBHftvGSXgRSU28eTukAaZozDaP8bxY6wouB3.lW4blUzW2rNAaXmw1LkFjobrUGZKzOijKCwf7PvcqsCQ.5Ymr5YZ8xHAnMsqTDrs9ebLEMHm1MpVnu05YH5HIJ56j9xYjycMt.n38aN3J.Ea1CLwEEyfGqZEKmA6vMGAPj1ct77732gvXxjIk2PqEvsVqA';
-
-// ============================================
 // CONFIGURACIÓN DE LAS 6 LOTERÍAS
 // ============================================
 const CONFIG = {
@@ -110,52 +105,30 @@ const CONFIG = {
     }
   },
 
-  // 🌱 LA GRANJITA - CON URL DIRECTA Y COOKIE
+  // 🌱 LA GRANJITA - OPCIÓN A (API Lotterly)
   granjita: {
-    apiUrl: 'https://lagranjita.com/api/results.json',
+    apiUrl: 'https://api.lotterly.co/v1/results/la-granjita/',
     numeros: 12,
     nombre: 'La Granjita',
     archivo: 'granjita.json',
     procesar: async (fecha) => {
-      const fechaStr = formatearFechaGranjita(fecha);
-      const url = `${CONFIG.granjita.apiUrl}?date=${fechaStr}&productId=1&t=${Date.now()}`;
-      
+      const fechaStr = formatearFechaAPI(fecha);
+      const url = `${CONFIG.granjita.apiUrl}?exact_date=${fechaStr}&extended=true&_t=${Date.now()}`;
       console.log(`   📡 URL: ${url}`);
-      
       try {
-        const response = await fetch(url, {
-          headers: {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36',
-            'Accept': 'application/json, text/plain, */*',
-            'Accept-Language': 'es-US,es-419;q=0.9,es;q=0.8',
-            'Referer': 'https://lagranjita.com/',
-            'Origin': 'https://lagranjita.com',
-            'Cookie': COOKIE_GRANJITA
-          }
-        });
-        
+        const response = await fetch(url, { headers: HEADERS });
         if (!response.ok) {
           console.log(`   ⚠️ HTTP ${response.status}: ${response.statusText}`);
           return null;
         }
-        
         const data = await response.json();
-        
-        // Extraer los números de la respuesta
-        const resultados = data["LA GRANJITA"] || [];
-        const numeros = resultados.map(item => {
-          const valor = item.result_value;
-          return valor === "00" ? "00" : parseInt(valor);
-        });
-        
-        if (numeros.length === 12) {
-          console.log(`   ✅ Encontrados ${numeros.length} números desde La Granjita`);
-          console.log(`   📊 Números: ${numeros.join(', ')}`);
-          return numeros;
-        } else {
-          console.log(`   ⚠️ Solo ${numeros.length} números, esperando 12`);
-          return null;
+        if (Array.isArray(data) && data.length === 12) {
+          return data.map(sorteo => {
+            const resultado = sorteo.results?.[0]?.result;
+            return resultado === "00" ? "00" : parseInt(resultado);
+          });
         }
+        return null;
       } catch (error) {
         console.log(`   ❌ Error: ${error.message}`);
         return null;
