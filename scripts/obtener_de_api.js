@@ -1,18 +1,22 @@
 /**
  * SCRIPT DEFINITIVO - Dr. Animalitos
- * CONFIGURACIÓN PARA LAS 6 LOTERÍAS:
- * - Guácharo Activo (12 números) ✅ API oficial
- * - Granja Millonaria (10 números) ✅ API oficial
- * - Granjazo Millonario (10 números) ✅ API oficial
- * - La Granjita (12 números) ✅ API oficial CORREGIDA
- * - Lotto Activo (12 números) ✅ API OFICIAL con orden correcto
- * - Selva Plus (12 números) ✅ API oficial CORREGIDA
- * 
- * MI REY, CON ESTA VERSIÓN LOS 3 DÍAS QUEDAN CORRECTAMENTE ROTADOS 🚀
+ * CONFIGURACIÓN PARA LAS 6 LOTERÍAS - CON FORMATO DE FECHA CORREGIDO
  */
 
 const fs = require('fs');
 const path = require('path');
+
+// ============================================
+// FUNCIÓN PARA FORMATEAR FECHA CORRECTAMENTE
+// ============================================
+
+function formatearFechaAPI(fecha) {
+  // Formato: 2026-8-25 (sin ceros en mes y día)
+  const año = fecha.getFullYear();
+  const mes = fecha.getMonth() + 1; // Sin padStart
+  const dia = fecha.getDate(); // Sin padStart
+  return `${año}-${mes}-${dia}`;
+}
 
 // ============================================
 // CONFIGURACIÓN DE LAS 6 LOTERÍAS
@@ -25,19 +29,25 @@ const CONFIG = {
     nombre: 'Guácharo Activo',
     archivo: 'guacharo.json',
     procesar: async (fecha) => {
-      const fechaStr = fecha.toISOString().split('T')[0];
+      const fechaStr = formatearFechaAPI(fecha);
       const url = `${CONFIG.guacharo.apiUrl}?exact_date=${fechaStr}&extended=true&_t=${Date.now()}`;
       
       console.log(`   📡 URL: ${url}`);
       
       const response = await fetch(url, {
         headers: {
-          'User-Agent': 'DrAnimalitosBot/1.0',
-          'Accept': 'application/json'
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36',
+          'Accept': 'application/json',
+          'Origin': 'https://www.selvaplus.com',
+          'Referer': 'https://www.selvaplus.com/'
         }
       });
       
-      if (!response.ok) return null;
+      if (!response.ok) {
+        console.log(`   ⚠️ HTTP ${response.status}: ${response.statusText}`);
+        return null;
+      }
+      
       const data = await response.json();
       
       if (Array.isArray(data) && data.length === 12) {
@@ -130,26 +140,25 @@ const CONFIG = {
     }
   },
 
-  // 🌱 LA GRANJITA (12 números) - CORREGIDO
+  // 🌱 LA GRANJITA (12 números) - CON FORMATO CORRECTO
   granjita: {
-    apiUrl: 'https://lagranjita.com/Resource?a=la-granjita-lista',
+    apiUrl: 'https://api.lotterly.co/v1/results/la-granjita/',
     numeros: 12,
     nombre: 'La Granjita',
     archivo: 'granjita.json',
     procesar: async (fecha) => {
-      const dia = String(fecha.getDate()).padStart(2, '0');
-      const mes = String(fecha.getMonth() + 1).padStart(2, '0');
-      const año = fecha.getFullYear();
-      const fechaStr = `${dia}/${mes}/${año}`;
+      const fechaStr = formatearFechaAPI(fecha);
+      const url = `${CONFIG.granjita.apiUrl}?exact_date=${fechaStr}&extended=true&_t=${Date.now()}`;
       
-      console.log(`   📡 Buscando fecha: ${fechaStr}`);
+      console.log(`   📡 URL: ${url}`);
       
       try {
-        const response = await fetch(CONFIG.granjita.apiUrl, {
+        const response = await fetch(url, {
           headers: {
-            'User-Agent': 'DrAnimalitosBot/1.0',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36',
             'Accept': 'application/json',
-            'Content-Type': 'application/json'
+            'Origin': 'https://lagranjita.com',
+            'Referer': 'https://lagranjita.com/'
           }
         });
         
@@ -158,53 +167,50 @@ const CONFIG = {
           return null;
         }
         
-        // Verificar si la respuesta es JSON válido
-        const contentType = response.headers.get('content-type');
-        if (!contentType || !contentType.includes('application/json')) {
-          console.log(`   ⚠️ La API no devuelve JSON, probando con fetch directo...`);
-          // Intentar con fetch directo sin headers estrictos
-          const fallbackResponse = await fetch(CONFIG.granjita.apiUrl);
-          if (!fallbackResponse.ok) return null;
-          const text = await fallbackResponse.text();
-          try {
-            const data = JSON.parse(text);
-            return procesarGranjitaData(data, fechaStr);
-          } catch (e) {
-            console.log(`   ❌ No se pudo parsear la respuesta`);
-            return null;
+        const data = await response.json();
+        
+        if (Array.isArray(data) && data.length === 12) {
+          return data.map(sorteo => {
+            const resultado = sorteo.results?.[0]?.result;
+            return resultado === "00" ? "00" : parseInt(resultado);
+          });
+        }
+        
+        // Si no es array de 12, intentar extraer de otra estructura
+        if (data && data.resultados && Array.isArray(data.resultados)) {
+          const numeros = data.resultados.slice(0, 12);
+          if (numeros.length === 12) {
+            return numeros.map(n => n === "00" ? "00" : parseInt(n));
           }
         }
         
-        const data = await response.json();
-        return procesarGranjitaData(data, fechaStr);
-        
+        return null;
       } catch (error) {
-        console.log(`   ❌ Error de conexión: ${error.message}`);
+        console.log(`   ❌ Error: ${error.message}`);
         return null;
       }
     }
   },
 
-  // 🐆 SELVA PLUS (12 números) - CORREGIDO
+  // 🐆 SELVA PLUS (12 números) - CON FORMATO CORRECTO
   selva: {
-    apiUrl: 'https://www.selvaplus.com/Resource?a=selva-plus-lista',
+    apiUrl: 'https://api.lotterly.co/v1/results/selva-plus/',
     numeros: 12,
     nombre: 'Selva Plus',
     archivo: 'selva.json',
     procesar: async (fecha) => {
-      const dia = String(fecha.getDate()).padStart(2, '0');
-      const mes = String(fecha.getMonth() + 1).padStart(2, '0');
-      const año = fecha.getFullYear();
-      const fechaStr = `${dia}/${mes}/${año}`;
+      const fechaStr = formatearFechaAPI(fecha);
+      const url = `${CONFIG.selva.apiUrl}?exact_date=${fechaStr}&extended=true&_t=${Date.now()}`;
       
-      console.log(`   📡 Buscando fecha: ${fechaStr}`);
+      console.log(`   📡 URL: ${url}`);
       
       try {
-        const response = await fetch(CONFIG.selva.apiUrl, {
+        const response = await fetch(url, {
           headers: {
-            'User-Agent': 'DrAnimalitosBot/1.0',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36',
             'Accept': 'application/json',
-            'Content-Type': 'application/json'
+            'Origin': 'https://www.selvaplus.com',
+            'Referer': 'https://www.selvaplus.com/'
           }
         });
         
@@ -213,28 +219,26 @@ const CONFIG = {
           return null;
         }
         
-        // Verificar si la respuesta es JSON válido
-        const contentType = response.headers.get('content-type');
-        if (!contentType || !contentType.includes('application/json')) {
-          console.log(`   ⚠️ La API no devuelve JSON, probando con fetch directo...`);
-          // Intentar con fetch directo sin headers estrictos
-          const fallbackResponse = await fetch(CONFIG.selva.apiUrl);
-          if (!fallbackResponse.ok) return null;
-          const text = await fallbackResponse.text();
-          try {
-            const data = JSON.parse(text);
-            return procesarSelvaData(data, fechaStr);
-          } catch (e) {
-            console.log(`   ❌ No se pudo parsear la respuesta`);
-            return null;
+        const data = await response.json();
+        
+        if (Array.isArray(data) && data.length === 12) {
+          return data.map(sorteo => {
+            const resultado = sorteo.results?.[0]?.result;
+            return resultado === "00" ? "00" : parseInt(resultado);
+          });
+        }
+        
+        // Si no es array de 12, intentar extraer de otra estructura
+        if (data && data.resultados && Array.isArray(data.resultados)) {
+          const numeros = data.resultados.slice(0, 12);
+          if (numeros.length === 12) {
+            return numeros.map(n => n === "00" ? "00" : parseInt(n));
           }
         }
         
-        const data = await response.json();
-        return procesarSelvaData(data, fechaStr);
-        
+        return null;
       } catch (error) {
-        console.log(`   ❌ Error de conexión: ${error.message}`);
+        console.log(`   ❌ Error: ${error.message}`);
         return null;
       }
     }
@@ -302,42 +306,6 @@ const CONFIG = {
     }
   }
 };
-
-// ============================================
-// FUNCIONES AUXILIARES PARA PROCESAR DATOS
-// ============================================
-
-function procesarGranjitaData(data, fechaStr) {
-  const diaData = data.find(d => d.fecha === fechaStr);
-  if (!diaData || !diaData.rss) {
-    console.log(`   ⚠️ No hay datos para ${fechaStr}`);
-    return null;
-  }
-  
-  const numeros = diaData.rss
-    .filter(item => item.nu)
-    .map(item => parseInt(item.nu))
-    .slice(0, 12);
-  
-  console.log(`   ✅ Encontrados ${numeros.length} números`);
-  return numeros.length === 12 ? numeros : null;
-}
-
-function procesarSelvaData(data, fechaStr) {
-  const diaData = data.find(d => d.fecha === fechaStr);
-  if (!diaData || !diaData.rss) {
-    console.log(`   ⚠️ No hay datos para ${fechaStr}`);
-    return null;
-  }
-  
-  const numeros = diaData.rss
-    .filter(item => item.nu)
-    .map(item => parseInt(item.nu))
-    .slice(0, 12);
-  
-  console.log(`   ✅ Encontrados ${numeros.length} números`);
-  return numeros.length === 12 ? numeros : null;
-}
 
 // ============================================
 // FUNCIONES AUXILIARES
