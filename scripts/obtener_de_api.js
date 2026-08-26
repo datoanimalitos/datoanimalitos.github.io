@@ -105,30 +105,49 @@ const CONFIG = {
     }
   },
 
-  // 🌱 LA GRANJITA - OPCIÓN A (API Lotterly)
+  // 🌱 LA GRANJITA - OPCIÓN B (EMULACIÓN DE NAVEGADOR COMPLETA)
   granjita: {
-    apiUrl: 'https://api.lotterly.co/v1/results/la-granjita/',
+    apiUrl: 'https://lagranjita.com/api/results.json',
     numeros: 12,
     nombre: 'La Granjita',
     archivo: 'granjita.json',
     procesar: async (fecha) => {
-      const fechaStr = formatearFechaAPI(fecha);
-      const url = `${CONFIG.granjita.apiUrl}?exact_date=${fechaStr}&extended=true&_t=${Date.now()}`;
+      const fechaStr = formatearFechaGranjita(fecha);
+      const url = `${CONFIG.granjita.apiUrl}?date=${fechaStr}&productId=1&t=${Date.now()}`;
       console.log(`   📡 URL: ${url}`);
+      
       try {
-        const response = await fetch(url, { headers: HEADERS });
+        const response = await fetch(url, {
+          headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+            'Accept': 'application/json, text/plain, */*',
+            'Accept-Language': 'es-ES,es;q=0.9,en;q=0.8',
+            'Sec-Fetch-Dest': 'empty',
+            'Sec-Fetch-Mode': 'cors',
+            'Sec-Fetch-Site': 'same-origin',
+            'Referer': 'https://lagranjita.com/',
+            'Origin': 'https://lagranjita.com'
+          }
+        });
+        
         if (!response.ok) {
           console.log(`   ⚠️ HTTP ${response.status}: ${response.statusText}`);
           return null;
         }
+        
         const data = await response.json();
-        if (Array.isArray(data) && data.length === 12) {
-          return data.map(sorteo => {
-            const resultado = sorteo.results?.[0]?.result;
-            return resultado === "00" ? "00" : parseInt(resultado);
-          });
+        const resultados = data["LA GRANJITA"] || [];
+        const numeros = resultados.map(item => {
+          const valor = item.result_value;
+          return valor === "00" ? "00" : parseInt(valor);
+        });
+        
+        if (numeros.length === 12) {
+          return numeros;
+        } else {
+          console.log(`   ⚠️ Se obtuvieron ${numeros.length} números de 12 requeridos`);
+          return null;
         }
-        return null;
       } catch (error) {
         console.log(`   ❌ Error: ${error.message}`);
         return null;
