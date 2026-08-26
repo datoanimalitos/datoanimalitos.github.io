@@ -1,6 +1,6 @@
 /**
  * SCRIPT DEFINITIVO - Dr. Animalitos
- * CONFIGURACIÓN PARA LAS 6 LOTERÍAS - CON FORMATO DE FECHA CORREGIDO
+ * CONFIGURACIÓN PARA LAS 6 LOTERÍAS - COMPLETAMENTE CORREGIDO
  */
 
 const fs = require('fs');
@@ -15,6 +15,14 @@ function formatearFechaAPI(fecha) {
   const año = fecha.getFullYear();
   const mes = fecha.getMonth() + 1; // Sin padStart
   const dia = fecha.getDate(); // Sin padStart
+  return `${año}-${mes}-${dia}`;
+}
+
+function formatearFechaGranjita(fecha) {
+  // Formato: 2026-08-25 (con ceros)
+  const año = fecha.getFullYear();
+  const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+  const dia = String(fecha.getDate()).padStart(2, '0');
   return `${año}-${mes}-${dia}`;
 }
 
@@ -37,9 +45,7 @@ const CONFIG = {
       const response = await fetch(url, {
         headers: {
           'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36',
-          'Accept': 'application/json',
-          'Origin': 'https://www.selvaplus.com',
-          'Referer': 'https://www.selvaplus.com/'
+          'Accept': 'application/json'
         }
       });
       
@@ -140,15 +146,15 @@ const CONFIG = {
     }
   },
 
-  // 🌱 LA GRANJITA (12 números) - CON FORMATO CORRECTO
+  // 🌱 LA GRANJITA (12 números) - CON URL CORRECTA
   granjita: {
-    apiUrl: 'https://api.lotterly.co/v1/results/la-granjita/',
+    apiUrl: 'https://lagranjita.com/api/results.json',
     numeros: 12,
     nombre: 'La Granjita',
     archivo: 'granjita.json',
     procesar: async (fecha) => {
-      const fechaStr = formatearFechaAPI(fecha);
-      const url = `${CONFIG.granjita.apiUrl}?exact_date=${fechaStr}&extended=true&_t=${Date.now()}`;
+      const fechaStr = formatearFechaGranjita(fecha);
+      const url = `${CONFIG.granjita.apiUrl}?date=${fechaStr}&productId=1&t=${Date.now()}`;
       
       console.log(`   📡 URL: ${url}`);
       
@@ -157,8 +163,8 @@ const CONFIG = {
           headers: {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36',
             'Accept': 'application/json',
-            'Origin': 'https://lagranjita.com',
-            'Referer': 'https://lagranjita.com/'
+            'Referer': 'https://lagranjita.com/',
+            'Origin': 'https://lagranjita.com'
           }
         });
         
@@ -169,22 +175,29 @@ const CONFIG = {
         
         const data = await response.json();
         
-        if (Array.isArray(data) && data.length === 12) {
-          return data.map(sorteo => {
-            const resultado = sorteo.results?.[0]?.result;
-            return resultado === "00" ? "00" : parseInt(resultado);
-          });
+        // La API devuelve un objeto con resultados
+        // Estructura esperada: { results: [ ... ] } o directamente un array
+        let numeros = [];
+        
+        if (data && data.results && Array.isArray(data.results)) {
+          numeros = data.results.map(item => {
+            const num = item.result || item.number || item.nu || item;
+            return num === "00" ? "00" : parseInt(num);
+          }).filter(n => !isNaN(n) || n === "00");
+        } else if (Array.isArray(data)) {
+          numeros = data.map(item => {
+            const num = item.result || item.number || item.nu || item;
+            return num === "00" ? "00" : parseInt(num);
+          }).filter(n => !isNaN(n) || n === "00");
         }
         
-        // Si no es array de 12, intentar extraer de otra estructura
-        if (data && data.resultados && Array.isArray(data.resultados)) {
-          const numeros = data.resultados.slice(0, 12);
-          if (numeros.length === 12) {
-            return numeros.map(n => n === "00" ? "00" : parseInt(n));
-          }
+        if (numeros.length === 12) {
+          console.log(`   ✅ Encontrados ${numeros.length} números`);
+          return numeros;
+        } else {
+          console.log(`   ⚠️ Solo ${numeros.length} números, esperando 12`);
+          return null;
         }
-        
-        return null;
       } catch (error) {
         console.log(`   ❌ Error: ${error.message}`);
         return null;
@@ -192,7 +205,7 @@ const CONFIG = {
     }
   },
 
-  // 🐆 SELVA PLUS (12 números) - CON FORMATO CORRECTO
+  // 🐆 SELVA PLUS (12 números)
   selva: {
     apiUrl: 'https://api.lotterly.co/v1/results/selva-plus/',
     numeros: 12,
@@ -228,14 +241,6 @@ const CONFIG = {
           });
         }
         
-        // Si no es array de 12, intentar extraer de otra estructura
-        if (data && data.resultados && Array.isArray(data.resultados)) {
-          const numeros = data.resultados.slice(0, 12);
-          if (numeros.length === 12) {
-            return numeros.map(n => n === "00" ? "00" : parseInt(n));
-          }
-        }
-        
         return null;
       } catch (error) {
         console.log(`   ❌ Error: ${error.message}`);
@@ -244,7 +249,7 @@ const CONFIG = {
     }
   },
 
-  // 🎲 LOTTO ACTIVO (12 números) - CON ORDEN CORRECTO
+  // 🎲 LOTTO ACTIVO (12 números)
   lotto: {
     apiUrl: 'https://lottoactivo.com/core/process.php',
     numeros: 12,
