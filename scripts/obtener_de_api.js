@@ -5,7 +5,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const puppeteer = require('puppeteer');
+let puppeteer = null;
 
 // ============================================
 // FUNCIONES PARA FORMATEAR FECHA
@@ -106,7 +106,7 @@ const CONFIG = {
     }
   },
 
-  // 🌱 LA GRANJITA - CON PUPPETEER PARA COOKIE FRESCA
+  // 🌱 LA GRANJITA - CON PUPPETEER
   granjita: {
     numeros: 12,
     nombre: 'La Granjita',
@@ -114,10 +114,36 @@ const CONFIG = {
     procesar: async (fecha) => {
       const fechaStr = formatearFechaGranjita(fecha);
       
+      // Intentar primero con Lotterly
+      const nombres = ['la-granjita', 'granjita', 'la_granjita'];
+      for (const nombre of nombres) {
+        const url = `https://api.lotterly.co/v1/results/${nombre}/?exact_date=${formatearFechaAPI(fecha)}&extended=true&_t=${Date.now()}`;
+        console.log(`   📡 Probando Lotterly: ${url}`);
+        try {
+          const response = await fetch(url, { headers: HEADERS });
+          if (response.ok) {
+            const data = await response.json();
+            if (Array.isArray(data) && data.length === 12) {
+              const numeros = data.map(s => {
+                const r = s.results?.[0]?.result;
+                return r === "00" ? "00" : parseInt(r);
+              });
+              console.log(`   ✅ Encontrados ${numeros.length} números desde Lotterly (${nombre})`);
+              return numeros;
+            }
+          }
+        } catch (e) {}
+      }
+      
+      // Si Lotterly falla, usar Puppeteer
+      console.log(`   📡 Usando Puppeteer para obtener datos de La Granjita...`);
+      
       try {
-        console.log(`   📡 Usando Puppeteer para obtener cookie fresca...`);
+        if (!puppeteer) {
+          puppeteer = await import('puppeteer');
+        }
         
-        const browser = await puppeteer.launch({ 
+        const browser = await puppeteer.default.launch({ 
           headless: 'new',
           args: ['--no-sandbox', '--disable-setuid-sandbox']
         });
@@ -125,51 +151,58 @@ const CONFIG = {
         const page = await browser.newPage();
         await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36');
         
-        // Ir a la página principal para obtener la cookie
-        await page.goto('https://lagranjita.com/', { waitUntil: 'networkidle2' });
+        // Ir a la página de resultados
+        const url = `https://lotoven.com/animalito/lagranjita/resultados/`;
+        console.log(`   📡 Navegando a: ${url}`);
+        await page.goto(url, { waitUntil: 'networkidle2', timeout: 30000 });
+        
+        // Esperar a que carguen los resultados
         await page.waitForTimeout(3000);
         
-        // Obtener la cookie
-        const cookies = await page.cookies();
-        const cfCookie = cookies.find(c => c.name === 'cf_clearance');
-        
-        if (!cfCookie) {
-          console.log(`   ⚠️ No se pudo obtener la cookie de Cloudflare`);
-          await browser.close();
-          return null;
-        }
-        
-        console.log(`   ✅ Cookie obtenida: ${cfCookie.value.substring(0, 30)}...`);
-        
-        // Ahora hacer la petición a la API con la cookie fresca
-        const url = `https://lagranjita.com/api/results.json?date=${fechaStr}&productId=1&t=${Date.now()}`;
-        console.log(`   📡 URL: ${url}`);
-        
-        // Configurar la cookie en la página
-        await page.setCookie(cfCookie);
-        
-        const response = await page.goto(url, { waitUntil: 'networkidle2' });
-        const data = await response.json();
+        // Buscar los números en la página
+        const numeros = await page.evaluate(() => {
+          // Buscar elementos que contengan números de la lotería
+          const resultados = [];
+          
+          // Buscar en elementos con clase específica
+          const elementos = document.querySelectorAll('.numero, .number, .resultado, .bola, .sorteo, [class*="num"], [class*="result"], [class*="bola"]');
+          
+          elementos.forEach(el => {
+            const texto = el.textContent.trim();
+            const num = parseInt(texto);
+            if (!isNaN(num) && num >= 0 && num <= 76) {
+              resultados.push(num);
+            }
+          });
+          
+          // Si no encuentra, buscar en todo el texto
+          if (resultados.length < 10) {
+            const bodyText = document.body.innerText;
+            const matches = bodyText.match(/\b(\d{1,2})\b/g);
+            if (matches) {
+              matches.forEach(m => {
+                const num = parseInt(m);
+                if (!isNaN(num) && num >= 0 && num <= 76 && !resultados.includes(num)) {
+                  resultados.push(num);
+                }
+              });
+            }
+          }
+          
+          return resultados.slice(0, 12);
+        });
         
         await browser.close();
         
-        // Extraer los números
-        const resultados = data["LA GRANJITA"] || [];
-        const numeros = resultados.map(item => {
-          const valor = item.result_value;
-          return valor === "00" ? "00" : parseInt(valor);
-        });
-        
-        if (numeros.length === 12) {
-          console.log(`   ✅ Encontrados ${numeros.length} números desde La Granjita`);
-          console.log(`   📊 Números: ${numeros.join(', ')}`);
+        if (numeros && numeros.length === 12) {
+          console.log(`   ✅ Encontrados ${numeros.length} números desde Puppeteer: ${numeros.join(', ')}`);
           return numeros;
         } else {
-          console.log(`   ⚠️ Solo ${numeros.length} números, esperando 12`);
+          console.log(`   ⚠️ Solo ${numeros?.length || 0} números encontrados con Puppeteer`);
           return null;
         }
       } catch (error) {
-        console.log(`   ❌ Error: ${error.message}`);
+        console.log(`   ❌ Error con Puppeteer: ${error.message}`);
         return null;
       }
     }
