@@ -1,11 +1,10 @@
 /**
  * SCRIPT DEFINITIVO - Dr. Animalitos
- * CONFIGURACIÓN PARA LAS 6 LOTERÍAS - CON PUPPETEER PARA LA GRANJITA
+ * CONFIGURACIÓN PARA LAS 6 LOTERÍAS - SIN PUPPETEER
  */
 
 const fs = require('fs');
 const path = require('path');
-let puppeteer = null;
 
 // ============================================
 // FUNCIONES PARA FORMATEAR FECHA
@@ -33,6 +32,11 @@ const HEADERS = {
   'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36',
   'Accept': 'application/json, text/plain, */*'
 };
+
+// ============================================
+// COOKIE PARA LA GRANJITA (actualizada)
+// ============================================
+const COOKIE_GRANJITA = 'cf_clearance=zhADwaNc4.k_3SNGTDAFUhjXG3GjPnWoK5HGHImP5Oo-1787710201-1.2.1.1-KrEEvMuMmnyfHrPgBYn1wc3UkXt3lJ5S1bsvl3IOoVs3jNWyj4rPfyFuCeanBMc2F3plwkHThLUkojKBenLPuebNLQSCovaiYGsOX9WNDqBPU7bNX2P7z_bvAcLqZzQVG0S3TMXgRVbx_p2k6TR_eZIxV8uruZg_BNOkoxvJzMRWBHftvGSXgRSU28eTukAaZozDaP8bxY6wouB3.lW4blUzW2rNAaXmw1LkFjobrUGZKzOijKCwf7PvcqsCQ.5Ymr5YZ8xHAnMsqTDrs9ebLEMHm1MpVnu05YH5HIJ56j9xYjycMt.n38aN3J.Ea1CLwEEyfGqZEKmA6vMGAPj1ct77732gvXxjIk2PqEvsVqA';
 
 // ============================================
 // CONFIGURACIÓN DE LAS 6 LOTERÍAS
@@ -106,103 +110,54 @@ const CONFIG = {
     }
   },
 
-  // 🌱 LA GRANJITA - CON PUPPETEER
+  // 🌱 LA GRANJITA - CON URL DIRECTA Y COOKIE
   granjita: {
+    apiUrl: 'https://lagranjita.com/api/results.json',
     numeros: 12,
     nombre: 'La Granjita',
     archivo: 'granjita.json',
     procesar: async (fecha) => {
       const fechaStr = formatearFechaGranjita(fecha);
+      const url = `${CONFIG.granjita.apiUrl}?date=${fechaStr}&productId=1&t=${Date.now()}`;
       
-      // Intentar primero con Lotterly
-      const nombres = ['la-granjita', 'granjita', 'la_granjita'];
-      for (const nombre of nombres) {
-        const url = `https://api.lotterly.co/v1/results/${nombre}/?exact_date=${formatearFechaAPI(fecha)}&extended=true&_t=${Date.now()}`;
-        console.log(`   📡 Probando Lotterly: ${url}`);
-        try {
-          const response = await fetch(url, { headers: HEADERS });
-          if (response.ok) {
-            const data = await response.json();
-            if (Array.isArray(data) && data.length === 12) {
-              const numeros = data.map(s => {
-                const r = s.results?.[0]?.result;
-                return r === "00" ? "00" : parseInt(r);
-              });
-              console.log(`   ✅ Encontrados ${numeros.length} números desde Lotterly (${nombre})`);
-              return numeros;
-            }
-          }
-        } catch (e) {}
-      }
-      
-      // Si Lotterly falla, usar Puppeteer
-      console.log(`   📡 Usando Puppeteer para obtener datos de La Granjita...`);
+      console.log(`   📡 URL: ${url}`);
       
       try {
-        if (!puppeteer) {
-          puppeteer = await import('puppeteer');
+        const response = await fetch(url, {
+          headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36',
+            'Accept': 'application/json, text/plain, */*',
+            'Accept-Language': 'es-US,es-419;q=0.9,es;q=0.8',
+            'Referer': 'https://lagranjita.com/',
+            'Origin': 'https://lagranjita.com',
+            'Cookie': COOKIE_GRANJITA
+          }
+        });
+        
+        if (!response.ok) {
+          console.log(`   ⚠️ HTTP ${response.status}: ${response.statusText}`);
+          return null;
         }
         
-        const browser = await puppeteer.default.launch({ 
-          headless: 'new',
-          args: ['--no-sandbox', '--disable-setuid-sandbox']
+        const data = await response.json();
+        
+        // Extraer los números de la respuesta
+        const resultados = data["LA GRANJITA"] || [];
+        const numeros = resultados.map(item => {
+          const valor = item.result_value;
+          return valor === "00" ? "00" : parseInt(valor);
         });
         
-        const page = await browser.newPage();
-        await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36');
-        
-        // Ir a la página de resultados
-        const url = `https://lotoven.com/animalito/lagranjita/resultados/`;
-        console.log(`   📡 Navegando a: ${url}`);
-        await page.goto(url, { waitUntil: 'networkidle2', timeout: 30000 });
-        
-        // Esperar a que carguen los resultados
-        await page.waitForTimeout(3000);
-        
-        // Buscar los números en la página
-        const numeros = await page.evaluate(() => {
-          // Buscar elementos que contengan números de la lotería
-          const resultados = [];
-          
-          // Buscar en elementos con clase específica
-          const elementos = document.querySelectorAll('.numero, .number, .resultado, .bola, .sorteo, [class*="num"], [class*="result"], [class*="bola"]');
-          
-          elementos.forEach(el => {
-            const texto = el.textContent.trim();
-            const num = parseInt(texto);
-            if (!isNaN(num) && num >= 0 && num <= 76) {
-              resultados.push(num);
-            }
-          });
-          
-          // Si no encuentra, buscar en todo el texto
-          if (resultados.length < 10) {
-            const bodyText = document.body.innerText;
-            const matches = bodyText.match(/\b(\d{1,2})\b/g);
-            if (matches) {
-              matches.forEach(m => {
-                const num = parseInt(m);
-                if (!isNaN(num) && num >= 0 && num <= 76 && !resultados.includes(num)) {
-                  resultados.push(num);
-                }
-              });
-            }
-          }
-          
-          return resultados.slice(0, 12);
-        });
-        
-        await browser.close();
-        
-        if (numeros && numeros.length === 12) {
-          console.log(`   ✅ Encontrados ${numeros.length} números desde Puppeteer: ${numeros.join(', ')}`);
+        if (numeros.length === 12) {
+          console.log(`   ✅ Encontrados ${numeros.length} números desde La Granjita`);
+          console.log(`   📊 Números: ${numeros.join(', ')}`);
           return numeros;
         } else {
-          console.log(`   ⚠️ Solo ${numeros?.length || 0} números encontrados con Puppeteer`);
+          console.log(`   ⚠️ Solo ${numeros.length} números, esperando 12`);
           return null;
         }
       } catch (error) {
-        console.log(`   ❌ Error con Puppeteer: ${error.message}`);
+        console.log(`   ❌ Error: ${error.message}`);
         return null;
       }
     }
