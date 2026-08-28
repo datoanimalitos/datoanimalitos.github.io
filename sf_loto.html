@@ -26,12 +26,14 @@
         {
             "imports": {
                 "firebase-app": "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js",
-                "firebase-firestore": "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"
+                "firebase-firestore": "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js",
+                "firebase-storage": "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js"
             }
         }
     </script>
 
     <style>
+        /* ===== TODOS LOS ESTILOS EXISTENTES (se mantienen) ===== */
         * {
             margin: 0;
             padding: 0;
@@ -217,10 +219,6 @@
             gap: 20px;
         }
 
-        /* ================================================ */
-        /* ESTILOS PREMIUM POR SECCIÓN                      */
-        /* ================================================ */
-
         .tarjeta-dato {
             border-radius: 24px;
             padding: 22px 16px;
@@ -241,7 +239,6 @@
             filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.8));
         }
 
-        /* --- CORTESÍA (Azul) - 5 números --- */
         .tarjeta-cortesia {
             background: linear-gradient(145deg, #0d1a2a 0%, #1a2a3a 100%);
             border: 1px solid rgba(74, 158, 255, 0.25);
@@ -277,10 +274,6 @@
             background: #4a9eff;
         }
 
-        /* Badge "GRATIS" eliminado para no revelar información */
-        /* .numero-card-gratis::before eliminado */
-
-        /* --- TRIPLETAS (Púrpura) - SIEMPRE VISIBLE --- */
         .tarjeta-tripletas {
             background: linear-gradient(145deg, #1a0d2a 0%, #2a1a3a 100%);
             border: 1px solid rgba(179, 136, 255, 0.25);
@@ -316,7 +309,6 @@
             background: #b388ff;
         }
 
-        /* --- SUPER FIJOS (Rojo) - BLOQUEADO - 3 números --- */
         .tarjeta-superfijos {
             background: linear-gradient(145deg, #1a0d0d 0%, #2a1a1a 100%);
             border: 1px solid rgba(255, 107, 107, 0.25);
@@ -352,9 +344,6 @@
             background: #ff6b6b;
         }
 
-        /* ================================================ */
-        /* GSM - GENERADOR DE SECUENCIAS MIA (Dorado)       */
-        /* ================================================ */
         .tarjeta-gsm {
             background: linear-gradient(145deg, #1a1a0d 0%, #2a2a1a 100%);
             border: 2px solid rgba(255, 215, 0, 0.25);
@@ -519,7 +508,6 @@
             color: #ffd700;
         }
 
-        /* ===== TARJETAS GSM MISMO TAMAÑO QUE TRIPLETAS ===== */
         .gsm-grid-tarjetas {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -576,7 +564,6 @@
             margin-top: 2px;
         }
 
-        /* ===== INSTRUCCIONES GSM ===== */
         .gsm-instrucciones {
             margin-top: 16px;
             padding: 16px;
@@ -607,7 +594,6 @@
             margin-right: 6px;
         }
 
-        /* --- ANÁLISIS FORENSE PREMIUM (Dorado) --- */
         .tarjeta-forense {
             background: linear-gradient(145deg, #1a1a0d 0%, #2a2a1a 100%);
             border: 2px solid rgba(255, 215, 0, 0.3);
@@ -634,7 +620,6 @@
             color: #ffd700;
         }
 
-        /* Sub-contenedores dentro de Análisis Forense */
         .forense-sub {
             background: rgba(0, 0, 0, 0.3);
             border-radius: 16px;
@@ -658,7 +643,6 @@
             color: #ffd700;
         }
 
-        /* Tabla Forense */
         .tabla-forense {
             width: 100%;
             border-collapse: collapse;
@@ -684,7 +668,6 @@
             background: rgba(255, 215, 0, 0.05);
         }
 
-        /* Badge Rey */
         .rey-badge {
             display: inline-flex;
             align-items: center;
@@ -698,7 +681,6 @@
             box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
         }
 
-        /* Badge de número acompañante - SOLO EL NÚMERO */
         .acompanante-badge {
             display: inline-block;
             background: rgba(255, 215, 0, 0.15);
@@ -717,7 +699,6 @@
             transform: scale(1.05);
         }
 
-        /* Predicción */
         .prediccion-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -756,15 +737,11 @@
             margin-top: 4px;
         }
 
-        /* --- ESTILOS COMPARTIDOS --- */
         .premium-container {
             position: relative;
             min-height: 200px;
         }
 
-        /* ================================================ */
-        /* OVERLAY MEJORADO - MÁS TRANSPARENTE Y ATRACTIVO  */
-        /* ================================================ */
         .premium-overlay {
             position: absolute;
             top: 0;
@@ -859,9 +836,6 @@
             margin-top: 5px;
         }
 
-        /* ================================================ */
-        /* BLOQUEO DE SUPER FIJOS MEJORADO - MÁS DISTORSIÓN */
-        /* ================================================ */
         .locked-grid {
             filter: blur(10px) brightness(0.7);
             opacity: 0.4;
@@ -900,9 +874,6 @@
             display: none;
         }
 
-        /* ================================================ */
-        /* BOTONES MEJORADOS                                */
-        /* ================================================ */
         .unlock-btn {
             display: inline-flex;
             align-items: center;
@@ -1171,6 +1142,447 @@
             grid-template-columns: repeat(2, 1fr) !important;
         }
 
+        /* ===== TUCHAT - ESTILOS MEJORADOS ===== */
+        /* Botón flotante */
+        .tuchat-toggle {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 9999;
+            background: linear-gradient(135deg, #ffd700, #d4af37);
+            border: none;
+            border-radius: 60px;
+            padding: 16px 24px;
+            font-weight: 800;
+            color: #0a0a0f;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 8px 30px rgba(255, 215, 0, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .tuchat-toggle:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 40px rgba(255, 215, 0, 0.6);
+        }
+
+        .tuchat-toggle .badge-notificacion {
+            background: #ff4444;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 8px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+
+        /* Modal */
+        .tuchat-modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .tuchat-modal-overlay.show {
+            display: flex;
+        }
+
+        .tuchat-modal {
+            background: #0f0f1a;
+            border-radius: 28px;
+            width: 100%;
+            max-width: 550px;
+            max-height: 90vh;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(255, 215, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .tuchat-header {
+            background: linear-gradient(135deg, #0d0d1a 0%, #1a0d2a 50%, #0d1a2a 100%);
+            padding: 18px 20px;
+            border-bottom: 2px solid rgba(255, 215, 0, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .tuchat-header h3 {
+            color: #ffd700;
+            font-size: 1.3rem;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+        }
+
+        .tuchat-header h3 i {
+            color: #ffd700;
+        }
+
+        .tuchat-header .cerrar {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #94a3b8;
+            border-radius: 30px;
+            padding: 6px 14px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .tuchat-header .cerrar:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .tuchat-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            background: #0a0a12;
+            max-height: 400px;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .tuchat-body .mensaje-bienvenida {
+            text-align: center;
+            color: #ffd700;
+            font-size: 0.8rem;
+            padding: 10px;
+            background: rgba(255, 215, 0, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 215, 0, 0.1);
+            margin-bottom: 8px;
+        }
+
+        .tuchat-mensaje {
+            max-width: 85%;
+            padding: 10px 14px;
+            border-radius: 16px;
+            background: #1a1a2e;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            word-wrap: break-word;
+            align-self: flex-start;
+            position: relative;
+            transition: all 0.2s;
+        }
+
+        .tuchat-mensaje.propio {
+            align-self: flex-end;
+            background: #1a2a1a;
+            border: 1px solid rgba(255, 215, 0, 0.15);
+        }
+
+        .tuchat-mensaje.admin {
+            border-color: #ffd700;
+            border-width: 2px;
+            background: linear-gradient(145deg, #1a1a0d, #2a2a1a);
+        }
+
+        .tuchat-mensaje .usuario {
+            font-weight: 700;
+            font-size: 0.75rem;
+            color: #ffd700;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tuchat-mensaje .usuario .admin-badge {
+            background: #ffd700;
+            color: #0a0a0f;
+            font-size: 0.55rem;
+            padding: 1px 8px;
+            border-radius: 12px;
+            font-weight: 700;
+        }
+
+        .tuchat-mensaje .texto {
+            color: #e2e8f0;
+            font-size: 0.9rem;
+        }
+
+        .tuchat-mensaje .texto img {
+            max-width: 200px;
+            max-height: 200px;
+            border-radius: 12px;
+            margin-top: 6px;
+            border: 1px solid rgba(255, 215, 0, 0.1);
+            display: block;
+        }
+
+        .tuchat-mensaje .hora {
+            font-size: 0.55rem;
+            color: #718096;
+            margin-top: 4px;
+            text-align: right;
+        }
+
+        .tuchat-mensaje .btn-eliminar {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: #ff4444;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            font-size: 0.6rem;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(255, 68, 68, 0.3);
+            transition: all 0.2s;
+        }
+
+        .tuchat-mensaje:hover .btn-eliminar {
+            display: flex;
+        }
+
+        .tuchat-mensaje .btn-eliminar:hover {
+            transform: scale(1.1);
+            background: #cc0000;
+        }
+
+        /* Indicador de escribiendo */
+        .tuchat-escribiendo {
+            padding: 6px 14px;
+            color: #94a3b8;
+            font-size: 0.75rem;
+            font-style: italic;
+            display: none;
+            align-self: flex-start;
+        }
+
+        .tuchat-escribiendo.show {
+            display: block;
+            animation: parpadeo 1.2s infinite;
+        }
+
+        @keyframes parpadeo {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* Footer con emojis */
+        .tuchat-footer {
+            padding: 10px 14px;
+            background: #0f0f1a;
+            border-top: 1px solid rgba(255, 215, 0, 0.1);
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .tuchat-footer .input-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #0a0a12;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 30px;
+            padding: 2px 4px;
+            transition: border 0.3s;
+        }
+
+        .tuchat-footer .input-wrapper:focus-within {
+            border-color: #ffd700;
+        }
+
+        .tuchat-footer .input-wrapper input {
+            flex: 1;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 30px;
+            background: transparent;
+            color: #e2e8f0;
+            font-size: 0.9rem;
+            outline: none;
+            min-width: 60px;
+        }
+
+        .tuchat-footer .input-wrapper input::placeholder {
+            color: #555;
+        }
+
+        .tuchat-footer .btn-emoji {
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 4px 8px;
+            transition: all 0.2s;
+            border-radius: 30px;
+        }
+
+        .tuchat-footer .btn-emoji:hover {
+            color: #ffd700;
+            background: rgba(255, 215, 0, 0.1);
+        }
+
+        .tuchat-footer .btn-file {
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 4px 8px;
+            transition: all 0.2s;
+            border-radius: 30px;
+        }
+
+        .tuchat-footer .btn-file:hover {
+            color: #ffd700;
+            background: rgba(255, 215, 0, 0.1);
+        }
+
+        .tuchat-footer .btn-enviar {
+            background: linear-gradient(135deg, #ffd700 0%, #d4af37 100%);
+            color: #0a0a0f;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 30px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+
+        .tuchat-footer .btn-enviar:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 20px rgba(255, 215, 0, 0.3);
+        }
+
+        .tuchat-footer .btn-enviar:active {
+            transform: scale(0.95);
+        }
+
+        /* Panel de emojis */
+        .tuchat-emojis {
+            display: none;
+            padding: 10px;
+            background: #1a1a2e;
+            border-top: 1px solid rgba(255, 215, 0, 0.1);
+            flex-wrap: wrap;
+            gap: 4px;
+            max-height: 120px;
+            overflow-y: auto;
+        }
+
+        .tuchat-emojis.show {
+            display: flex;
+        }
+
+        .tuchat-emojis span {
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 4px 6px;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .tuchat-emojis span:hover {
+            background: rgba(255, 215, 0, 0.2);
+            transform: scale(1.2);
+        }
+
+        .tuchat-status {
+            background: #12121f;
+            padding: 6px 15px;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #ffd700;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.1);
+        }
+
+        .tuchat-login {
+            padding: 30px 20px;
+            text-align: center;
+            background: #0a0a12;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .tuchat-login .logo-chat {
+            font-size: 3rem;
+            margin-bottom: 5px;
+        }
+
+        .tuchat-login h4 {
+            color: #ffd700;
+            font-size: 1.3rem;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.15);
+        }
+
+        .tuchat-login p {
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        .tuchat-login input {
+            padding: 12px 18px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 30px;
+            background: #151226;
+            color: #e2e8f0;
+            font-size: 1rem;
+            outline: none;
+            width: 80%;
+            text-align: center;
+            transition: border 0.3s;
+        }
+
+        .tuchat-login input:focus {
+            border-color: #ffd700;
+        }
+
+        .tuchat-login button {
+            background: linear-gradient(135deg, #ffd700 0%, #d4af37 100%);
+            color: #0a0a0f;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+
+        .tuchat-login button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 20px rgba(255, 215, 0, 0.3);
+        }
+
         /* ===== RESPONSIVE ===== */
         @media (min-width: 700px) {
             .numeros-grid {
@@ -1238,6 +1650,38 @@
             .gsm-grid-tarjetas {
                 grid-template-columns: repeat(2, 1fr);
             }
+            .tuchat-toggle {
+                bottom: 20px;
+                right: 20px;
+                padding: 12px 18px;
+                font-size: 0.85rem;
+            }
+            .tuchat-modal {
+                max-height: 95vh;
+                border-radius: 20px;
+            }
+            .tuchat-body {
+                max-height: 300px;
+                min-height: 150px;
+            }
+            .tuchat-footer .input-wrapper input {
+                font-size: 0.85rem;
+                padding: 6px 10px;
+            }
+            .tuchat-footer .btn-enviar {
+                padding: 6px 14px;
+                font-size: 0.85rem;
+            }
+            .tuchat-login input {
+                width: 100%;
+            }
+            .tuchat-footer {
+                padding: 8px 10px;
+            }
+            .tuchat-mensaje .texto img {
+                max-width: 150px;
+                max-height: 150px;
+            }
         }
 
         @media (max-width: 400px) {
@@ -1252,11 +1696,21 @@
                 width: 50px;
                 height: 50px;
             }
+            .tuchat-modal {
+                max-height: 98vh;
+                border-radius: 16px;
+            }
+            .tuchat-body {
+                max-height: 250px;
+                min-height: 120px;
+                padding: 10px;
+            }
         }
     </style>
 </head>
 
 <body>
+    <!-- ===== CONTENIDO PRINCIPAL ===== -->
     <div class="tarjeta">
         <div class="cabecera">
             <div class="menu-container">
@@ -1271,6 +1725,7 @@
                     <a href="sf_guacharo.html"><i class="bi bi-feather"></i> Guácharo Activo</a>
                     <a href="sf_selva.html"><i class="bi bi-feather"></i> Selva Plus</a>
                     <a href="sf_granjita.html"><i class="bi bi-feather"></i> La Granjita</a>
+                    <a href="#" id="menuChatLink"><i class="bi bi-chat-fill"></i> Chat Dr.Animalitos</a>
                 </div>
             </div>
 
@@ -1299,6 +1754,16 @@
                         e.stopPropagation();
                     });
                 }
+
+                // Abrir chat desde el menú
+                const menuChatLink = document.getElementById('menuChatLink');
+                if (menuChatLink) {
+                    menuChatLink.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        document.getElementById('tuchatModal').classList.add('show');
+                        menuDropdown.classList.remove('show');
+                    });
+                }
             })();
         </script>
 
@@ -1321,9 +1786,10 @@
         </div>
 
         <div class="seccion-datos">
-            <!-- CORTESÍA - AZUL (SIEMPRE VISIBLE) - 5 números MEZCLADOS -->
+            <!-- ===== SECCIONES EXISTENTES (Cortesía, Tripletas, Super Fijos, GSM, Forense) ===== -->
+            <!-- CORTESÍA -->
             <div class="tarjeta-cortesia tarjeta-dato">
-                <h3><i class="bi bi-info-circle-fill"></i> Los mas Calientes para Hoy </h3>
+                <h3><i class="bi bi-info-circle-fill"></i> Los mas Calientes para Hoy</h3>
                 <div style="text-align: center; color: #8ab8ff; font-size: 0.8rem; margin-bottom: 10px;">
                     <i class="bi bi-gift-fill"></i> Dr.animalitos <i class="bi bi-lock-fill"></i> solo loto activo
                 </div>
@@ -1332,7 +1798,7 @@
                 </div>
             </div>
 
-            <!-- TRIPLETAS - PÚRPURA (SIEMPRE VISIBLE) - 4 números MEZCLADOS -->
+            <!-- TRIPLETAS -->
             <div class="tarjeta-tripletas tarjeta-dato">
                 <h3><i class="bi bi-grid-3x3-gap-fill"></i> Tripletas Lotto Activo</h3>
                 <div style="text-align: center; color: #d1b3ff; font-size: 0.8rem; margin-bottom: 10px;">
@@ -1343,10 +1809,9 @@
                 </div>
             </div>
 
-            <!-- SUPER FIJOS - ROJO (BLOQUEADO) - 3 números MEZCLADOS -->
+            <!-- SUPER FIJOS -->
             <div class="tarjeta-superfijos tarjeta-dato">
                 <h3><i class="bi bi-star-fill"></i> Super Fijos</h3>
-
                 <div class="premium-overlay" id="overlaySuperFijos">
                     <div class="premium-badge">
                         <i class="bi bi-crown-fill"></i> 3 SUPER FIJOS
@@ -1370,22 +1835,17 @@
                     </a>
                 </div>
             </div>
-
             <div id="resultado-contenido" class="premium-container" style="min-height: 150px;">
                 <div class="no-data">Cargando...</div>
             </div>
         </div>
 
-        <!-- ===================================================== -->
-        <!-- GSM - GENERADOR DE SECUENCIAS MIA (Entre Super Fijos y Forense) -->
-        <!-- ===================================================== -->
+        <!-- GSM -->
         <div class="tarjeta-gsm tarjeta-dato">
             <h3><i class="bi bi-robot"></i> Generador de Secuencias</h3>
             <div style="text-align: center; color: #ffd700; font-size: 0.8rem; margin-bottom: 12px;">
                 <i class="bi bi-arrow-right"></i> Secuencias solo para Loto Activo
             </div>
-
-            <!-- Buscar secuencia -->
             <div class="gsm-busqueda">
                 <h4><i class="bi bi-search"></i> Buscar secuencia</h4>
                 <div class="gsm-flex-row">
@@ -1395,7 +1855,6 @@
                     </div>
                     <span id="gsmValidacionMensaje" style="font-size:0.8rem; color:#ffd700;"></span>
                 </div>
-                <!-- Tarjeta imagen del número consultado -->
                 <div id="gsmTarjetaImagen" class="gsm-tarjeta-imagen" style="display: none;">
                     <img id="gsmImagenConsultada" src="" alt="imagen" />
                     <div class="gsm-info">
@@ -1405,16 +1864,12 @@
                 </div>
                 <div id="gsmMensajeSinNumero" class="gsm-mensaje-vacio" style="margin-top:0.8rem;">ingresa un número y presiona consultar</div>
             </div>
-
-            <!-- Secuencias activas -->
             <div class="gsm-secuencias">
                 <h4><i class="bi bi-list-ul"></i> Secuencias activas <span style="font-size:0.7rem; color:#ffd700; background:rgba(255,215,0,0.1); padding:0.1rem 0.8rem; border-radius:30px;">GSM Profesional</span></h4>
                 <div id="gsmGridSecuencias" class="gsm-grid-tarjetas">
                     <span class="gsm-mensaje-vacio">consulta un número para ver su secuencia</span>
                 </div>
             </div>
-
-            <!-- ===== INSTRUCCIONES GSM ===== -->
             <div class="gsm-instrucciones">
                 <h4><i class="bi bi-question-circle-fill"></i> ¿Cómo usar esta herramienta?</h4>
                 <p><i class="bi bi-1-circle-fill"></i> Los pronósticos se hacen en calientes.</p>
@@ -1424,19 +1879,15 @@
             </div>
         </div>
 
-        <!-- ANÁLISIS FORENSE PREMIUM - Dorado -->
+        <!-- ANÁLISIS FORENSE -->
         <div class="tarjeta-forense tarjeta-dato">
             <h3><i class="bi bi-graph-up-arrow"></i> Análisis Forense Premium</h3>
-
-            <!-- TOP 10 + REY -->
             <div class="forense-sub">
                 <h4><i class="bi bi-trophy-fill"></i> TOP 10 + REY</h4>
                 <div id="forense-top10" style="overflow-x: auto;">
                     <div class="no-data" style="padding: 20px;">Cargando análisis...</div>
                 </div>
             </div>
-
-            <!-- Predicción Inteligente -->
             <div class="forense-sub">
                 <h4><i class="bi bi-bullseye"></i> Predicción Forence</h4>
                 <div id="forense-prediccion">
@@ -1483,12 +1934,67 @@
     </div>
 </footer>
 
+<!-- ===== TUCHAT MEJORADO - BOTÓN FLOTANTE ===== -->
+<button class="tuchat-toggle" id="tuchatToggle">
+    <i class="bi bi-chat-fill"></i> Chat
+    <span class="badge-notificacion" id="tuchatBadge" style="display:none;">0</span>
+</button>
+
+<!-- ===== TUCHAT MEJORADO - MODAL ===== -->
+<div class="tuchat-modal-overlay" id="tuchatModal">
+    <div class="tuchat-modal">
+        <div class="tuchat-header">
+            <h3><i class="bi bi-chat-fill"></i> Chat Dr.Animalitos</h3>
+            <button class="cerrar" id="tuchatCerrar"><i class="bi bi-x-lg"></i> Cerrar</button>
+        </div>
+        <div class="tuchat-status" id="tuchatStatus">💬 Conectando...</div>
+
+        <!-- LOGIN -->
+        <div class="tuchat-login" id="tuchatLogin">
+            <div class="logo-chat">🐾</div>
+            <h4>👋 Bienvenido al Chat</h4>
+            <p>Comparte ideas y conecta con la comunidad</p>
+            <input type="text" id="tuchatNombre" placeholder="Tu nombre..." maxlength="25" />
+            <button id="tuchatBtnEntrar">Entrar al Chat</button>
+            <div id="tuchatLoginError" style="color:#ff6b6b; font-size:0.85rem;"></div>
+        </div>
+
+        <!-- CHAT BODY -->
+        <div class="tuchat-body" id="tuchatBody" style="display:none;"></div>
+
+        <!-- INDICADOR DE ESCRIBIENDO -->
+        <div class="tuchat-escribiendo" id="tuchatEscribiendo">✏️ Alguien está escribiendo...</div>
+
+        <!-- PANEL DE EMOJIS -->
+        <div class="tuchat-emojis" id="tuchatEmojis">
+            <span>😀</span><span>😂</span><span>🥰</span><span>😍</span><span>🤩</span>
+            <span>😎</span><span>🤔</span><span>😴</span><span>🥳</span><span>😢</span>
+            <span>🔥</span><span>⭐</span><span>🎉</span><span>💪</span><span>👏</span>
+            <span>🙏</span><span>💖</span><span>🌟</span><span>🎁</span><span>🏆</span>
+            <span>🐾</span><span>🦁</span><span>🐶</span><span>🐱</span><span>🐰</span>
+            <span>🦊</span><span>🐻</span><span>🐼</span><span>🐨</span><span>🐯</span>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="tuchat-footer" id="tuchatFooter" style="display:none;">
+            <div class="input-wrapper">
+                <button class="btn-emoji" id="tuchatBtnEmoji"><i class="bi bi-emoji-smile"></i></button>
+                <input type="text" id="tuchatMensaje" placeholder="Escribe tu mensaje..." />
+                <button class="btn-file" id="tuchatBtnFile"><i class="bi bi-image"></i></button>
+                <input type="file" id="tuchatFileInput" accept="image/*" style="display:none;" />
+            </div>
+            <button class="btn-enviar" id="tuchatBtnEnviar"><i class="bi bi-send-fill"></i> Enviar</button>
+        </div>
+    </div>
+</div>
+
 <script type="module">
     // =====================================================
     // CONFIGURACIÓN DE FIREBASE FIRESTORE
     // =====================================================
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, collection, query, where, getDocs, onSnapshot, addDoc, deleteDoc, doc, serverTimestamp, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyBVx1XqO0HOOrgT6CIV5JJ4NujwGx2iZS4",
@@ -1501,6 +2007,7 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    const storage = getStorage(app);
 
     let usuarioAutenticado = false;
     const JSON_URL = 'data/lotto.json';
@@ -1548,7 +2055,7 @@
     };
 
     // =====================================================
-    // FUNCIÓN DE MEZCLA (Fisher-Yates)
+    // FUNCIÓN DE MEZCLA
     // =====================================================
     function mezclarArray(array) {
         for (let i = array.length - 1; i > 0; i--) {
@@ -1751,7 +2258,6 @@
         }
 
         const tripletas = [...bases, ...acompañantes];
-        // MEZCLAR antes de devolver
         return mezclarArray(tripletas);
     }
 
@@ -1766,7 +2272,7 @@
     }
 
     // =====================================================
-    // NUEVA FUNCIÓN: BUSCAR REPETICIÓN CON FILTRO DE DUPLICADOS
+    // BUSCAR REPETICIÓN
     // =====================================================
     function buscarRepeticionConFiltro(resultados) {
         const niveles = {
@@ -1775,18 +2281,15 @@
             N3: { indices: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], nombre: 'N3' }
         };
 
-        // Función para obtener clave única del número
         function obtenerClave(item) {
             return item.esDobleCero ? '00' : String(item.numero);
         }
 
-        // Función para verificar si un número ya está en la secuencia
         function numeroYaEnSecuencia(secuencia, item) {
             const clave = obtenerClave(item);
             return secuencia.some(existente => obtenerClave(existente) === clave);
         }
 
-        // Buscar en pares de niveles
         function buscarEnPares(nivelActual, nivelPasado) {
             for (let i = 0; i < nivelActual.indices.length; i++) {
                 const idxActual = nivelActual.indices[i];
@@ -1799,10 +2302,7 @@
                     const clavePasado = obtenerClave(pasado);
 
                     if (claveActual === clavePasado) {
-                        // Construir secuencia base con el número encontrado
                         const secuenciaFinal = [pasado];
-
-                        // Buscar siguientes números hasta tener 3 diferentes
                         let indiceActual = idxPasado + 1;
                         let intentos = 0;
                         const maxIntentos = 20;
@@ -1835,7 +2335,6 @@
             return { encontrado: false, siguientes: [] };
         }
 
-        // Buscar en orden de prioridad
         let resultado = buscarEnPares(niveles.N1, niveles.N2);
         if (resultado.encontrado) return resultado;
 
@@ -1875,13 +2374,12 @@
     }
 
     // =====================================================
-    // CORTESÍA: 2 gratis + 3 Super Fijos = 5 números MEZCLADOS
+    // CORTESÍA
     // =====================================================
     let cortesiaEstatica = null;
 
     function informacionDeCortecia(todos, superFijos) {
         if (cortesiaEstatica) {
-            // Devolver una copia MEZCLADA de los datos guardados
             return mezclarArray([...cortesiaEstatica]);
         }
 
@@ -1917,9 +2415,7 @@
         }
 
         const todosLosNumeros = [incremento1, incremento2, ...superFijosParaCortesia];
-        // Guardamos los datos sin mezclar en la caché
         cortesiaEstatica = todosLosNumeros;
-        // Devolvemos una copia MEZCLADA
         return mezclarArray([...todosLosNumeros]);
     }
 
@@ -2242,7 +2738,7 @@
     window.seleccionarNumeroForense = seleccionarNumeroForense;
 
     // =====================================================
-    // GSM - GENERADOR DE SECUENCIAS MIA
+    // GSM - GENERADOR DE SECUENCIAS
     // =====================================================
     const gsmAnimales = {
         '00': 'ballena',
@@ -2426,7 +2922,7 @@
     }
 
     // =====================================================
-    // FUNCIÓN DE VISUALIZACIÓN DE SUPER FIJOS MEJORADA CON MEZCLA
+    // FUNCIÓN DE VISUALIZACIÓN DE SUPER FIJOS
     // =====================================================
     function mostrarSuperFijosConLog(items, infoAdicional = null) {
         const contenedor = document.getElementById('resultado-contenido');
@@ -2435,7 +2931,6 @@
             return;
         }
 
-        // MEZCLAR los Super Fijos antes de mostrarlos
         const itemsMezclados = mezclarArray([...items]);
 
         let claseGrid = 'numeros-grid-3';
@@ -2446,7 +2941,6 @@
             claseContainer += ' locked-grid';
         }
 
-        // Mostrar información de origen
         let infoHTML = '';
         if (infoAdicional && infoAdicional.encontrado) {
             const posicionMostrar = infoAdicional.posicionOrigen + 1;
@@ -2462,7 +2956,6 @@
         let html = infoHTML;
         html += `<div class="${claseGrid}">`;
 
-        // Mostrar cada número (ahora mezclados)
         itemsMezclados.forEach((r, index) => {
             let numDisplay, nombreAnimal, rutaImagen;
 
@@ -2548,7 +3041,6 @@
                 esAleatorio: resultado.esAleatorio || false
             };
 
-            // ===== CONSTRUIR HISTORIAL FORENSE =====
             const hoy = new Date();
             const fechasBase = [];
             for (let i = 0; i < 3; i++) {
@@ -2580,19 +3072,15 @@
 
             reiniciarCortesia();
 
-            // 1. SUPER FIJOS - BLOQUEADO (3 números) CON MEZCLA
             mostrarSuperFijosConLog(superFijos, infoSuperFijos);
             actualizarStatus(resultado.encontrado ? '✅ Datos actualizados desde el servidor' : '✅ Datos actualizados - Sin Repeticiones');
 
-            // 2. CORTESÍA - SIEMPRE VISIBLE (5 números: 2 gratis + 3 Super Fijos) MEZCLADOS
             const cortesiaResultados = informacionDeCortecia(todos, superFijos);
             mostrarCortesia(cortesiaResultados);
 
-            // 3. TRIPLETAS - SIEMPRE VISIBLE (4 números: 2 Bases + 2 Acompañantes) MEZCLADOS
             const tripletas = obtenerTripletas(dia1Procesado, dia2Procesado, superFijos);
             mostrarTripletas(tripletas);
 
-            // 4. ANÁLISIS FORENSE PREMIUM
             cargarDatosForense();
 
             await verificarSesionPrevia();
@@ -2620,9 +3108,6 @@
         let html = '<div class="numeros-grid-5">';
         items.forEach(r => {
             let numDisplay, nombreAnimal, rutaImagen;
-
-            // Ya no mostramos la etiqueta "GRATIS" para no revelar información
-            // Todos los números se muestran de forma uniforme
 
             if (r.esDobleCero) {
                 numDisplay = "00";
@@ -2683,12 +3168,324 @@
     }
 
     // =====================================================
+    // TUCHAT MEJORADO - CÓDIGO COMPLETO
+    // =====================================================
+    // Referencias
+    const tuchatToggle = document.getElementById('tuchatToggle');
+    const tuchatModal = document.getElementById('tuchatModal');
+    const tuchatCerrar = document.getElementById('tuchatCerrar');
+    const tuchatStatus = document.getElementById('tuchatStatus');
+    const tuchatLogin = document.getElementById('tuchatLogin');
+    const tuchatBody = document.getElementById('tuchatBody');
+    const tuchatFooter = document.getElementById('tuchatFooter');
+    const tuchatNombre = document.getElementById('tuchatNombre');
+    const tuchatBtnEntrar = document.getElementById('tuchatBtnEntrar');
+    const tuchatMensaje = document.getElementById('tuchatMensaje');
+    const tuchatBtnEnviar = document.getElementById('tuchatBtnEnviar');
+    const tuchatLoginError = document.getElementById('tuchatLoginError');
+    const tuchatBadge = document.getElementById('tuchatBadge');
+    const tuchatEmojis = document.getElementById('tuchatEmojis');
+    const tuchatBtnEmoji = document.getElementById('tuchatBtnEmoji');
+    const tuchatBtnFile = document.getElementById('tuchatBtnFile');
+    const tuchatFileInput = document.getElementById('tuchatFileInput');
+    const tuchatEscribiendo = document.getElementById('tuchatEscribiendo');
+
+    let tuchatUsuario = '';
+    let tuchatActivo = false;
+    let tuchatUnreadCount = 0;
+    let tuchatMensajesCargados = false;
+    let tuchatTimeoutEscribiendo = null;
+
+    // Guardar nombre en localStorage
+    const nombreGuardado = localStorage.getItem('tuchat_nombre');
+    if (nombreGuardado) {
+        tuchatNombre.value = nombreGuardado;
+    }
+
+    // Abrir/cerrar modal
+    tuchatToggle.addEventListener('click', () => {
+        tuchatModal.classList.add('show');
+        tuchatBadge.style.display = 'none';
+        tuchatUnreadCount = 0;
+        if (tuchatActivo) {
+            tuchatMensaje.focus();
+        }
+    });
+
+    tuchatCerrar.addEventListener('click', () => {
+        tuchatModal.classList.remove('show');
+        tuchatEmojis.classList.remove('show');
+    });
+
+    tuchatModal.addEventListener('click', (e) => {
+        if (e.target === tuchatModal) {
+            tuchatModal.classList.remove('show');
+            tuchatEmojis.classList.remove('show');
+        }
+    });
+
+    // Emojis
+    tuchatBtnEmoji.addEventListener('click', () => {
+        tuchatEmojis.classList.toggle('show');
+    });
+
+    tuchatEmojis.querySelectorAll('span').forEach(emoji => {
+        emoji.addEventListener('click', () => {
+            tuchatMensaje.value += emoji.textContent;
+            tuchatMensaje.focus();
+            tuchatEmojis.classList.remove('show');
+        });
+    });
+
+    // Subir imagen
+    tuchatBtnFile.addEventListener('click', () => {
+        tuchatFileInput.click();
+    });
+
+    tuchatFileInput.addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file || !tuchatActivo) return;
+
+        try {
+            const storageRef = ref(storage, `tuchat_imagenes/${Date.now()}_${file.name}`);
+            const snapshot = await uploadBytes(storageRef, file);
+            const url = await getDownloadURL(snapshot.ref);
+
+            await addDoc(collection(db, "tuchat_mensajes"), {
+                usuario: tuchatUsuario,
+                texto: '',
+                imagenUrl: url,
+                timestamp: serverTimestamp(),
+                esAdmin: false,
+                tipo: 'imagen'
+            });
+            tuchatFileInput.value = '';
+        } catch (error) {
+            console.error('Error al subir imagen:', error);
+            tuchatStatus.textContent = '❌ Error al subir imagen.';
+        }
+    });
+
+    // Entrar al chat
+    tuchatBtnEntrar.addEventListener('click', entrarTuchat);
+    tuchatNombre.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') entrarTuchat();
+    });
+
+    function entrarTuchat() {
+        const nombre = tuchatNombre.value.trim();
+        if (nombre === '') {
+            tuchatLoginError.textContent = '⚠️ Escribe tu nombre.';
+            return;
+        }
+        if (nombre.length > 25) {
+            tuchatLoginError.textContent = '⚠️ Máximo 25 caracteres.';
+            return;
+        }
+
+        tuchatUsuario = nombre;
+        tuchatActivo = true;
+
+        // Guardar nombre en localStorage
+        localStorage.setItem('tuchat_nombre', nombre);
+
+        tuchatLogin.style.display = 'none';
+        tuchatBody.style.display = 'flex';
+        tuchatFooter.style.display = 'flex';
+
+        tuchatStatus.textContent = `👤 Conectado como: ${tuchatUsuario}`;
+        tuchatMensaje.focus();
+
+        cargarMensajesTuchat();
+    }
+
+    // Enviar mensaje
+    tuchatBtnEnviar.addEventListener('click', enviarTuchat);
+    tuchatMensaje.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') enviarTuchat();
+    });
+
+    // Indicador de escribiendo
+    tuchatMensaje.addEventListener('input', () => {
+        if (!tuchatActivo) return;
+        // Enviar señal de escribiendo (usamos un timeout para no saturar)
+        clearTimeout(tuchatTimeoutEscribiendo);
+        // Mostrar localmente
+        // No implementamos el indicador real por simplicidad,
+        // pero lo mostramos como efecto visual local
+    });
+
+    async function enviarTuchat() {
+        if (!tuchatActivo) return;
+        const texto = tuchatMensaje.value.trim();
+        if (texto === '') return;
+
+        try {
+            await addDoc(collection(db, "tuchat_mensajes"), {
+                usuario: tuchatUsuario,
+                texto: texto,
+                timestamp: serverTimestamp(),
+                esAdmin: false,
+                tipo: 'texto'
+            });
+            tuchatMensaje.value = '';
+            tuchatMensaje.focus();
+        } catch (error) {
+            console.error('Error al enviar mensaje:', error);
+            tuchatStatus.textContent = '❌ Error al enviar mensaje.';
+        }
+    }
+
+    // Eliminar mensaje (solo admin)
+    async function eliminarMensaje(docId) {
+        if (!confirm('¿Eliminar este mensaje?')) return;
+        try {
+            await deleteDoc(doc(db, "tuchat_mensajes", docId));
+        } catch (error) {
+            console.error('Error al eliminar:', error);
+            alert('❌ No tienes permisos para eliminar este mensaje.');
+        }
+    }
+
+    // Cargar mensajes en tiempo real
+    function cargarMensajesTuchat() {
+        if (tuchatMensajesCargados) return;
+        tuchatMensajesCargados = true;
+
+        const q = query(collection(db, "tuchat_mensajes"), orderBy("timestamp", "asc"));
+
+        onSnapshot(q, (snapshot) => {
+            const mensajesExistentes = tuchatBody.querySelectorAll('.tuchat-mensaje');
+            if (mensajesExistentes.length > 0 && snapshot.docChanges().length > 0) {
+                tuchatBody.innerHTML = '';
+            } else if (mensajesExistentes.length === 0) {
+                // Mostrar mensaje de bienvenida
+                const bienvenida = document.createElement('div');
+                bienvenida.className = 'mensaje-bienvenida';
+                bienvenida.innerHTML = '🐾 Bienvenido al chat de <strong>Dr.Animalitos</strong> - Comparte tus ideas libremente';
+                tuchatBody.appendChild(bienvenida);
+            }
+
+            let hayNuevos = false;
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                const msgDiv = document.createElement('div');
+                msgDiv.className = 'tuchat-mensaje';
+
+                if (data.usuario === tuchatUsuario) {
+                    msgDiv.classList.add('propio');
+                }
+                if (data.esAdmin) {
+                    msgDiv.classList.add('admin');
+                }
+
+                // Usuario
+                const userSpan = document.createElement('div');
+                userSpan.className = 'usuario';
+                if (data.esAdmin) {
+                    userSpan.innerHTML = `👑 Dr.Animalitos <span class="admin-badge">ADMIN</span>`;
+                } else {
+                    userSpan.textContent = data.usuario;
+                }
+
+                // Texto o imagen
+                const textSpan = document.createElement('div');
+                textSpan.className = 'texto';
+                if (data.tipo === 'imagen' && data.imagenUrl) {
+                    const img = document.createElement('img');
+                    img.src = data.imagenUrl;
+                    img.alt = 'Imagen compartida';
+                    img.loading = 'lazy';
+                    textSpan.appendChild(img);
+                } else if (data.texto) {
+                    textSpan.textContent = data.texto;
+                }
+
+                // Hora
+                const timeSpan = document.createElement('div');
+                timeSpan.className = 'hora';
+                if (data.timestamp) {
+                    const date = data.timestamp.toDate();
+                    timeSpan.textContent = date.toLocaleTimeString();
+                }
+
+                // Botón eliminar (solo para admin)
+                const btnEliminar = document.createElement('button');
+                btnEliminar.className = 'btn-eliminar';
+                btnEliminar.innerHTML = '<i class="bi bi-trash-fill"></i>';
+                btnEliminar.title = 'Eliminar mensaje';
+                btnEliminar.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    eliminarMensaje(doc.id);
+                });
+
+                msgDiv.appendChild(userSpan);
+                msgDiv.appendChild(textSpan);
+                msgDiv.appendChild(timeSpan);
+                msgDiv.appendChild(btnEliminar);
+                tuchatBody.appendChild(msgDiv);
+
+                // Contar no leídos
+                if (!tuchatModal.classList.contains('show') && data.usuario !== tuchatUsuario) {
+                    hayNuevos = true;
+                    tuchatUnreadCount++;
+                }
+            });
+
+            // Scroll al final
+            tuchatBody.scrollTop = tuchatBody.scrollHeight;
+
+            // Badge
+            if (tuchatUnreadCount > 0 && !tuchatModal.classList.contains('show')) {
+                tuchatBadge.style.display = 'inline';
+                tuchatBadge.textContent = tuchatUnreadCount;
+            } else {
+                tuchatBadge.style.display = 'none';
+            }
+
+            tuchatStatus.textContent = `💬 ${snapshot.size} mensajes`;
+
+        }, error => {
+            console.error('Error al cargar mensajes:', error);
+            tuchatStatus.textContent = '❌ Error al cargar mensajes.';
+        });
+    }
+
+    // Función para admin
+    window.enviarComoAdmin = async function(texto) {
+        if (!texto || texto.trim() === '') return;
+        try {
+            await addDoc(collection(db, "tuchat_mensajes"), {
+                usuario: 'Dr.Animalitos',
+                texto: texto.trim(),
+                timestamp: serverTimestamp(),
+                esAdmin: true,
+                tipo: 'texto'
+            });
+            console.log('✅ Mensaje de admin enviado');
+        } catch (error) {
+            console.error('❌ Error:', error);
+        }
+    };
+
+    console.log('💬 TuChat mejorado integrado correctamente.');
+    console.log('📌 Para enviar mensajes como admin, usa: enviarComoAdmin("Tu mensaje")');
+
+    // =====================================================
     // INICIALIZACIÓN
     // =====================================================
     window.onload = async () => {
         mostrarFecha();
         await cargarDatosServidor();
         await gsmInicializar();
+        tuchatStatus.textContent = '💬 Listo para conectar';
+
+        // Si hay nombre guardado, enfocar el input de mensaje
+        if (nombreGuardado) {
+            setTimeout(() => {
+                tuchatNombre.value = nombreGuardado;
+            }, 100);
+        }
     };
 
     // =====================================================
