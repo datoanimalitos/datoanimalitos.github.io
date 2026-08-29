@@ -21,6 +21,20 @@
     <link rel="apple-touch-icon" href="./favicon.webp">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
+    <!-- OneSignal SDK -->
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script>
+        window.OneSignalDeferred = window.OneSignalDeferred || [];
+        OneSignalDeferred.push(async function(OneSignal) {
+            await OneSignal.init({
+                appId: "e528af1f-e023-4dd3-8cb0-68d389493cb5",
+                serviceWorkerOverrideForTypical: true,
+                path: "https://tuanimalito.github.io/OneSignalSDKWorker.js",
+                serviceWorkerParam: { scope: "/" },
+            });
+        });
+    </script>
+
     <!-- SDK DE FIREBASE FIRESTORE -->
     <script type="importmap">
         {
@@ -2053,11 +2067,9 @@
     // CONFIGURACIÓN DE LIMPIEZA Y BIENVENIDA
     // =====================================================
 
-    // Configuración de limpieza automática
     const TIEMPO_LIMITE_HORAS = 24;
     const INTERVALO_LIMPIEZA_MINUTOS = 60;
 
-    // Función para limpiar mensajes antiguos
     async function limpiarMensajesAntiguos() {
         try {
             const ahora = new Date();
@@ -2073,7 +2085,6 @@
 
             for (const doc of snapshot.docs) {
                 const data = doc.data();
-                // No eliminar mensajes de bienvenida
                 if (data.esBienvenida) continue;
                 await deleteDoc(doc.ref);
                 eliminados++;
@@ -2087,19 +2098,15 @@
         }
     }
 
-    // Iniciar limpieza automática
     function iniciarLimpiezaAutomatica() {
         setTimeout(() => limpiarMensajesAntiguos(), 5000);
         setInterval(() => limpiarMensajesAntiguos(), INTERVALO_LIMPIEZA_MINUTOS * 60 * 1000);
     }
 
-    // Función para enviar mensaje de bienvenida/promoción automático
     async function enviarMensajeBienvenida(usuario) {
-        // Verificar si el usuario ya ha recibido el mensaje
         const usuarioKey = `bienvenida_${usuario}`;
         if (localStorage.getItem(usuarioKey) === 'enviado') return;
 
-        // Mensaje de promoción premium
         const mensajePromocion = `👑 ¡Bienvenido a TuChat Dr.Animalitos!
 
 ✅ Acceso a los 3 súper fijos
