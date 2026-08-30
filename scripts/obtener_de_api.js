@@ -107,7 +107,7 @@ const CONFIG = {
 
   // 🌱 LA GRANJITA - OPCIÓN B (EMULACIÓN DE NAVEGADOR COMPLETA)
   granjita: {
-    apiUrl: 'https://lagranjita.com/api/results.json',
+    apiUrl: 'https://resultados365.com/resultados/la-granjita',
     numeros: 12,
     nombre: 'La Granjita',
     archivo: 'granjita.json',
@@ -125,8 +125,8 @@ const CONFIG = {
             'Sec-Fetch-Dest': 'empty',
             'Sec-Fetch-Mode': 'cors',
             'Sec-Fetch-Site': 'same-origin',
-            'Referer': 'https://lagranjita.com/',
-            'Origin': 'https://lagranjita.com'
+            'Referer': 'https://resultados365.com/resultados/la-granjita',
+            'Origin': 'https://resultados365.com/resultados/la-granjita'
           }
         });
         
