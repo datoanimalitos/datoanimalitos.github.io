@@ -1298,6 +1298,14 @@
             transition: all 0.2s;
         }
 
+        .tuchat-mensaje .texto img {
+            max-width: 200px;
+            max-height: 200px;
+            border-radius: 8px;
+            margin-top: 4px;
+            border: 1px solid rgba(255, 215, 0, 0.1);
+        }
+
         .tuchat-mensaje.propio {
             align-self: flex-end;
             background: #1a2a1a;
@@ -1382,6 +1390,22 @@
 
         .tuchat-footer .input-wrapper input::placeholder {
             color: #555;
+        }
+
+        .tuchat-footer .btn-file {
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 4px 8px;
+            transition: all 0.2s;
+            border-radius: 30px;
+        }
+
+        .tuchat-footer .btn-file:hover {
+            color: #ffd700;
+            background: rgba(255, 215, 0, 0.1);
         }
 
         .tuchat-footer .btn-enviar {
@@ -1491,6 +1515,43 @@
             display: block;
         }
 
+        #previewImagen {
+            padding: 8px 16px;
+            background: #0a0a12;
+            border-top: 1px solid rgba(255, 215, 0, 0.1);
+            display: none;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        #previewImagen img {
+            max-width: 60px;
+            max-height: 60px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+
+        #previewImagen .file-name {
+            color: #94a3b8;
+            font-size: 0.8rem;
+            flex: 1;
+        }
+
+        #previewImagen .btn-eliminar-img {
+            background: transparent;
+            border: none;
+            color: #ff6b6b;
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 4px 8px;
+        }
+
+        #previewImagen .btn-eliminar-img:hover {
+            color: #ff4444;
+            transform: scale(1.1);
+        }
+
         @media (min-width: 700px) {
             .numeros-grid {
                 grid-template-columns: repeat(4, 1fr);
@@ -1584,6 +1645,10 @@
             }
             .tuchat-footer {
                 padding: 8px 10px;
+            }
+            #previewImagen img {
+                max-width: 40px;
+                max-height: 40px;
             }
         }
 
@@ -1869,6 +1934,8 @@
         <div class="tuchat-footer" id="tuchatFooter" style="display:none;">
             <div class="input-wrapper">
                 <input type="text" id="tuchatMensaje" placeholder="Escribe tu mensaje..." />
+                <button class="btn-file" id="tuchatBtnFile" title="Subir imagen"><i class="bi bi-image"></i></button>
+                <input type="file" id="tuchatFileInput" accept="image/*" style="display:none;">
             </div>
             <button class="btn-enviar" id="tuchatBtnEnviar"><i class="bi bi-send-fill"></i> Enviar</button>
         </div>
@@ -3053,11 +3120,14 @@
     const tuchatLoginError = document.getElementById('tuchatLoginError');
     const tuchatBadge = document.getElementById('tuchatBadge');
     const ticketInfo = document.getElementById('ticketInfo');
+    const tuchatBtnFile = document.getElementById('tuchatBtnFile');
+    const tuchatFileInput = document.getElementById('tuchatFileInput');
 
     let tuchatUsuario = '';
     let tuchatActivo = false;
     let tuchatUnreadCount = 0;
     let tuchatMensajesCargados = false;
+    let imagenSeleccionada = null;
 
     const nombreGuardado = localStorage.getItem('tuchat_nombre');
     if (nombreGuardado) {
@@ -3109,7 +3179,6 @@
         tuchatStatus.textContent = `👤 Conectado como: ${tuchatUsuario}`;
         tuchatMensaje.focus();
 
-        // Crear o obtener ticket del usuario
         await crearTicketUsuario(nombre);
     }
 
@@ -3144,7 +3213,7 @@
                 console.log(`✅ Ticket existente para ${nombre}: ${tuchatTicketId}`);
             }
 
-            // Enviar mensaje de bienvenida solo si es ticket nuevo
+            // Mensaje de bienvenida
             const mensajePromocion = `👑 ¡Bienvenido a TuChat Dr.Animalitos!
 
 ✅ Acceso a los 3 súper fijos por 5 días
@@ -3175,6 +3244,58 @@
         }
     }
 
+    // =====================================================
+    // SUBIR IMÁGENES (USUARIO)
+    // =====================================================
+    if (tuchatBtnFile && tuchatFileInput) {
+        tuchatBtnFile.addEventListener('click', () => {
+            if (!tuchatActivo) {
+                tuchatLoginError.textContent = '⚠️ Entra al chat primero.';
+                return;
+            }
+            tuchatFileInput.click();
+        });
+
+        tuchatFileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                imagenSeleccionada = event.target.result;
+                
+                let preview = document.getElementById('previewImagen');
+                if (!preview) {
+                    preview = document.createElement('div');
+                    preview.id = 'previewImagen';
+                    const footer = document.getElementById('tuchatFooter');
+                    if (footer) footer.parentNode.insertBefore(preview, footer);
+                }
+                
+                preview.style.display = 'flex';
+                preview.innerHTML = `
+                    <img src="${event.target.result}" alt="Vista previa">
+                    <span class="file-name">${file.name}</span>
+                    <button class="btn-eliminar-img" onclick="eliminarImagenSeleccionada()">✕</button>
+                `;
+                tuchatStatus.textContent = `📷 Imagen seleccionada: ${file.name}`;
+            };
+            reader.readAsDataURL(file);
+            tuchatFileInput.value = '';
+        });
+    }
+
+    function eliminarImagenSeleccionada() {
+        imagenSeleccionada = null;
+        const preview = document.getElementById('previewImagen');
+        if (preview) preview.style.display = 'none';
+        tuchatStatus.textContent = `👤 Conectado como: ${tuchatUsuario}`;
+    }
+    window.eliminarImagenSeleccionada = eliminarImagenSeleccionada;
+
+    // =====================================================
+    // ENVIAR MENSAJE CON SOPORTE PARA IMÁGENES
+    // =====================================================
     tuchatBtnEnviar.addEventListener('click', enviarTuchat);
     tuchatMensaje.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') enviarTuchat();
@@ -3183,23 +3304,42 @@
     async function enviarTuchat() {
         if (!tuchatActivo || !tuchatTicketId) return;
         const texto = tuchatMensaje.value.trim();
-        if (texto === '') return;
+        
+        if (texto === '' && !imagenSeleccionada) return;
 
         try {
-            await addDoc(collection(db, "tuchat_tickets", tuchatTicketId, "mensajes"), {
-                texto: texto,
+            const mensajeData = {
                 remitente: tuchatUsuario,
                 timestamp: serverTimestamp(),
-                esAdmin: false
-            });
+                esAdmin: false,
+                tipo: 'texto'
+            };
+
+            if (texto) {
+                mensajeData.texto = texto;
+            }
+
+            if (imagenSeleccionada) {
+                mensajeData.tipo = 'imagen';
+                mensajeData.imagenBase64 = imagenSeleccionada;
+                mensajeData.fileName = 'imagen_usuario.jpg';
+                if (!texto) {
+                    mensajeData.texto = '📷 Imagen compartida';
+                }
+            }
+
+            await addDoc(collection(db, "tuchat_tickets", tuchatTicketId, "mensajes"), mensajeData);
 
             await updateDoc(doc(db, "tuchat_tickets", tuchatTicketId), {
-                ultimo_mensaje: texto,
+                ultimo_mensaje: mensajeData.texto || '📷 Imagen',
                 ultimo_remitente: tuchatUsuario,
                 ultimo_timestamp: serverTimestamp()
             });
 
             tuchatMensaje.value = '';
+            imagenSeleccionada = null;
+            const preview = document.getElementById('previewImagen');
+            if (preview) preview.style.display = 'none';
             tuchatMensaje.focus();
         } catch (error) {
             console.error('Error al enviar mensaje:', error);
@@ -3207,6 +3347,9 @@
         }
     }
 
+    // =====================================================
+    // CARGAR MENSAJES
+    // =====================================================
     function cargarMensajesTuchat() {
         if (tuchatMensajesCargados || !tuchatTicketId) return;
         tuchatMensajesCargados = true;
@@ -3217,10 +3360,8 @@
         );
 
         onSnapshot(q, (snapshot) => {
-            // Limpiar solo si hay cambios o es la primera vez
             const mensajesExistentes = tuchatBody.querySelectorAll('.tuchat-mensaje');
             if (mensajesExistentes.length > 0 && snapshot.docChanges().length > 0) {
-                // Actualización parcial - añadir solo nuevos
                 snapshot.docChanges().forEach(change => {
                     if (change.type === 'added') {
                         const data = change.doc.data();
@@ -3228,7 +3369,6 @@
                     }
                 });
             } else if (mensajesExistentes.length === 0) {
-                // Primera carga - mostrar todos
                 tuchatBody.innerHTML = '';
                 snapshot.forEach(doc => {
                     const data = doc.data();
@@ -3263,7 +3403,22 @@
 
         const textSpan = document.createElement('div');
         textSpan.className = 'texto';
-        textSpan.textContent = data.texto || '';
+        
+        // Si es imagen
+        if (data.tipo === 'imagen' && data.imagenBase64) {
+            const img = document.createElement('img');
+            img.src = data.imagenBase64;
+            img.alt = 'Imagen compartida';
+            img.loading = 'lazy';
+            img.style.maxWidth = '200px';
+            img.style.maxHeight = '200px';
+            img.style.borderRadius = '8px';
+            img.style.marginTop = '4px';
+            img.style.border = '1px solid rgba(255,215,0,0.1)';
+            textSpan.appendChild(img);
+        } else {
+            textSpan.textContent = data.texto || '';
+        }
 
         const timeSpan = document.createElement('div');
         timeSpan.className = 'hora';
@@ -3278,21 +3433,28 @@
         tuchatBody.appendChild(msgDiv);
     }
 
+    // =====================================================
+    // FUNCIÓN PARA ADMIN DESDE CONSOLA
+    // =====================================================
     window.enviarComoAdmin = async function(texto) {
         if (!texto || texto.trim() === '') return;
         try {
-            // Buscar el primer ticket abierto para enviar un mensaje general
             const q = query(collection(db, "tuchat_tickets"), where("estado", "==", "abierto"), orderBy("ultimo_timestamp", "desc"));
             const snapshot = await getDocs(q);
             if (!snapshot.empty) {
-                const doc = snapshot.docs[0];
-                await addDoc(collection(db, "tuchat_tickets", doc.id, "mensajes"), {
+                const docRef = snapshot.docs[0];
+                await addDoc(collection(db, "tuchat_tickets", docRef.id, "mensajes"), {
                     texto: texto.trim(),
                     remitente: 'Dr.Animalitos',
                     timestamp: serverTimestamp(),
                     esAdmin: true
                 });
-                console.log('✅ Mensaje de admin enviado al ticket:', doc.id);
+                await updateDoc(doc(db, "tuchat_tickets", docRef.id), {
+                    ultimo_mensaje: texto.trim(),
+                    ultimo_remitente: 'Dr.Animalitos',
+                    ultimo_timestamp: serverTimestamp()
+                });
+                console.log('✅ Mensaje de admin enviado');
             }
         } catch (error) {
             console.error('❌ Error:', error);
@@ -3312,7 +3474,7 @@
     };
 
     // =====================================================
-    // MEDIDAS DE SEGURIDAD
+    // MEDIDAS DE SEGURIDAD (SE MANTIENEN)
     // =====================================================
     (function() {
         document.addEventListener('contextmenu', function(e) { e.preventDefault(); return false; });
