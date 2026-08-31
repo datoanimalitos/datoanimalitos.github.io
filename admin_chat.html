@@ -40,7 +40,6 @@
         .login-panel button:hover { transform: scale(1.02); box-shadow: 0 4px 25px rgba(255,215,0,0.3); }
         .login-panel .error { color: #ff6b6b; font-size: 0.85rem; min-height: 20px; }
 
-        /* ===== LISTA DE TICKETS ===== */
         .tickets-list { max-height: 150px; overflow-y: auto; border-bottom: 1px solid rgba(255,215,0,0.1); flex-shrink: 0; background: #0d0d18; }
         .tickets-list::-webkit-scrollbar { width: 3px; }
         .tickets-list::-webkit-scrollbar-thumb { background: #ffd700; border-radius: 10px; }
@@ -54,7 +53,6 @@
         .ticket-item .ticket-badge { background: #ff4444; color: white; border-radius: 50%; padding: 1px 6px; font-size: 0.5rem; font-weight: 700; margin-left: 6px; flex-shrink: 0; }
         .no-tickets { text-align: center; color: #718096; padding: 20px; font-size: 0.8rem; }
 
-        /* ===== CHAT ===== */
         .chat-container { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 6px; background: #0a0a12; }
         .chat-container::-webkit-scrollbar { width: 3px; }
         .chat-container::-webkit-scrollbar-thumb { background: #ffd700; border-radius: 10px; }
@@ -71,7 +69,6 @@
         .mensaje .responder-btn:hover { background: rgba(255,215,0,0.25); }
         .mensaje .responder-btn:active { transform: scale(0.95); }
 
-        /* ===== FOOTER ===== */
         .footer { padding: 8px 12px; background: #0f0f1a; border-top: 1px solid rgba(255,215,0,0.1); display: flex; gap: 8px; flex-shrink: 0; align-items: center; flex-wrap: wrap; }
         .footer .input-wrapper { flex: 1; display: flex; align-items: center; background: #0a0a12; border: 1px solid rgba(255,215,0,0.2); border-radius: 30px; padding: 2px 4px; transition: border 0.3s; min-width: 80px; }
         .footer .input-wrapper:focus-within { border-color: #ffd700; }
@@ -240,12 +237,12 @@
         }
 
         // =====================================================
-        // CARGAR TICKETS
+        // CARGAR TICKETS - VERSIÓN MEJORADA (SIN where)
         // =====================================================
         function cargarTickets() {
+            // Consulta sin filtro para ver todos los tickets
             const q = query(
                 collection(db, "tuchat_tickets"),
-                where("estado", "==", "abierto"),
                 orderBy("ultimo_timestamp", "desc")
             );
 
@@ -253,11 +250,26 @@
                 ticketsLista = [];
                 snapshot.forEach(doc => {
                     const data = doc.data();
-                    ticketsLista.push({ id: doc.id, ...data });
+                    // Solo mostrar los que tienen usuario y estado abierto
+                    if (data.usuario && data.estado === "abierto") {
+                        ticketsLista.push({ id: doc.id, ...data });
+                    }
                 });
                 actualizarListaTickets();
             }, (error) => {
                 console.error('Error al cargar tickets:', error);
+                // Si hay error, intentar sin orderBy
+                const q2 = collection(db, "tuchat_tickets");
+                onSnapshot(q2, (snapshot2) => {
+                    ticketsLista = [];
+                    snapshot2.forEach(doc => {
+                        const data = doc.data();
+                        if (data.usuario && data.estado === "abierto") {
+                            ticketsLista.push({ id: doc.id, ...data });
+                        }
+                    });
+                    actualizarListaTickets();
+                });
             });
         }
 
@@ -272,7 +284,6 @@
                 const preview = ticket.ultimo_mensaje || 'Sin mensajes';
                 const hora = ticket.ultimo_timestamp ? new Date(ticket.ultimo_timestamp.toDate()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
                 const activeClass = ticketSeleccionado === ticket.id ? 'active' : '';
-                const hasUnread = ticket.hasUnread ? `<span class="ticket-badge">●</span>` : '';
                 
                 html += `
                     <div class="ticket-item ${activeClass}" data-id="${ticket.id}" onclick="seleccionarTicket('${ticket.id}')">
@@ -280,10 +291,7 @@
                             <div class="usuario">🐾 ${ticket.usuario}</div>
                             <div class="preview">${preview}</div>
                         </div>
-                        <div style="display:flex; align-items:center; gap:4px;">
-                            ${hasUnread}
-                            <span class="hora">${hora}</span>
-                        </div>
+                        <span class="hora">${hora}</span>
                     </div>
                 `;
             });
@@ -294,21 +302,13 @@
             ticketSeleccionado = ticketId;
             const ticket = ticketsLista.find(t => t.id === ticketId);
             if (ticket) {
-                // Marcar como leído
-                ticket.hasUnread = false;
-                
-                // Actualizar UI
                 ticketIdDisplay.textContent = ticketId.slice(0, 8);
                 ticketSeleccionadoDisplay.classList.add('show');
                 nombreDestino.textContent = ticket.usuario;
                 respondiendoA.classList.add('show');
                 mensajeInput.placeholder = `Responder a ${ticket.usuario}...`;
                 mensajeInput.focus();
-                
-                // Actualizar lista
                 actualizarListaTickets();
-                
-                // Cargar mensajes del ticket
                 cargarMensajesTicket(ticketId);
             }
         };
@@ -443,31 +443,6 @@
             }
         }
 
-        // Función para cerrar ticket
-        window.cerrarTicket = async function(ticketId) {
-            if (!confirm('¿Cerrar este ticket? El usuario no podrá seguir escribiendo.')) return;
-            try {
-                await updateDoc(doc(db, "tuchat_tickets", ticketId), {
-                    estado: "cerrado"
-                });
-                mostrarToast('✅ Ticket cerrado', 'El ticket ha sido cerrado correctamente');
-                if (ticketSeleccionado === ticketId) {
-                    ticketSeleccionado = null;
-                    chatContainer.innerHTML = `
-                        <div class="no-tickets">
-                            <i class="bi bi-chat-dots" style="font-size:2rem; color:#ffd700; opacity:0.3; display:block; margin-bottom:8px;"></i>
-                            Selecciona un ticket para ver la conversación
-                        </div>
-                    `;
-                    ticketSeleccionadoDisplay.classList.remove('show');
-                    respondiendoA.classList.remove('show');
-                }
-            } catch (error) {
-                console.error('❌ Error:', error);
-                mostrarToast('❌ Error', 'No se pudo cerrar el ticket');
-            }
-        };
-
         window.enviarComoAdmin = async function(texto) {
             if (!texto || texto.trim() === '') return;
             try {
@@ -495,7 +470,6 @@
 
         console.log('👑 Panel Admin de Tickets cargado');
         console.log('📌 Clave de admin:', ADMIN_CLAVE);
-        console.log('💬 Para enviar mensaje desde consola: enviarComoAdmin("Texto")');
     </script>
 </body>
 </html>
