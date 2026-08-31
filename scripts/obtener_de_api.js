@@ -107,7 +107,7 @@ const CONFIG = {
 
   // 🌱 LA GRANJITA - OPCIÓN B (EMULACIÓN DE NAVEGADOR COMPLETA)
   granjita: {
-    apiUrl: 'https://resultados365.com/resultados/la-granjita',
+    apiUrl: 'https://api.lotterly.co/v1/results/selva-plus/',
     numeros: 12,
     nombre: 'La Granjita',
     archivo: 'granjita.json',
@@ -125,8 +125,8 @@ const CONFIG = {
             'Sec-Fetch-Dest': 'empty',
             'Sec-Fetch-Mode': 'cors',
             'Sec-Fetch-Site': 'same-origin',
-            'Referer': 'https://resultados365.com/resultados/la-granjita',
-            'Origin': 'https://resultados365.com/resultados/la-granjita'
+            'Referer': 'https://www.selvaplus.com',
+            'Origin': 'https://www.selvaplus.com/'
           }
         });
         
