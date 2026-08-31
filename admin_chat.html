@@ -1,6 +1,20 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <!-- OneSignal SDK -->
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script>
+        window.OneSignalDeferred = window.OneSignalDeferred || [];
+        OneSignalDeferred.push(async function(OneSignal) {
+            await OneSignal.init({
+                appId: "e528af1f-e023-4dd3-8cb0-68d389493cb5",
+                serviceWorkerOverrideForTypical: true,
+                path: "https://tuanimalito.github.io/OneSignalSDKWorker.js",
+                serviceWorkerParam: { scope: "/" },
+            });
+        });
+    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>Admin TuChat - Tickets</title>
@@ -304,8 +318,6 @@
                         const subscription = await OneSignal.User.PushSubscription.getId();
                         console.log('📱 Tu Subscription ID es:', subscription);
                         if (subscription) {
-                            // Actualizar automáticamente el TU_SUBSCRIPTION_ID
-                            // Pero mejor que el usuario lo copie manualmente
                             alert('✅ Tu Subscription ID es: ' + subscription + '\nCópialo y pégalo en el código donde dice "TU_SUBSCRIPTION_ID_AQUI"');
                         }
                     } catch (e) {
