@@ -3,7 +3,7 @@
  * CONFIGURACIÓN PARA LAS 7 LOTERÍAS - SIN PUPPETEER
  * ACTUALIZADO: 
  *   - guacharito → archivo correcto (guacharito.json)
- *   - granjita → scraping de Lotoven con soporte de fechas
+ *   - granjita → scraping de Lotoven con lógica correcta (hoy → ayer → anteayer)
  *   - selva → 13 sorteos
  */
 
@@ -157,7 +157,7 @@ const CONFIG = {
     }
   },
 
-  // 🌿 LA GRANJITA - SCRAPING DE LOTOVEN (CON SOPORTE DE FECHAS)
+  // 🌿 LA GRANJITA - SCRAPING DE LOTOVEN (CON LÓGICA CORRECTA)
   granjita: {
     apiUrl: 'https://lotoven.com/animalito/lagranjita/resultados/',
     numeros: 12,
@@ -214,38 +214,14 @@ const CONFIG = {
           if (numeros.length === 12) break;
         }
         
-        // Si no hay 12 números, intentar buscar en otra sección
-        if (numeros.length < 12) {
-          const regexTexto = /La Granjita\s+(\d{1,2}:\d{2}\s*(?:AM|PM))[^>]*>(\d{1,2})\s+([A-Za-záéíóúñÑ]+)/g;
-          while ((match = regexTexto.exec(html)) !== null) {
-            const num = match[2];
-            const animal = match[3];
-            if (parseInt(num) >= 0 && parseInt(num) <= 99 && animal.length >= 3) {
-              const numValue = num === "0" ? "00" : parseInt(num);
-              if (!numeros.includes(numValue)) {
-                numeros.push(numValue);
-              }
-            }
-            if (numeros.length === 12) break;
-          }
-        }
-        
-        // Si solo hay 11 números, completar con el último
-        if (numeros.length === 11) {
-          const ultimoNumero = numeros[numeros.length - 1];
-          numeros.push(ultimoNumero);
-        }
-        
-        if (numeros.length >= 11) {
-          console.log(`   ✅ Números obtenidos: ${numeros.slice(0, 12).join(', ')}`);
-          return numeros.slice(0, 12);
-        } else {
-          console.log(`   ⚠️ Se obtuvieron ${numeros.length} números de 12 requeridos`);
-          if (numeros.length > 0) {
-            console.log(`   📋 Números encontrados: ${numeros.join(', ')}`);
-          }
+        // 🔥 CRÍTICO: Si no hay 12 números, devolver null para que busque el día anterior
+        if (numeros.length !== 12) {
+          console.log(`   ⚠️ Se obtuvieron ${numeros.length} números de 12 requeridos - Buscando día anterior...`);
           return null;
         }
+        
+        console.log(`   ✅ Números obtenidos: ${numeros.join(', ')}`);
+        return numeros;
         
       } catch (error) {
         console.log(`   ❌ Error al scrapear: ${error.message}`);
