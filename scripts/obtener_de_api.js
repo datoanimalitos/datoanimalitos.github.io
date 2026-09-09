@@ -1,7 +1,8 @@
 /**
  * SCRIPT DEFINITIVO - Dr. Animalitos
  * CONFIGURACIÓN PARA LAS 6 LOTERÍAS - SIN PUPPETEER
- * ACTUALIZADO: Todas las URLs de API correctas
+ * ACTUALIZADO: guacharito → API correcta (12 sorteos)
+ *              selva → API correcta (13 sorteos)
  */
 
 const fs = require('fs');
@@ -106,7 +107,7 @@ const CONFIG = {
     }
   },
 
-  // 🌱 GUACHARITO - API OFICIAL (NUEVA)
+  // 🌱 GUACHARITO - API OFICIAL (12 SORTEOS)
   granjita: {
     apiUrl: 'https://api.lotterly.co/v1/results/el-guacharito-millonario/',
     numeros: 12,
@@ -154,10 +155,10 @@ const CONFIG = {
     }
   },
 
-  // 🌿 SELVA PLUS - API OFICIAL (NUEVA)
+  // 🌿 SELVA PLUS - API OFICIAL (13 SORTEOS)
   selva: {
     apiUrl: 'https://api.lotterly.co/v1/results/selva-plus/',
-    numeros: 12,
+    numeros: 13,  // ← 13 SORTEOS (8:15 AM a 8:15 PM)
     nombre: 'Selva Plus',
     archivo: 'selva.json',
     procesar: async (fecha) => {
@@ -182,8 +183,10 @@ const CONFIG = {
         
         const data = await response.json();
         
-        if (Array.isArray(data) && data.length === 12) {
-          const numeros = data.map(sorteo => {
+        // Verificar que la respuesta tenga al menos 13 sorteos
+        if (Array.isArray(data) && data.length >= 13) {
+          // Tomar los primeros 13 sorteos
+          const numeros = data.slice(0, 13).map(sorteo => {
             const resultado = sorteo.results?.[0]?.result;
             return resultado === "00" ? "00" : parseInt(resultado);
           });
@@ -191,7 +194,7 @@ const CONFIG = {
           console.log(`   ✅ Números obtenidos: ${numeros.join(', ')}`);
           return numeros;
         } else {
-          console.log(`   ⚠️ Se obtuvieron ${data?.length || 0} sorteos de 12 requeridos`);
+          console.log(`   ⚠️ Se obtuvieron ${data?.length || 0} sorteos, se esperaban 13`);
           return null;
         }
         
@@ -312,7 +315,7 @@ async function main() {
 
   const resultados = {};
   const loterias = ['guacharo', 'granja', 'granjazo', 'granjita', 'selva', 'lotto'];
-  const numerosEsperados = { guacharo: 12, granja: 10, granjazo: 10, granjita: 12, selva: 12, lotto: 12 };
+  const numerosEsperados = { guacharo: 12, granja: 10, granjazo: 10, granjita: 12, selva: 13, lotto: 12 };
 
   for (const loteria of loterias) {
     console.log(`\n🔍 Buscando ${CONFIG[loteria].nombre}...`);
