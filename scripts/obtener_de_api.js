@@ -2,6 +2,7 @@
  * SCRIPT DEFINITIVO - Dr. Animalitos
  * CONFIGURACIÓN PARA LAS 6 LOTERÍAS - SIN PUPPETEER
  * ACTUALIZADO: granjita → scrapea https://elguacharitomillonario.com/
+ *              selva → https://www.selvaplus.com/
  */
 
 const fs = require('fs');
@@ -162,8 +163,9 @@ const CONFIG = {
     }
   },
 
+  // 🌿 SELVA PLUS - NUEVA URL OFICIAL
   selva: {
-    apiUrl: 'https://api.lotterly.co/v1/results/selva-plus/',
+    apiUrl: 'https://www.selvaplus.com/',  // ← SOLO ESTA LÍNEA CAMBIÓ
     numeros: 12,
     nombre: 'Selva Plus',
     archivo: 'selva.json',
