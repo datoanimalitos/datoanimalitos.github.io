@@ -2,7 +2,7 @@
  * SCRIPT DEFINITIVO - Dr. Animalitos
  * CONFIGURACIÓN PARA LAS 6 LOTERÍAS - SIN PUPPETEER
  * ACTUALIZADO: granjita → scrapea https://elguacharitomillonario.com/
- *              selva → https://www.selvaplus.com/
+ *              selva → scrapea https://www.selvaplus.com/
  */
 
 const fs = require('fs');
@@ -163,31 +163,57 @@ const CONFIG = {
     }
   },
 
-  // 🌿 SELVA PLUS - NUEVA URL OFICIAL
+  // 🌿 SELVA PLUS - SCRAPING DIRECTO DESDE LA PÁGINA OFICIAL
   selva: {
-    apiUrl: 'https://www.selvaplus.com/',  // ← SOLO ESTA LÍNEA CAMBIÓ
+    apiUrl: 'https://www.selvaplus.com/',
     numeros: 12,
     nombre: 'Selva Plus',
     archivo: 'selva.json',
     procesar: async (fecha) => {
-      const fechaStr = formatearFechaAPI(fecha);
-      const url = `${CONFIG.selva.apiUrl}?exact_date=${fechaStr}&extended=true&_t=${Date.now()}`;
-      console.log(`   📡 URL: ${url}`);
+      console.log(`   📡 Scrapeando https://www.selvaplus.com/`);
+      
       try {
-        const response = await fetch(url, {
-          headers: { ...HEADERS, 'Origin': 'https://www.selvaplus.com', 'Referer': 'https://www.selvaplus.com/' }
+        const response = await fetch('https://www.selvaplus.com/', {
+          headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+            'Accept-Language': 'es-ES,es;q=0.9,en;q=0.8',
+            'Cache-Control': 'no-cache'
+          }
         });
-        if (!response.ok) return null;
-        const data = await response.json();
-        if (Array.isArray(data) && data.length === 12) {
-          return data.map(sorteo => {
-            const resultado = sorteo.results?.[0]?.result;
-            return resultado === "00" ? "00" : parseInt(resultado);
-          });
+        
+        if (!response.ok) {
+          console.log(`   ⚠️ HTTP ${response.status}: No se pudo acceder a la página`);
+          return null;
         }
-        return null;
+        
+        const html = await response.text();
+        
+        // Extraer números del HTML (formato: "09Águila", "12Caballo", "36Culebra", "59Pantera")
+        const numeros = [];
+        const regex = /(\d{2})([A-Za-záéíóúñÑ]+)/g;
+        let match;
+        
+        while ((match = regex.exec(html)) !== null) {
+          const num = match[1];
+          // Validar que sea un número entre 00 y 99
+          if (parseInt(num) >= 0 && parseInt(num) <= 99) {
+            numeros.push(num === "00" ? "00" : parseInt(num));
+          }
+          // Limitar a 12 números (los sorteos del día)
+          if (numeros.length === 12) break;
+        }
+        
+        if (numeros.length === 12) {
+          console.log(`   ✅ Números obtenidos: ${numeros.join(', ')}`);
+          return numeros;
+        } else {
+          console.log(`   ⚠️ Se obtuvieron ${numeros.length} números de 12 requeridos`);
+          return null;
+        }
+        
       } catch (error) {
-        console.log(`   ❌ Error: ${error.message}`);
+        console.log(`   ❌ Error al scrapear: ${error.message}`);
         return null;
       }
     }
