@@ -1,8 +1,7 @@
 /**
  * SCRIPT DEFINITIVO - Dr. Animalitos
  * CONFIGURACIÓN PARA LAS 6 LOTERÍAS - SIN PUPPETEER
- * ACTUALIZADO: granjita → scrapea https://elguacharitomillonario.com/
- *              selva → scrapea https://www.selvaplus.com/
+ * ACTUALIZADO: Todas las URLs de API correctas
  */
 
 const fs = require('fs');
@@ -107,113 +106,97 @@ const CONFIG = {
     }
   },
 
-  // 🌱 GUACHARITO - SCRAPING DIRECTO DESDE LA PÁGINA OFICIAL
+  // 🌱 GUACHARITO - API OFICIAL (NUEVA)
   granjita: {
-    apiUrl: 'https://elguacharitomillonario.com/',
+    apiUrl: 'https://api.lotterly.co/v1/results/el-guacharito-millonario/',
     numeros: 12,
     nombre: 'Guacharito Millonario',
     archivo: 'granjita.json',
     procesar: async (fecha) => {
-      console.log(`   📡 Scrapeando https://elguacharitomillonario.com/`);
+      const fechaStr = formatearFechaAPI(fecha);
+      const url = `${CONFIG.granjita.apiUrl}?exact_date=${fechaStr}&extended=true&_t=${Date.now()}`;
+      console.log(`   📡 URL: ${url}`);
       
       try {
-        const response = await fetch('https://elguacharitomillonario.com/', {
+        const response = await fetch(url, {
           headers: {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-            'Accept-Language': 'es-ES,es;q=0.9,en;q=0.8',
-            'Cache-Control': 'no-cache'
+            'Accept': 'application/json, text/plain, */*',
+            'Origin': 'https://elguacharitomillonario.com',
+            'Referer': 'https://elguacharitomillonario.com/'
           }
         });
         
         if (!response.ok) {
-          console.log(`   ⚠️ HTTP ${response.status}: No se pudo acceder a la página`);
+          console.log(`   ⚠️ HTTP ${response.status}: ${response.statusText}`);
           return null;
         }
         
-        const html = await response.text();
+        const data = await response.json();
         
-        // Extraer números del HTML (formato: "85Hamster", "90Huron", "98Cocodrilo")
-        const numeros = [];
-        const regex = /(\d{2})([A-Za-záéíóúñÑ]+)/g;
-        let match;
-        
-        while ((match = regex.exec(html)) !== null) {
-          const num = match[1];
-          // Validar que sea un número entre 00 y 99
-          if (parseInt(num) >= 0 && parseInt(num) <= 99) {
-            numeros.push(num === "00" ? "00" : parseInt(num));
-          }
-          // Limitar a 12 números (los sorteos del día)
-          if (numeros.length === 12) break;
-        }
-        
-        if (numeros.length === 12) {
+        if (Array.isArray(data) && data.length === 12) {
+          const numeros = data.map(sorteo => {
+            const resultado = sorteo.results?.[0]?.result;
+            return resultado === "00" ? "00" : parseInt(resultado);
+          });
+          
           console.log(`   ✅ Números obtenidos: ${numeros.join(', ')}`);
           return numeros;
         } else {
-          console.log(`   ⚠️ Se obtuvieron ${numeros.length} números de 12 requeridos`);
+          console.log(`   ⚠️ Se obtuvieron ${data?.length || 0} sorteos de 12 requeridos`);
           return null;
         }
         
       } catch (error) {
-        console.log(`   ❌ Error al scrapear: ${error.message}`);
+        console.log(`   ❌ Error: ${error.message}`);
         return null;
       }
     }
   },
 
-  // 🌿 SELVA PLUS - SCRAPING DIRECTO DESDE LA PÁGINA OFICIAL
+  // 🌿 SELVA PLUS - API OFICIAL (NUEVA)
   selva: {
-    apiUrl: 'https://www.selvaplus.com/',
+    apiUrl: 'https://api.lotterly.co/v1/results/selva-plus/',
     numeros: 12,
     nombre: 'Selva Plus',
     archivo: 'selva.json',
     procesar: async (fecha) => {
-      console.log(`   📡 Scrapeando https://www.selvaplus.com/`);
+      const fechaStr = formatearFechaAPI(fecha);
+      const url = `${CONFIG.selva.apiUrl}?exact_date=${fechaStr}&extended=true&_t=${Date.now()}`;
+      console.log(`   📡 URL: ${url}`);
       
       try {
-        const response = await fetch('https://www.selvaplus.com/', {
+        const response = await fetch(url, {
           headers: {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-            'Accept-Language': 'es-ES,es;q=0.9,en;q=0.8',
-            'Cache-Control': 'no-cache'
+            'Accept': 'application/json, text/plain, */*',
+            'Origin': 'https://www.selvaplus.com',
+            'Referer': 'https://www.selvaplus.com/'
           }
         });
         
         if (!response.ok) {
-          console.log(`   ⚠️ HTTP ${response.status}: No se pudo acceder a la página`);
+          console.log(`   ⚠️ HTTP ${response.status}: ${response.statusText}`);
           return null;
         }
         
-        const html = await response.text();
+        const data = await response.json();
         
-        // Extraer números del HTML (formato: "09Águila", "12Caballo", "36Culebra", "59Pantera")
-        const numeros = [];
-        const regex = /(\d{2})([A-Za-záéíóúñÑ]+)/g;
-        let match;
-        
-        while ((match = regex.exec(html)) !== null) {
-          const num = match[1];
-          // Validar que sea un número entre 00 y 99
-          if (parseInt(num) >= 0 && parseInt(num) <= 99) {
-            numeros.push(num === "00" ? "00" : parseInt(num));
-          }
-          // Limitar a 12 números (los sorteos del día)
-          if (numeros.length === 12) break;
-        }
-        
-        if (numeros.length === 12) {
+        if (Array.isArray(data) && data.length === 12) {
+          const numeros = data.map(sorteo => {
+            const resultado = sorteo.results?.[0]?.result;
+            return resultado === "00" ? "00" : parseInt(resultado);
+          });
+          
           console.log(`   ✅ Números obtenidos: ${numeros.join(', ')}`);
           return numeros;
         } else {
-          console.log(`   ⚠️ Se obtuvieron ${numeros.length} números de 12 requeridos`);
+          console.log(`   ⚠️ Se obtuvieron ${data?.length || 0} sorteos de 12 requeridos`);
           return null;
         }
         
       } catch (error) {
-        console.log(`   ❌ Error al scrapear: ${error.message}`);
+        console.log(`   ❌ Error: ${error.message}`);
         return null;
       }
     }
