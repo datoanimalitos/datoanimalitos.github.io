@@ -3,7 +3,7 @@
  * CONFIGURACIÓN PARA LAS 7 LOTERÍAS - SIN PUPPETEER
  * ACTUALIZADO: 
  *   - guacharito → archivo correcto (guacharito.json)
- *   - granjita → agregada como lotería independiente
+ *   - granjita → API vía Lotterly (sin cookies)
  *   - selva → 13 sorteos
  */
 
@@ -157,24 +157,22 @@ const CONFIG = {
     }
   },
 
-  // 🌿 LA GRANJITA - API OFICIAL (12 SORTEOS)
+  // 🌿 LA GRANJITA - API VÍA LOTTERLY (SIN COOKIES)
   granjita: {
-    apiUrl: 'https://lagranjita.com/api/results.json',
+    apiUrl: 'https://api.lotterly.co/v1/results/la-granjita/',
     numeros: 12,
     nombre: 'La Granjita',
     archivo: 'granjita.json',
     procesar: async (fecha) => {
-      const fechaStr = formatearFechaGranjita(fecha);
-      const url = `${CONFIG.granjita.apiUrl}?date=${fechaStr}&productId=1&t=${Date.now()}`;
+      const fechaStr = formatearFechaAPI(fecha);
+      const url = `${CONFIG.granjita.apiUrl}?exact_date=${fechaStr}&extended=true&_t=${Date.now()}`;
       console.log(`   📡 URL: ${url}`);
       
       try {
         const response = await fetch(url, {
           headers: {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
-            'Accept': 'application/json, text/plain, */*',
-            'Referer': 'https://lagranjita.com/',
-            'Origin': 'https://lagranjita.com'
+            'Accept': 'application/json, text/plain, */*'
           }
         });
         
@@ -184,17 +182,17 @@ const CONFIG = {
         }
         
         const data = await response.json();
-        const resultados = data["LA GRANJITA"] || [];
-        const numeros = resultados.map(item => {
-          const valor = item.result_value;
-          return valor === "00" ? "00" : parseInt(valor);
-        });
         
-        if (numeros.length === 12) {
+        if (Array.isArray(data) && data.length === 12) {
+          const numeros = data.map(sorteo => {
+            const resultado = sorteo.results?.[0]?.result;
+            return resultado === "00" ? "00" : parseInt(resultado);
+          });
+          
           console.log(`   ✅ Números obtenidos: ${numeros.join(', ')}`);
           return numeros;
         } else {
-          console.log(`   ⚠️ Se obtuvieron ${numeros.length} números de 12 requeridos`);
+          console.log(`   ⚠️ Se obtuvieron ${data?.length || 0} sorteos de 12 requeridos`);
           return null;
         }
         
@@ -369,7 +367,7 @@ async function main() {
     granja: 10, 
     granjazo: 10, 
     guacharito: 12, 
-    granjita: 12,   // ← NUEVA
+    granjita: 12,
     selva: 13, 
     lotto: 12 
   };
