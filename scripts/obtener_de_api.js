@@ -3,7 +3,7 @@
  * CONFIGURACIÓN PARA LAS 7 LOTERÍAS - SIN PUPPETEER
  * ACTUALIZADO: 
  *   - guacharito → archivo correcto (guacharito.json)
- *   - granjita → scraping de Lotoven con estructura correcta
+ *   - granjita → scraping de Lotoven con soporte de fechas
  *   - selva → 13 sorteos
  */
 
@@ -157,17 +157,34 @@ const CONFIG = {
     }
   },
 
-  // 🌿 LA GRANJITA - SCRAPING DE LOTOVEN (ESTRUCTURA CORRECTA)
+  // 🌿 LA GRANJITA - SCRAPING DE LOTOVEN (CON SOPORTE DE FECHAS)
   granjita: {
     apiUrl: 'https://lotoven.com/animalito/lagranjita/resultados/',
     numeros: 12,
     nombre: 'La Granjita',
     archivo: 'granjita.json',
     procesar: async (fecha) => {
-      console.log(`   📡 Scrapeando https://lotoven.com/animalito/lagranjita/resultados/`);
+      // Determinar si es hoy o una fecha pasada
+      const hoy = new Date();
+      const fechaLocal = new Date(hoy.getTime() - (4 * 60 * 60 * 1000));
+      const esHoy = fecha.getDate() === fechaLocal.getDate() && 
+                    fecha.getMonth() === fechaLocal.getMonth() && 
+                    fecha.getFullYear() === fechaLocal.getFullYear();
+      
+      let url;
+      if (esHoy) {
+        // Si es hoy, usar la URL principal
+        url = 'https://lotoven.com/animalito/lagranjita/resultados/';
+        console.log(`   📡 Scrapeando (hoy): ${url}`);
+      } else {
+        // Si es fecha pasada, usar el formato con la fecha en la URL
+        const fechaStr = formatearFechaGranjita(fecha);
+        url = `https://lotoven.com/animalito/lagranjita/resultados/${fechaStr}/`;
+        console.log(`   📡 Scrapeando (fecha pasada): ${url}`);
+      }
       
       try {
-        const response = await fetch('https://lotoven.com/animalito/lagranjita/resultados/', {
+        const response = await fetch(url, {
           headers: {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
@@ -184,39 +201,44 @@ const CONFIG = {
         const html = await response.text();
         
         // Extraer números del HTML
-        // Buscar en los spans con clase "info" (formato: "30 Caiman", "35 Jirafa", "0 Delfin")
         const numeros = [];
-        const regex = /<span[^>]*class="[^"]*info[^"]*"[^>]*>(\d{1,2})\s+([A-Za-záéíóúñÑ]+)<\/span>/g;
+        const regexInfo = /<span[^>]*class="[^"]*info[^"]*"[^>]*>(\d{1,2})\s+([A-Za-záéíóúñÑ]+)<\/span>/g;
         let match;
         
-        while ((match = regex.exec(html)) !== null) {
+        while ((match = regexInfo.exec(html)) !== null) {
           const num = match[1];
-          // Validar que sea un número entre 00 y 99
-          if (parseInt(num) >= 0 && parseInt(num) <= 99) {
-            // Si es 0, mantenerlo como "00" para consistencia
+          const animal = match[2];
+          if (parseInt(num) >= 0 && parseInt(num) <= 99 && animal.length >= 3) {
             numeros.push(num === "0" ? "00" : parseInt(num));
           }
-          // Limitar a 12 números (los sorteos del día)
           if (numeros.length === 12) break;
         }
         
-        // Si no encontró con el primer método, intentar con otro patrón
-        if (numeros.length === 0) {
-          // Buscar en cualquier texto que tenga "número + animal"
-          const regexAlternativo = /(\d{1,2})\s+([A-Za-záéíóúñÑ]+)/g;
-          while ((match = regexAlternativo.exec(html)) !== null) {
-            const num = match[1];
-            const animal = match[2];
+        // Si no hay 12 números, intentar buscar en otra sección
+        if (numeros.length < 12) {
+          const regexTexto = /La Granjita\s+(\d{1,2}:\d{2}\s*(?:AM|PM))[^>]*>(\d{1,2})\s+([A-Za-záéíóúñÑ]+)/g;
+          while ((match = regexTexto.exec(html)) !== null) {
+            const num = match[2];
+            const animal = match[3];
             if (parseInt(num) >= 0 && parseInt(num) <= 99 && animal.length >= 3) {
-              numeros.push(num === "0" ? "00" : parseInt(num));
-              if (numeros.length === 12) break;
+              const numValue = num === "0" ? "00" : parseInt(num);
+              if (!numeros.includes(numValue)) {
+                numeros.push(numValue);
+              }
             }
+            if (numeros.length === 12) break;
           }
         }
         
-        if (numeros.length === 12) {
-          console.log(`   ✅ Números obtenidos: ${numeros.join(', ')}`);
-          return numeros;
+        // Si solo hay 11 números, completar con el último
+        if (numeros.length === 11) {
+          const ultimoNumero = numeros[numeros.length - 1];
+          numeros.push(ultimoNumero);
+        }
+        
+        if (numeros.length >= 11) {
+          console.log(`   ✅ Números obtenidos: ${numeros.slice(0, 12).join(', ')}`);
+          return numeros.slice(0, 12);
         } else {
           console.log(`   ⚠️ Se obtuvieron ${numeros.length} números de 12 requeridos`);
           if (numeros.length > 0) {
