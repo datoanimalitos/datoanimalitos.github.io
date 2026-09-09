@@ -3,7 +3,7 @@
  * CONFIGURACIÓN PARA LAS 7 LOTERÍAS - SIN PUPPETEER
  * ACTUALIZADO: 
  *   - guacharito → archivo correcto (guacharito.json)
- *   - granjita → scraping de Lotoven (https://lotoven.com/animalito/lagranjita/resultados/)
+ *   - granjita → scraping de Lotoven con estructura correcta
  *   - selva → 13 sorteos
  */
 
@@ -157,7 +157,7 @@ const CONFIG = {
     }
   },
 
-  // 🌿 LA GRANJITA - SCRAPING DE LOTOVEN
+  // 🌿 LA GRANJITA - SCRAPING DE LOTOVEN (ESTRUCTURA CORRECTA)
   granjita: {
     apiUrl: 'https://lotoven.com/animalito/lagranjita/resultados/',
     numeros: 12,
@@ -184,37 +184,32 @@ const CONFIG = {
         const html = await response.text();
         
         // Extraer números del HTML
-        // Buscar patrones como "09", "12", "36" seguidos de texto
+        // Buscar en los spans con clase "info" (formato: "30 Caiman", "35 Jirafa", "0 Delfin")
         const numeros = [];
-        const regex = /(\d{2})(?:<\/?[^>]*>)?\s*([A-Za-záéíóúñÑ]+)/g;
+        const regex = /<span[^>]*class="[^"]*info[^"]*"[^>]*>(\d{1,2})\s+([A-Za-záéíóúñÑ]+)<\/span>/g;
         let match;
         
         while ((match = regex.exec(html)) !== null) {
           const num = match[1];
-          const animal = match[2];
           // Validar que sea un número entre 00 y 99
           if (parseInt(num) >= 0 && parseInt(num) <= 99) {
-            // Verificar que el animal sea válido (evitar palabras como "en", "la", etc.)
-            if (animal.length >= 3) {
-              numeros.push(num === "00" ? "00" : parseInt(num));
-            }
+            // Si es 0, mantenerlo como "00" para consistencia
+            numeros.push(num === "0" ? "00" : parseInt(num));
           }
+          // Limitar a 12 números (los sorteos del día)
           if (numeros.length === 12) break;
         }
         
-        // Si no encontró resultados con el primer método, intentar solo números
+        // Si no encontró con el primer método, intentar con otro patrón
         if (numeros.length === 0) {
-          const regexSimple = /(\d{2})/g;
-          while ((match = regexSimple.exec(html)) !== null) {
+          // Buscar en cualquier texto que tenga "número + animal"
+          const regexAlternativo = /(\d{1,2})\s+([A-Za-záéíóúñÑ]+)/g;
+          while ((match = regexAlternativo.exec(html)) !== null) {
             const num = match[1];
-            if (parseInt(num) >= 0 && parseInt(num) <= 99) {
-              // Verificar que el número esté en el contexto de resultados
-              const contexto = html.substring(Math.max(0, match.index - 50), match.index + 50);
-              if (contexto.includes('resultado') || contexto.includes('sorteo') || 
-                  contexto.includes('animalito') || contexto.includes('La Granjita')) {
-                numeros.push(num === "00" ? "00" : parseInt(num));
-                if (numeros.length === 12) break;
-              }
+            const animal = match[2];
+            if (parseInt(num) >= 0 && parseInt(num) <= 99 && animal.length >= 3) {
+              numeros.push(num === "0" ? "00" : parseInt(num));
+              if (numeros.length === 12) break;
             }
           }
         }
@@ -224,6 +219,9 @@ const CONFIG = {
           return numeros;
         } else {
           console.log(`   ⚠️ Se obtuvieron ${numeros.length} números de 12 requeridos`);
+          if (numeros.length > 0) {
+            console.log(`   📋 Números encontrados: ${numeros.join(', ')}`);
+          }
           return null;
         }
         
@@ -391,7 +389,6 @@ async function main() {
   console.log('');
 
   const resultados = {};
-  // 🔥 AHORA 7 LOTERÍAS
   const loterias = ['guacharo', 'granja', 'granjazo', 'guacharito', 'granjita', 'selva', 'lotto'];
   const numerosEsperados = { 
     guacharo: 12, 
