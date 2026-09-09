@@ -3,7 +3,7 @@
  * CONFIGURACIÓN PARA LAS 7 LOTERÍAS - SIN PUPPETEER
  * ACTUALIZADO: 
  *   - guacharito → archivo correcto (guacharito.json)
- *   - granjita → API vía Lotterly (sin cookies)
+ *   - granjita → scraping de Lotoven (https://lotoven.com/animalito/lagranjita/resultados/)
  *   - selva → 13 sorteos
  */
 
@@ -157,47 +157,78 @@ const CONFIG = {
     }
   },
 
-  // 🌿 LA GRANJITA - API VÍA LOTTERLY (SIN COOKIES)
+  // 🌿 LA GRANJITA - SCRAPING DE LOTOVEN
   granjita: {
-    apiUrl: 'https://api.lotterly.co/v1/results/la-granjita/',
+    apiUrl: 'https://lotoven.com/animalito/lagranjita/resultados/',
     numeros: 12,
     nombre: 'La Granjita',
     archivo: 'granjita.json',
     procesar: async (fecha) => {
-      const fechaStr = formatearFechaAPI(fecha);
-      const url = `${CONFIG.granjita.apiUrl}?exact_date=${fechaStr}&extended=true&_t=${Date.now()}`;
-      console.log(`   📡 URL: ${url}`);
+      console.log(`   📡 Scrapeando https://lotoven.com/animalito/lagranjita/resultados/`);
       
       try {
-        const response = await fetch(url, {
+        const response = await fetch('https://lotoven.com/animalito/lagranjita/resultados/', {
           headers: {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
-            'Accept': 'application/json, text/plain, */*'
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+            'Accept-Language': 'es-ES,es;q=0.9,en;q=0.8',
+            'Cache-Control': 'no-cache'
           }
         });
         
         if (!response.ok) {
-          console.log(`   ⚠️ HTTP ${response.status}: ${response.statusText}`);
+          console.log(`   ⚠️ HTTP ${response.status}: No se pudo acceder a la página`);
           return null;
         }
         
-        const data = await response.json();
+        const html = await response.text();
         
-        if (Array.isArray(data) && data.length === 12) {
-          const numeros = data.map(sorteo => {
-            const resultado = sorteo.results?.[0]?.result;
-            return resultado === "00" ? "00" : parseInt(resultado);
-          });
-          
+        // Extraer números del HTML
+        // Buscar patrones como "09", "12", "36" seguidos de texto
+        const numeros = [];
+        const regex = /(\d{2})(?:<\/?[^>]*>)?\s*([A-Za-záéíóúñÑ]+)/g;
+        let match;
+        
+        while ((match = regex.exec(html)) !== null) {
+          const num = match[1];
+          const animal = match[2];
+          // Validar que sea un número entre 00 y 99
+          if (parseInt(num) >= 0 && parseInt(num) <= 99) {
+            // Verificar que el animal sea válido (evitar palabras como "en", "la", etc.)
+            if (animal.length >= 3) {
+              numeros.push(num === "00" ? "00" : parseInt(num));
+            }
+          }
+          if (numeros.length === 12) break;
+        }
+        
+        // Si no encontró resultados con el primer método, intentar solo números
+        if (numeros.length === 0) {
+          const regexSimple = /(\d{2})/g;
+          while ((match = regexSimple.exec(html)) !== null) {
+            const num = match[1];
+            if (parseInt(num) >= 0 && parseInt(num) <= 99) {
+              // Verificar que el número esté en el contexto de resultados
+              const contexto = html.substring(Math.max(0, match.index - 50), match.index + 50);
+              if (contexto.includes('resultado') || contexto.includes('sorteo') || 
+                  contexto.includes('animalito') || contexto.includes('La Granjita')) {
+                numeros.push(num === "00" ? "00" : parseInt(num));
+                if (numeros.length === 12) break;
+              }
+            }
+          }
+        }
+        
+        if (numeros.length === 12) {
           console.log(`   ✅ Números obtenidos: ${numeros.join(', ')}`);
           return numeros;
         } else {
-          console.log(`   ⚠️ Se obtuvieron ${data?.length || 0} sorteos de 12 requeridos`);
+          console.log(`   ⚠️ Se obtuvieron ${numeros.length} números de 12 requeridos`);
           return null;
         }
         
       } catch (error) {
-        console.log(`   ❌ Error: ${error.message}`);
+        console.log(`   ❌ Error al scrapear: ${error.message}`);
         return null;
       }
     }
