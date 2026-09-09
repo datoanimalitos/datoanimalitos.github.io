@@ -8,10 +8,10 @@
       31
     ],
     [
-      31,
+      76,
+      55,
+      57,
       95,
-      85,
-      19,
       31
     ],
     [
@@ -22,7 +22,7 @@
       31
     ]
   ],
-  "fecha_actualizacion": "2026-09-09T20:03:15.952Z",
+  "fecha_actualizacion": "2026-09-09T20:14:33.755Z",
   "metadata": {
     "origen": "granjita.json",
     "numeros_por_secuencia": 5,

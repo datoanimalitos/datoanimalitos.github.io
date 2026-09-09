@@ -15,14 +15,14 @@
       31
     ],
     [
-      31,
+      20,
+      33,
       95,
-      85,
-      19,
-      31
+      29,
+      96
     ]
   ],
-  "fecha_actualizacion": "2026-09-09T20:03:16.140Z",
+  "fecha_actualizacion": "2026-09-09T20:14:33.794Z",
   "metadata": {
     "origen": "selva.json",
     "numeros_por_secuencia": 5,
