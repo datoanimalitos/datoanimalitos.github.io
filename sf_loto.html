@@ -318,7 +318,7 @@
             color: #d1b3ff;
         }
 
-        /* --- SUPER FIJOS (Rojo) - BLOQUEADO - 3 números --- */
+        /* --- SUPER FIJOS (Rojo) - BLOQUEADO - 2 números --- */
         .tarjeta-superfijos {
             background: linear-gradient(145deg, #1a0d0d 0%, #2a1a1a 100%);
             border: 1px solid rgba(255, 107, 107, 0.25);
@@ -863,6 +863,15 @@
             transition: all 0.3s;
         }
 
+        .numeros-grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            max-width: 420px;
+            margin: 0 auto;
+            transition: all 0.3s;
+        }
+
         .numeros-grid-5 {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -1246,6 +1255,11 @@
             .numeros-grid-3 {
                 grid-template-columns: repeat(3, 1fr);
             }
+            .numeros-grid-2 {
+                grid-template-columns: repeat(2, 1fr);
+                max-width: 420px;
+                margin: 0 auto;
+            }
             .cabecera h1 {
                 font-size: 3rem;
             }
@@ -1269,6 +1283,10 @@
             }
             .numeros-grid-3 {
                 grid-template-columns: repeat(3, 1fr);
+            }
+            .numeros-grid-2 {
+                grid-template-columns: repeat(2, 1fr);
+                max-width: 100%;
             }
             .prediccion-grid {
                 grid-template-columns: repeat(3, 1fr);
@@ -1349,6 +1367,7 @@
                     <a href="index.html"><i class="bi bi-house-door-fill"></i> Inicio</a>
                     <a href="sf_loto.html"><i class="bi bi-dice-6-fill"></i> Lotto Activo</a>
                     <a href="sf_granja.html"><i class="bi bi-flower2"></i> Granja Millonaria</a>
+                    <a href="sf_guacharito.html"><i class="bi bi-dice-6-fill"></i> Guacharito</a>
                     <a href="sf_granjazo.html"><i class="bi bi-feather"></i> Granjazo</a>
                     <a href="sf_guacharo.html"><i class="bi bi-feather"></i> Guácharo Activo</a>
                     <a href="sf_selva.html"><i class="bi bi-feather"></i> Selva Plus</a>
@@ -1451,11 +1470,11 @@
 
                 <div class="premium-overlay" id="overlaySuperFijos">
                     <div class="premium-badge">
-                        <i class="bi bi-crown-fill"></i> 3 SUPER FIJOS
+                        <i class="bi bi-crown-fill"></i> 2 SUPER FIJOS
                     </div>
                     <p class="premium-message">
                         <strong>🔒 Contenido Exclusivo</strong><br>
-                        Accede a los 3 Super Fijos ingresando tu clave:
+                        Accede a los 2 Super Fijos ingresando tu clave:
                     </p>
                     <div class="action-buttons-group">
                         <button class="unlock-btn" onclick="abrirModalLogin()">
@@ -1803,7 +1822,7 @@
             if (overlaySuperFijos) overlaySuperFijos.classList.add('hidden');
             const resultadoContenedor = document.getElementById('resultado-contenido');
             if (resultadoContenedor) {
-                const grid = resultadoContenedor.querySelector('.numeros-grid-3');
+                const grid = resultadoContenedor.querySelector('.numeros-grid-2');
                 if (grid) {
                     grid.classList.remove('locked-grid');
                     grid.classList.add('locked-grid-desbloqueado');
@@ -1897,20 +1916,6 @@
             return resultadoLimpio;
         }
 
-        function obtenerTripletas(dia1Procesado, dia2Procesado, superFijos) {
-            const basesBrutas = dia1Procesado.slice(0, 2).map(item => calcularEspejo(item));
-            const bases = resolverDuplicados(basesBrutas, dia2Procesado, 2);
-
-            let acompañantes = [];
-            if (superFijos && superFijos.length >= 2) {
-                acompañantes = superFijos.slice(0, 2);
-            } else {
-                acompañantes = obtener4Aleatorios(dia2Procesado).slice(0, 2);
-            }
-
-            return mezclarArray([...bases, ...acompañantes]);
-        }
-
         function obtener4Aleatorios(todos) {
             const copia = [...todos];
             const seleccionados = [];
@@ -1949,13 +1954,13 @@
             }
 
             let superFijosParaCortesia = [];
-            if (superFijos && superFijos.length >= 3) {
-                superFijosParaCortesia = superFijos.slice(0, 3).map(item => ({
+            if (superFijos && superFijos.length >= 2) {
+                superFijosParaCortesia = superFijos.slice(0, 2).map(item => ({
                     ...item,
                     esPremium: true
                 }));
             } else {
-                const aleatorios = obtener4Aleatorios(todos).slice(0, 3);
+                const aleatorios = obtener4Aleatorios(todos).slice(0, 2);
                 superFijosParaCortesia = aleatorios.map(item => ({
                     ...item,
                     esPremium: true
@@ -1972,7 +1977,7 @@
         }
 
         // =====================================================
-        // BÚSQUEDA DE REPETICIÓN (SUPER FIJOS - 3 números)
+        // BÚSQUEDA DE REPETICIÓN (SUPER FIJOS - 2 números)
         // =====================================================
         function buscarRepeticionConFiltro(resultados) {
             const niveles = {
@@ -2002,7 +2007,7 @@
                             let intentos = 0;
                             const maxIntentos = 20;
 
-                            while (secuenciaFinal.length < 3 && intentos < maxIntentos) {
+                            while (secuenciaFinal.length < 2 && intentos < maxIntentos) {
                                 if (indiceActual < resultados.length && indiceActual < 36) {
                                     const siguiente = resultados[indiceActual];
                                     if (!secuenciaFinal.some(existente => obtenerClave(existente) === obtenerClave(siguiente))) {
@@ -2015,7 +2020,7 @@
                                 intentos++;
                             }
 
-                            if (secuenciaFinal.length === 3) {
+                            if (secuenciaFinal.length === 2) {
                                 return {
                                     encontrado: true,
                                     siguientes: secuenciaFinal,
@@ -2045,7 +2050,7 @@
             const maxIntentos = 100;
             let intentos = 0;
 
-            while (seleccionados.length < 3 && intentos < maxIntentos) {
+            while (seleccionados.length < 2 && intentos < maxIntentos) {
                 const idxRandom = Math.floor(Math.random() * numerosDisponibles.length);
                 const item = numerosDisponibles[idxRandom];
                 const clave = obtenerClave(item);
@@ -2299,9 +2304,9 @@
         }
 
         // =====================================================
-        // PREDICCIÓN FORENSE - DESBLOQUEADA (GRATIS)
+        // RANKING DE PREDICCIÓN FORENSE (datos reutilizables)
         // =====================================================
-        function actualizarForensePrediccion() {
+        function obtenerRankingPrediccionForense() {
             const semillas = calcularSemillasForense();
             const arrastre = calcularArrastreForense();
             const zona = calcularZonaCazaForense();
@@ -2320,10 +2325,17 @@
                 if (pts > 0) puntajes[n] = pts;
             });
 
-            const ranking = Object.entries(puntajes)
+            return Object.entries(puntajes)
                 .map(([n, p]) => ({ numero: parseInt(n), puntaje: p }))
                 .sort((a, b) => b.puntaje - a.puntaje)
                 .slice(0, 3);
+        }
+
+        // =====================================================
+        // PREDICCIÓN FORENSE - DESBLOQUEADA (GRATIS)
+        // =====================================================
+        function actualizarForensePrediccion() {
+            const ranking = obtenerRankingPrediccionForense();
 
             const labels = ['⭐ Opción 1', '🎁 Opción 2', '🔥 Opción 3'];
             const colores = ['#ffd700', '#C0C0C0', '#CD7F32'];
@@ -2580,7 +2592,7 @@
         }
 
         // =====================================================
-        // FUNCIÓN DE VISUALIZACIÓN DE SUPER FIJOS CON MEZCLA
+        // FUNCIÓN DE VISUALIZACIÓN DE SUPER FIJOS CON MEZCLA (2 números)
         // =====================================================
         function mostrarSuperFijosConLog(items, infoAdicional = null) {
             const contenedor = document.getElementById('resultado-contenido');
@@ -2591,7 +2603,7 @@
 
             const itemsMezclados = mezclarArray([...items]);
 
-            let claseGrid = 'numeros-grid-3';
+            let claseGrid = 'numeros-grid-2';
             let claseContainer = 'premium-container';
 
             if (!usuarioAutenticado) {
@@ -2627,7 +2639,7 @@
                     rutaImagen = obtenerRutaImagen(r.numero, false);
                 }
 
-                const badges = ['🔥', '⭐', '🎁'];
+                const badges = ['🔥', '⭐'];
 
                 html += `
                     <div class="numero-card" style="position: relative;">
@@ -2644,7 +2656,7 @@
 
             html += '</div>';
 
-            if (infoAdicional && infoAdicional.secuenciaCompleta && infoAdicional.secuenciaCompleta.length > 3) {
+            if (infoAdicional && infoAdicional.secuenciaCompleta && infoAdicional.secuenciaCompleta.length > 2) {
                 const duplicadosEliminados = infoAdicional.secuenciaCompleta.length - items.length;
                 if (duplicadosEliminados > 0) {
                     html += `
@@ -2658,6 +2670,30 @@
 
             contenedor.className = claseContainer;
             contenedor.innerHTML = html;
+        }
+
+        // =====================================================
+        // TRIPLETAS: 2 Super Fijos + 2 Primeras Opciones Forenses
+        // =====================================================
+        function obtenerTripletas(superFijos, rankingForense) {
+            // 1) Los 2 super fijos
+            const parteSuperFijos = (superFijos && superFijos.length >= 2)
+                ? superFijos.slice(0, 2)
+                : [];
+
+            // 2) Los 2 primeros de la Predicción Forense
+            const parteForense = [];
+            if (rankingForense && rankingForense.length >= 2) {
+                rankingForense.slice(0, 2).forEach(r => {
+                    parteForense.push({
+                        numero: r.numero === 100 ? 0 : r.numero,
+                        esDobleCero: r.numero === 100
+                    });
+                });
+            }
+
+            // 3) Combinar y mezclar (4 números)
+            return mezclarArray([...parteSuperFijos, ...parteForense]);
         }
 
         // =====================================================
@@ -2689,7 +2725,7 @@
                 const todos = [...dia3Procesado, ...dia2Procesado, ...dia1Procesado];
 
                 const resultado = buscarRepeticionConFiltro(todos);
-                const superFijos = resultado.encontrado ? resultado.siguientes.slice(0, 3) : [];
+                const superFijos = resultado.encontrado ? resultado.siguientes.slice(0, 2) : [];
 
                 const infoSuperFijos = {
                     encontrado: resultado.encontrado,
@@ -2735,10 +2771,13 @@
                 const cortesiaResultados = informacionDeCortecia(todos, superFijos);
                 mostrarCortesia(cortesiaResultados);
 
-                const tripletas = obtenerTripletas(dia1Procesado, dia2Procesado, superFijos);
-                mostrarTripletas(tripletas);
-
+                // 🔹 Primero Forense (necesario para las Tripletas)
                 cargarDatosForense();
+
+                // 🔹 Tripletas = 2 Super Fijos + 2 Primeras Opciones Forenses
+                const rankingForense = obtenerRankingPrediccionForense();
+                const tripletas = obtenerTripletas(superFijos, rankingForense);
+                mostrarTripletas(tripletas);
 
                 actualizarStatus(resultado.encontrado ? '✅ Datos actualizados desde el servidor' : '✅ Datos actualizados - Sin Repeticiones');
 
