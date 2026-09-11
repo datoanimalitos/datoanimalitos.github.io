@@ -284,39 +284,6 @@
             color: #8ab8ff;
         }
 
-        /* --- TRIPLETAS (Púrpura) - BLOQUEADO --- */
-        .tarjeta-tripletas {
-            background: linear-gradient(145deg, #1a0d2a 0%, #2a1a3a 100%);
-            border: 1px solid rgba(179, 136, 255, 0.25);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(179, 136, 255, 0.1);
-            position: relative;
-        }
-        .tarjeta-tripletas::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle, rgba(179, 136, 255, 0.06) 0%, transparent 70%);
-            pointer-events: none;
-        }
-        .tarjeta-tripletas h3 {
-            color: #b388ff;
-            -webkit-text-fill-color: #b388ff;
-            background: none;
-        }
-        .tarjeta-tripletas .numero-card {
-            background: linear-gradient(180deg, #2a1a3a 0%, #1a0d2a 100%);
-            border: 1px solid rgba(179, 136, 255, 0.2);
-        }
-        .tarjeta-tripletas .numero-card .numero {
-            color: #b388ff;
-        }
-        .tarjeta-tripletas .numero-card .animal {
-            color: #d1b3ff;
-        }
-
         /* --- SUPER FIJOS (Rojo) - BLOQUEADO - 3 números --- */
         .tarjeta-superfijos {
             background: linear-gradient(145deg, #1a0d0d 0%, #2a1a1a 100%);
@@ -748,13 +715,6 @@
             cursor: pointer;
         }
 
-        .numeros-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            transition: all 0.3s;
-        }
-
         .numeros-grid-3 {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -907,9 +867,6 @@
         /* RESPONSIVE                                        */
         /* ================================================ */
         @media (min-width: 700px) {
-            .numeros-grid {
-                grid-template-columns: repeat(4, 1fr);
-            }
             .numeros-grid-5 {
                 grid-template-columns: repeat(5, 1fr);
             }
@@ -988,6 +945,7 @@
                 <div class="menu-dropdown" id="menuDropdown">
                     <a href="index.html"><i class="bi bi-house-door-fill"></i> Inicio</a>
                     <a href="sf_loto.html"><i class="bi bi-dice-6-fill"></i> Lotto Activo</a>
+                    <a href="sf_guacharito.html"><i class="bi bi-dice-6-fill"></i> Guacharito</a>
                     <a href="sf_granja.html"><i class="bi bi-flower2"></i> Granja Millonaria</a>
                     <a href="sf_granjazo.html"><i class="bi bi-feather"></i> Granjazo</a>
                     <a href="sf_guacharo.html"><i class="bi bi-feather"></i> Guacharo Activo</a>
@@ -1057,34 +1015,7 @@
             </div>
 
             <!-- ======================================== -->
-            <!-- 2. TRIPLETAS - BLOQUEADO (PREMIUM)       -->
-            <!-- ======================================== -->
-            <div class="tarjeta-tripletas tarjeta-dato">
-                <h3><i class="bi bi-grid-3x3-gap-fill"></i> Tripletas Premium</h3>
-                
-                <!-- OVERLAY DE BLOQUEO -->
-                <div class="premium-overlay" id="overlayTripletas">
-                    <div class="premium-badge">
-                        <i class="bi bi-crown-fill"></i> TRIPLETAS VIP
-                    </div>
-                    <p class="premium-message">
-                        <strong>🔒 Contenido Exclusivo</strong><br>
-                        Accede a las Tripletas ingresando tu clave:
-                    </p>
-                    <div class="action-buttons-group">
-                        <button class="unlock-btn" onclick="abrirModalLogin()">
-                            <i class="bi bi-unlock-fill"></i> Desbloquear
-                        </button>
-                    </div>
-                </div>
-
-                <div id="tripletas-contenido" class="premium-container" style="min-height: 150px;">
-                    <div class="no-data">Cargando tripletas...</div>
-                </div>
-            </div>
-
-            <!-- ======================================== -->
-            <!-- 3. SUPER FIJOS - BLOQUEADO (PREMIUM)     -->
+            <!-- 2. SUPER FIJOS - BLOQUEADO (PREMIUM)     -->
             <!-- ======================================== -->
             <div class="tarjeta-superfijos tarjeta-dato">
                 <h3><i class="bi bi-star-fill"></i> Super Fijos Premium</h3>
@@ -1110,7 +1041,7 @@
             </div>
 
             <!-- ======================================== -->
-            <!-- 4. ANÁLISIS FORENSE - DESBLOQUEADO       -->
+            <!-- 3. ANÁLISIS FORENSE - DESBLOQUEADO       -->
             <!-- ======================================== -->
             <div class="tarjeta-forense tarjeta-dato">
                 <h3><i class="bi bi-graph-up-arrow"></i> Análisis Forense Premium</h3>
@@ -1164,14 +1095,14 @@
         <div class="modal-content">
             <button class="close-modal" onclick="cerrarModalLogin()">&times;</button>
             <h4><i class="bi bi-shield-lock-fill"></i> Acceso Premium</h4>
-            <p style="color: #a3b8cc; font-size: 0.9rem; margin-bottom: 15px;">Ingresa tu código de suscripción para desbloquear Tripletas y Super Fijos:</p>
+            <p style="color: #a3b8cc; font-size: 0.9rem; margin-bottom: 15px;">Ingresa tu código de suscripción para desbloquear los Super Fijos:</p>
             <input type="password" id="claveAcceso" placeholder="Ingresa tu clave aquí" autocomplete="off">
             <button class="btn-ingresar" id="btnIngresar" onclick="autenticarUsuario()">Validar Clave</button>
         </div>
     </div>
 
     <div style="padding: 15px; font-size: 0.8rem; color: #a0c0a0; text-align: center;">
-        <p>Nuestros <strong>Super Fijos</strong> y <strong>Tripletas</strong> se generan mediante un algoritmo de análisis avanzado, identificando patrones secuenciales en Selva Plus.</p>
+        <p>Nuestros <strong>Super Fijos</strong> se generan mediante un algoritmo de análisis avanzado, identificando patrones secuenciales en Selva Plus.</p>
         <p style="margin-top: 5px; color: #4caf50;"><i class="bi bi-unlock-fill"></i> <strong>Análisis Forense Premium</strong> disponible gratis para todos.</p>
     </div>
 
@@ -1214,6 +1145,7 @@
 
         let usuarioAutenticado = false;
         const STORAGE_KEY = 'selva_premium_unlocked';
+        let superFijosActuales = []; // Guarda los super fijos cargados para re-renderizar
 
         // ============================================================
         // FUNCIÓN DE MEZCLA (Fisher-Yates)
@@ -1303,36 +1235,17 @@
         };
 
         // ============================================================
-        // 🔓 DESBLOQUEAR PREMIUM (SOLO TRIPLETAS Y SUPER FIJOS)
+        // 🔓 DESBLOQUEAR PREMIUM (SOLO SUPER FIJOS)
         // ============================================================
         function desbloquearPremium() {
             usuarioAutenticado = true;
 
-            // 1. Desbloquear Tripletas
-            const overlayTripletas = document.getElementById('overlayTripletas');
-            if (overlayTripletas) overlayTripletas.classList.add('hidden');
-            const tripletasContenedor = document.getElementById('tripletas-contenido');
-            if (tripletasContenedor) {
-                const grid = tripletasContenedor.querySelector('.numeros-grid');
-                if (grid) {
-                    grid.classList.remove('locked-grid');
-                    grid.classList.add('locked-grid-desbloqueado');
-                }
-                tripletasContenedor.classList.remove('locked-grid');
-            }
-
-            // 2. Desbloquear Super Fijos
+            // Desbloquear Super Fijos
             const overlaySuperFijos = document.getElementById('overlaySuperFijos');
             if (overlaySuperFijos) overlaySuperFijos.classList.add('hidden');
-            const resultadoContenedor = document.getElementById('resultado-contenido');
-            if (resultadoContenedor) {
-                const grid = resultadoContenedor.querySelector('.numeros-grid-3');
-                if (grid) {
-                    grid.classList.remove('locked-grid');
-                    grid.classList.add('locked-grid-desbloqueado');
-                }
-                resultadoContenedor.classList.remove('locked-grid');
-            }
+            
+            // Re-renderizar Super Fijos (mostrará números o el mensaje "No hay información para hoy")
+            mostrarSuperFijos(superFijosActuales);
         }
 
         // ============================================================
@@ -1748,121 +1661,6 @@
         }
 
         // ============================================================
-        // 📊 LÓGICA DE DATOS PRINCIPAL - TRIPLETAS
-        // ============================================================
-        function calcularEspejo(item) {
-            let posicionOriginal;
-            if (item.esDobleCero) {
-                posicionOriginal = 76;
-            } else if (item.numero === 0) {
-                posicionOriginal = 75;
-            } else {
-                posicionOriginal = item.numero;
-            }
-
-            let espejoPosicion;
-            if (posicionOriginal === 76) {
-                espejoPosicion = 38;
-            } else if (posicionOriginal === 38) {
-                espejoPosicion = 76;
-            } else {
-                espejoPosicion = 76 - posicionOriginal;
-            }
-
-            let esDobleCeroEspejo = (espejoPosicion === 76);
-            let numeroEspejo = (esDobleCeroEspejo || espejoPosicion === 75) ? 0 : espejoPosicion;
-
-            return {
-                numero: numeroEspejo,
-                esDobleCero: esDobleCeroEspejo,
-                casilla: item.casilla
-            };
-        }
-
-        function esMismoNumero(a, b) {
-            if (!a || !b) return false;
-            if (a.esDobleCero && b.esDobleCero) return true;
-            return !a.esDobleCero && !b.esDobleCero && a.numero === b.numero;
-        }
-
-        function resolverDuplicados(listaProcesada, dia2Procesado, limiteEfectivo) {
-            const resultadoLimpio = [];
-            let indiceReserva = 4;
-
-            for (let i = 0; i < limiteEfectivo; i++) {
-                let candidato = listaProcesada[i];
-                while (resultadoLimpio.some(existente => esMismoNumero(existente, candidato))) {
-                    if (indiceReserva < dia2Procesado.length) {
-                        candidato = calcularEspejo(dia2Procesado[indiceReserva]);
-                        indiceReserva++;
-                    } else {
-                        break;
-                    }
-                }
-                resultadoLimpio.push(candidato);
-            }
-            return resultadoLimpio;
-        }
-
-        function obtenerTripletas(dia1Procesado, dia2Procesado, superFijos) {
-            const basesBrutas = dia1Procesado.slice(0, 2).map(item => calcularEspejo(item));
-            const bases = resolverDuplicados(basesBrutas, dia2Procesado, 2);
-
-            let acompañantes = [];
-            if (superFijos && superFijos.length >= 2) {
-                acompañantes = superFijos.slice(0, 2);
-            } else {
-                acompañantes = obtener4Aleatorios(dia2Procesado).slice(0, 2);
-            }
-
-            return mezclarArray([...bases, ...acompañantes]);
-        }
-
-        function mostrarTripletas(items) {
-            const contenedor = document.getElementById('tripletas-contenido');
-
-            if (!items || items.length === 0) {
-                contenedor.innerHTML = '<div class="no-data">No hay tripletas disponibles.</div>';
-                return;
-            }
-
-            let claseGrid = 'numeros-grid';
-            let claseContainer = 'premium-container';
-
-            if (!usuarioAutenticado) {
-                claseGrid += ' locked-grid';
-                claseContainer += ' locked-grid';
-            }
-
-            let html = `<div class="${claseGrid}">`;
-            items.forEach(r => {
-                let numDisplay, nombreAnimal, rutaImagen;
-
-                if (r.esDobleCero) {
-                    numDisplay = "00";
-                    nombreAnimal = "ballena";
-                    rutaImagen = obtenerRutaImagen(0, true);
-                } else {
-                    numDisplay = String(r.numero).padStart(2, '0');
-                    nombreAnimal = r.numero === 0 ? 'delfín' : animales[r.numero];
-                    rutaImagen = obtenerRutaImagen(r.numero, false);
-                }
-
-                html += `
-                    <div class="numero-card">
-                        <div class="numero">${numDisplay}</div>
-                        <img src="${rutaImagen}" alt="${nombreAnimal}" 
-                             onerror="this.src='animalitos/animalitos_selva/00.JPG'">
-                        <div class="animal">${nombreAnimal}</div>
-                    </div>
-                `;
-            });
-            html += '</div>';
-            contenedor.className = claseContainer;
-            contenedor.innerHTML = html;
-        }
-
-        // ============================================================
         // 📊 LÓGICA DE SUPER FIJOS
         // ============================================================
         function buscarRepeticion(resultados) {
@@ -1897,11 +1695,74 @@
         function mostrarSuperFijos(items) {
             const contenedor = document.getElementById('resultado-contenido');
 
+            // 🔥 CASO 1: NO HAY SUPER FIJOS EN LOS DATOS
             if (!items || items.length === 0) {
-                contenedor.innerHTML = '<div class="no-data">No hay Super Fijos disponibles</div>';
+                // Si el usuario NO está autenticado, dejamos el contenedor vacío (el overlay cubre)
+                if (!usuarioAutenticado) {
+                    contenedor.innerHTML = '<div class="no-data" style="min-height: 150px;"></div>';
+                    contenedor.className = 'premium-container';
+                    return;
+                }
+                
+                // Si el usuario SÍ está autenticado, mostramos el mensaje
+                contenedor.className = 'premium-container';
+                contenedor.innerHTML = `
+                    <div style="
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        justify-content: center;
+                        padding: 35px 20px;
+                        text-align: center;
+                        background: linear-gradient(145deg, rgba(255, 107, 107, 0.05) 0%, rgba(0, 0, 0, 0.2) 100%);
+                        border-radius: 20px;
+                        border: 1px dashed rgba(255, 107, 107, 0.3);
+                        min-height: 180px;
+                    ">
+                        <div style="
+                            font-size: 3rem;
+                            margin-bottom: 12px;
+                            filter: drop-shadow(0 0 20px rgba(255, 107, 107, 0.4));
+                            animation: pulseIcon 2s ease-in-out infinite;
+                        ">🔍</div>
+                        <h4 style="
+                            color: #ff6b6b;
+                            font-size: 1.15rem;
+                            font-weight: 800;
+                            margin-bottom: 8px;
+                            letter-spacing: 0.5px;
+                        ">
+                            No hay información para hoy
+                        </h4>
+                        <p style="
+                            color: #e2e8f0;
+                            font-size: 0.9rem;
+                            line-height: 1.5;
+                            max-width: 280px;
+                            margin-bottom: 4px;
+                        ">
+                            El algoritmo no detectó repeticiones válidas entre los días analizados.
+                        </p>
+                        <p style="
+                            color: #ffb800;
+                            font-size: 0.85rem;
+                            font-weight: 700;
+                            margin-top: 8px;
+                        ">
+                            <i class="bi bi-calendar-check"></i> Intenta mañana nuevamente
+                        </p>
+                        <style>
+                            @keyframes pulseIcon {
+                                0%, 100% { transform: scale(1); opacity: 1; }
+                                50% { transform: scale(1.1); opacity: 0.85; }
+                            }
+                        </style>
+                    </div>
+                `;
                 return;
             }
 
+            // 🔥 CASO 2: SÍ HAY SUPER FIJOS
             const itemsMezclados = mezclarArray([...items]);
 
             let claseGrid = 'numeros-grid-3';
@@ -2040,6 +1901,9 @@
                 const resultado = buscarRepeticion(todos);
                 const superFijos = resultado.encontrado ? resultado.siguientes.slice(0, 3) : [];
                 
+                // Guardar en variable global para re-renderizar al autenticarse
+                superFijosActuales = superFijos;
+                
                 mostrarSuperFijos(superFijos);
                 actualizarStatus(resultado.encontrado ? '✅ Datos actualizados desde el servidor' : '✅ Datos actualizados - Sin Repeticiones');
 
@@ -2047,10 +1911,6 @@
                 reiniciarCortesia();
                 const cortesiaResultados = informacionDeCortecia(todos, superFijos);
                 mostrarCortesia(cortesiaResultados);
-
-                // TRIPLETAS - BLOQUEADO (4 números MEZCLADOS)
-                const tripletas = obtenerTripletas(dia1Procesado, dia2Procesado, superFijos);
-                mostrarTripletas(tripletas);
 
                 // ANÁLISIS FORENSE - DESBLOQUEADO (GRATIS)
                 cargarDatosForense();
@@ -2062,7 +1922,6 @@
                 actualizarStatus('⚠️ Error al cargar datos del servidor');
                 const msjError = '<div class="no-data">No se pudieron cargar los datos actualizados. Intenta de nuevo más tarde.</div>';
                 document.getElementById('cortesia-contenido').innerHTML = msjError;
-                document.getElementById('tripletas-contenido').innerHTML = msjError;
                 document.getElementById('resultado-contenido').innerHTML = msjError;
                 document.getElementById('forense-top10').innerHTML = msjError;
                 document.getElementById('forense-prediccion').innerHTML = msjError;
