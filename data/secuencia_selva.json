@@ -8,21 +8,21 @@
       96
     ],
     [
-      20,
-      33,
-      95,
-      29,
-      96
-    ],
-    [
       9,
       12,
       36,
       59,
       65
+    ],
+    [
+      63,
+      97,
+      89,
+      15,
+      76
     ]
   ],
-  "fecha_actualizacion": "2026-09-10T08:42:10.906Z",
+  "fecha_actualizacion": "2026-09-11T08:39:15.283Z",
   "metadata": {
     "origen": "selva.json",
     "numeros_por_secuencia": 5,
