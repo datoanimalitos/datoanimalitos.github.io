@@ -248,7 +248,7 @@
             letter-spacing: 0.5px;
         }
 
-        /* --- CORTESÍA (Azul) --- */
+        /* --- CORTESÍA --- */
         .tarjeta-cortesia {
             background: linear-gradient(145deg, #0d1a2a 0%, #1a2a3a 100%);
             border: 1px solid rgba(74, 158, 255, 0.25);
@@ -284,7 +284,7 @@
             color: #8ab8ff;
         }
 
-        /* --- SUPER FIJOS (Rojo) --- */
+        /* --- SUPER FIJOS --- */
         .tarjeta-superfijos {
             background: linear-gradient(145deg, #1a0d0d 0%, #2a1a1a 100%);
             border: 1px solid rgba(255, 107, 107, 0.25);
@@ -307,7 +307,7 @@
             color: #ff9999;
         }
 
-        /* --- GSM (Dorado) --- */
+        /* --- GSM --- */
         .tarjeta-gsm {
             background: linear-gradient(145deg, #1a1a0d 0%, #2a2a1a 100%);
             border: 2px solid rgba(255, 215, 0, 0.25);
@@ -1228,8 +1228,8 @@
                         <h4><i class="bi bi-question-circle-fill"></i> ¿Cómo usar esta herramienta?</h4>
                         <p><i class="bi bi-1-circle-fill"></i> Ingresa un número del 1 al 38 en el buscador.</p>
                         <p><i class="bi bi-2-circle-fill"></i> La herramienta analiza los últimos 3 días de resultados de Granja Millonaria.</p>
-                        <p><i class="bi bi-3-circle-fill"></i> Busca todas las apariciones de ese número y toma los números que le siguen inmediatamente.</p>
-                        <p><i class="bi bi-4-circle-fill"></i> Te muestra las secuencias activas (los números que suelen venir después), eliminando duplicados.</p>
+                        <p><i class="bi bi-3-circle-fill"></i> Busca la primera aparición del número (empezando por el día más reciente) y toma los 4 números siguientes.</p>
+                        <p><i class="bi bi-4-circle-fill"></i> Si el número está en las últimas posiciones, se toman los 4 primeros del día inmediatamente más reciente.</p>
                     </div>
                 </div>
             </div>
@@ -2026,7 +2026,7 @@
         // ============================================================
         // 🤖 GSM - GENERADOR DE SECUENCIAS (consulta granja.json)
         // ============================================================
-        let gsmDatosGranja = null; // { resultados: [[...], [...], [...]] }
+        let gsmDatosGranja = null;
 
         function gsmEsNumeroValido(input) {
             const num = Number(input);
@@ -2052,47 +2052,85 @@
         }
 
         /**
-         * Busca todas las apariciones del número en los 3 días.
-         * Para cada aparición, toma el número siguiente (el inmediato).
-         * Devuelve un array de números únicos (siguientes).
+         * Busca el número en los días respetando el orden:
+         * Día más reciente (idx 2) → Día intermedio (idx 1) → Día más antiguo (idx 0).
+         * 
+         * Reglas:
+         * - Si el número tiene 4 siguientes completos en ese día → los devuelve.
+         * - Si está en las últimas posiciones (no hay 4 siguientes) y NO es el día más reciente
+         *   → toma los 4 primeros del día inmediatamente más reciente.
+         * - Si está en las últimas posiciones del DÍA MÁS RECIENTE → sin secuencia.
          */
         function gsmBuscarSiguientes(numeroBuscado) {
-            if (!gsmDatosGranja || gsmDatosGranja.length === 0) return [];
+            if (!gsmDatosGranja || gsmDatosGranja.length === 0) {
+                return { encontrado: false, siguientes: [] };
+            }
 
             const numBuscado = Number(numeroBuscado);
-            const siguientes = [];
-            const clavesUsadas = new Set();
+            // Índices: 0 = más antiguo, 1 = intermedio, 2 = más reciente
+            // Orden de búsqueda: 2, 1, 0
+            const ordenBusqueda = [2, 1, 0];
 
-            gsmDatosGranja.forEach(dia => {
-                if (!Array.isArray(dia)) return;
+            for (const diaIdx of ordenBusqueda) {
+                const dia = gsmDatosGranja[diaIdx];
+                if (!Array.isArray(dia)) continue;
+
                 for (let i = 0; i < dia.length; i++) {
                     if (Number(dia[i]) === numBuscado) {
-                        // Tomar el siguiente en la misma secuencia
-                        if (i + 1 < dia.length) {
-                            const sig = Number(dia[i + 1]);
-                            if (!clavesUsadas.has(sig)) {
-                                clavesUsadas.add(sig);
-                                siguientes.push(sig);
+                        // ¿Hay 4 siguientes completos en este día?
+                        if (i + 4 < dia.length) {
+                            return {
+                                encontrado: true,
+                                siguientes: [
+                                    Number(dia[i + 1]),
+                                    Number(dia[i + 2]),
+                                    Number(dia[i + 3]),
+                                    Number(dia[i + 4])
+                                ],
+                                dia: diaIdx,
+                                posicion: i,
+                                tipo: 'siguientes'
+                            };
+                        } else {
+                            // No hay 4 siguientes completos.
+                            // Si es el día más reciente (2) → sin secuencia.
+                            if (diaIdx === 2) {
+                                return { encontrado: false, siguientes: [] };
+                            }
+                            // Si es intermedio (1) o antiguo (0) → tomar los 4 primeros del día inmediatamente más reciente.
+                            const diaSiguiente = gsmDatosGranja[diaIdx + 1];
+                            if (Array.isArray(diaSiguiente) && diaSiguiente.length >= 4) {
+                                return {
+                                    encontrado: true,
+                                    siguientes: [
+                                        Number(diaSiguiente[0]),
+                                        Number(diaSiguiente[1]),
+                                        Number(diaSiguiente[2]),
+                                        Number(diaSiguiente[3])
+                                    ],
+                                    dia: diaIdx,
+                                    posicion: i,
+                                    tipo: 'primeros_siguiente_dia'
+                                };
                             }
                         }
-                        // Si está al final, se ignora (Opción A)
                     }
                 }
-            });
+            }
 
-            return siguientes;
+            return { encontrado: false, siguientes: [] };
         }
 
-        function gsmRenderizarSecuencia(siguientes, numeroExcluir) {
+        function gsmRenderizarSecuencia(resultado, numeroConsultado) {
             const grid = document.getElementById('gsmGridSecuencias');
 
-            if (!siguientes || siguientes.length === 0) {
-                grid.innerHTML = `<span class="gsm-mensaje-vacio">⚠️ El número ${numeroExcluir} no tiene secuencia activa ⛔ Espere el próximo resultado de la operadora</span>`;
+            if (!resultado || !resultado.encontrado || !resultado.siguientes || resultado.siguientes.length === 0) {
+                grid.innerHTML = `<span class="gsm-mensaje-vacio">⚠️ El número ${numeroConsultado} no tiene secuencia activa ⛔ Espere el próximo resultado de la operadora</span>`;
                 return;
             }
 
             // Mezclar las tarjetas (como pidió el usuario)
-            const mezclados = mezclarArray([...siguientes]);
+            const mezclados = mezclarArray([...resultado.siguientes]);
 
             let html = '';
             mezclados.forEach(num => {
@@ -2147,8 +2185,8 @@
             tarjeta.style.display = 'inline-flex';
             mensaje.style.display = 'none';
 
-            const siguientes = gsmBuscarSiguientes(numConsultado);
-            gsmRenderizarSecuencia(siguientes, val);
+            const resultado = gsmBuscarSiguientes(numConsultado);
+            gsmRenderizarSecuencia(resultado, val);
         }
 
         async function gsmInicializar() {
