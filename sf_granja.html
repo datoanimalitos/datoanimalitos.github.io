@@ -1229,7 +1229,7 @@
                         <p><i class="bi bi-1-circle-fill"></i> Ingresa un número del 1 al 38 en el buscador.</p>
                         <p><i class="bi bi-2-circle-fill"></i> La herramienta analiza los últimos 3 días de resultados de Granja Millonaria.</p>
                         <p><i class="bi bi-3-circle-fill"></i> Busca la primera aparición del número (empezando por el día más reciente) y toma los 4 números siguientes, sin repetir.</p>
-                        <p><i class="bi bi-4-circle-fill"></i> Si no hay 4 números completos, se completa con el inicio del día anterior, sin repetir.</p>
+                        <p><i class="bi bi-4-circle-fill"></i> El número consultado y los repetidos se descartan automáticamente de la secuencia.</p>
                     </div>
                 </div>
             </div>
@@ -2057,8 +2057,8 @@
          * 
          * Reglas:
          * - Se toma el número consultado y se recorren los siguientes.
-         * - Se eliminan duplicados: si un número ya está en la secuencia, se descarta
-         *   y se pasa al siguiente.
+         * - Se eliminan duplicados: si un número ya está en la secuencia (incluyendo el
+         *   número consultado), se descarta y se pasa al siguiente.
          * - Si no se juntan 4 números en ese día, se completa con el INICIO del día
          *   inmediatamente MÁS RECIENTE (índice + 1), aplicando el mismo filtro.
          * - Si aún no se juntan 4 → se descarta esa aparición y se busca en otro día.
@@ -2079,6 +2079,8 @@
                     if (Number(dia[i]) === numBuscado) {
                         const secuencia = [];
                         const usados = new Set();
+                        // ✅ Excluir el número consultado de la secuencia
+                        usados.add(numBuscado);
 
                         // 1. Tomar los siguientes del mismo día (sin repetir)
                         for (let k = i + 1; k < dia.length && secuencia.length < 4; k++) {
