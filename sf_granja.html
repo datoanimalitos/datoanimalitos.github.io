@@ -1229,7 +1229,7 @@
                         <p><i class="bi bi-1-circle-fill"></i> Ingresa un número del 1 al 38 en el buscador.</p>
                         <p><i class="bi bi-2-circle-fill"></i> La herramienta analiza los últimos 3 días de resultados de Granja Millonaria.</p>
                         <p><i class="bi bi-3-circle-fill"></i> Busca la primera aparición del número (empezando por el día más reciente) y toma los 4 números siguientes.</p>
-                        <p><i class="bi bi-4-circle-fill"></i> Si el número está en las últimas posiciones, se toman los 4 primeros del día inmediatamente más reciente.</p>
+                        <p><i class="bi bi-4-circle-fill"></i> Si no hay 4 siguientes completos, se completa la secuencia con los primeros números del día anterior, sin repetir.</p>
                     </div>
                 </div>
             </div>
@@ -2056,10 +2056,12 @@
          * Día más reciente (idx 2) → Día intermedio (idx 1) → Día más antiguo (idx 0).
          * 
          * Reglas:
-         * - Si el número tiene 4 siguientes completos en ese día → los devuelve.
-         * - Si está en las últimas posiciones (no hay 4 siguientes) y NO es el día más reciente
-         *   → toma los 4 primeros del día inmediatamente más reciente.
-         * - Si está en las últimas posiciones del DÍA MÁS RECIENTE → sin secuencia.
+         * - Si el número tiene 4 siguientes completos → los devuelve.
+         * - Si tiene menos de 4 siguientes en ese día → se completa con el INICIO
+         *   del día inmediatamente MÁS RECIENTE (índice + 1), sin repetir números.
+         * - Si está en el día MÁS RECIENTE (idx 2) y no tiene 4 siguientes → se descarta
+         *   y se sigue buscando en el siguiente día.
+         * - Si no se pueden completar 4 números en ningún día → sin secuencia.
          */
         function gsmBuscarSiguientes(numeroBuscado) {
             if (!gsmDatosGranja || gsmDatosGranja.length === 0) {
@@ -2067,8 +2069,8 @@
             }
 
             const numBuscado = Number(numeroBuscado);
-            // Índices: 0 = más antiguo, 1 = intermedio, 2 = más reciente
-            // Orden de búsqueda: 2, 1, 0
+            // Índices en granja.json: 0 = más antiguo, 1 = intermedio, 2 = más reciente
+            // Orden de búsqueda: 2, 1, 0 (más reciente primero)
             const ordenBusqueda = [2, 1, 0];
 
             for (const diaIdx of ordenBusqueda) {
@@ -2077,43 +2079,41 @@
 
                 for (let i = 0; i < dia.length; i++) {
                     if (Number(dia[i]) === numBuscado) {
-                        // ¿Hay 4 siguientes completos en este día?
-                        if (i + 4 < dia.length) {
-                            return {
-                                encontrado: true,
-                                siguientes: [
-                                    Number(dia[i + 1]),
-                                    Number(dia[i + 2]),
-                                    Number(dia[i + 3]),
-                                    Number(dia[i + 4])
-                                ],
-                                dia: diaIdx,
-                                posicion: i,
-                                tipo: 'siguientes'
-                            };
-                        } else {
-                            // No hay 4 siguientes completos.
-                            // Si es el día más reciente (2) → sin secuencia.
-                            if (diaIdx === 2) {
-                                return { encontrado: false, siguientes: [] };
-                            }
-                            // Si es intermedio (1) o antiguo (0) → tomar los 4 primeros del día inmediatamente más reciente.
-                            const diaSiguiente = gsmDatosGranja[diaIdx + 1];
-                            if (Array.isArray(diaSiguiente) && diaSiguiente.length >= 4) {
-                                return {
-                                    encontrado: true,
-                                    siguientes: [
-                                        Number(diaSiguiente[0]),
-                                        Number(diaSiguiente[1]),
-                                        Number(diaSiguiente[2]),
-                                        Number(diaSiguiente[3])
-                                    ],
-                                    dia: diaIdx,
-                                    posicion: i,
-                                    tipo: 'primeros_siguiente_dia'
-                                };
+                        const siguientes = [];
+
+                        // 1. Tomar los siguientes disponibles en el mismo día
+                        for (let k = i + 1; k < dia.length && siguientes.length < 4; k++) {
+                            const val = Number(dia[k]);
+                            if (!siguientes.includes(val)) {
+                                siguientes.push(val);
                             }
                         }
+
+                        // 2. Si faltan, completar con el INICIO del día inmediatamente MÁS RECIENTE
+                        if (siguientes.length < 4 && diaIdx + 1 < gsmDatosGranja.length) {
+                            const diaSiguiente = gsmDatosGranja[diaIdx + 1];
+                            if (Array.isArray(diaSiguiente)) {
+                                for (let k = 0; k < diaSiguiente.length && siguientes.length < 4; k++) {
+                                    const val = Number(diaSiguiente[k]);
+                                    if (!siguientes.includes(val)) {
+                                        siguientes.push(val);
+                                    }
+                                }
+                            }
+                        }
+
+                        // 3. Verificar que tenemos los 4 números
+                        if (siguientes.length >= 4) {
+                            return {
+                                encontrado: true,
+                                siguientes: siguientes.slice(0, 4),
+                                dia: diaIdx,
+                                posicion: i,
+                                tipo: (i + 4 < dia.length) ? 'siguientes' : 'completado'
+                            };
+                        }
+
+                        // Si no se pudieron completar los 4, seguir buscando
                     }
                 }
             }
