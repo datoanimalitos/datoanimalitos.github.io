@@ -3,8 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generador de Secuencia LOTO ACTIVO,</title>
+    <title>Generador de Secuencia LOTO ACTIVO</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Firebase SDK -->
+    <script type="importmap">
+    {
+        "imports": {
+            "firebase-app": "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js",
+            "firebase-firestore": "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"
+        }
+    }
+    </script>
+    
     <style>
         * {
             box-sizing: border-box;
@@ -48,15 +59,15 @@
             -webkit-text-fill-color: transparent;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
         }
-        
-        .description {
-            text-align: center;
-            margin-bottom: 30px;
-            color: #7f8c8d;
-            line-height: 1.6;
-            font-size: 1.1rem;
-        }
 
+        .nota-operadoras {
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        
         /* ==================== PANEL DE INSTRUCCIONES ==================== */
         .instructions-panel {
             margin-bottom: 25px;
@@ -557,6 +568,261 @@
         .notification.error {
             background: #e74c3c;
         }
+
+        /* ==================== BLOQUEO PREMIUM ==================== */
+        .premium-wrapper {
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .premium-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            padding: 20px;
+            text-align: center;
+            gap: 12px;
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .premium-overlay.hidden {
+            display: none;
+        }
+
+        .premium-badge {
+            font-size: 1.8rem;
+            font-weight: 900;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            background: linear-gradient(45deg, #ffd700, #ffb800, #ffd700, #ffb800);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmerGold 1.8s ease-in-out infinite;
+            line-height: 1.2;
+        }
+
+        .premium-badge i {
+            -webkit-text-fill-color: #ffd700;
+            color: #ffd700;
+            font-size: 1.4rem;
+            margin-right: 8px;
+        }
+
+        @keyframes shimmerGold {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .premium-message {
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 0.95rem;
+            max-width: 320px;
+            margin: 2px 0;
+            line-height: 1.5;
+            text-shadow: 0 2px 15px rgba(0, 0, 0, 0.8);
+            font-weight: 500;
+        }
+
+        .premium-message strong {
+            color: #ffd700;
+            font-size: 1.05rem;
+        }
+
+        .unlock-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #ffd700 0%, #d4af37 100%);
+            color: #09130e;
+            padding: 12px 28px;
+            border-radius: 50px;
+            border: none;
+            font-weight: 800;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 25px rgba(255, 215, 0, 0.4);
+            animation: pulseBtn 2s ease-in-out infinite;
+        }
+
+        .unlock-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 35px rgba(255, 215, 0, 0.6);
+        }
+
+        .unlock-btn:active {
+            transform: scale(0.95);
+        }
+
+        @keyframes pulseBtn {
+            0%, 100% { box-shadow: 0 4px 25px rgba(255, 215, 0, 0.4); }
+            50% { box-shadow: 0 4px 40px rgba(255, 215, 0, 0.7); }
+        }
+
+        /* Grid bloqueado (desenfoque) */
+        .locked-grid {
+            filter: blur(10px) brightness(0.7);
+            opacity: 0.4;
+            pointer-events: none;
+            transition: all 0.5s ease;
+            transform: scale(0.98);
+        }
+
+        .locked-grid-desbloqueado {
+            filter: blur(0px) brightness(1);
+            opacity: 1;
+            pointer-events: auto;
+            transform: scale(1);
+            transition: all 0.8s ease;
+        }
+
+        /* ==================== MODAL DE LOGIN ==================== */
+        .modal-login {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+        }
+
+        .modal-login.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #1a1a2e;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 24px;
+            padding: 25px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+            position: relative;
+            text-align: center;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: transparent;
+            border: none;
+            color: #a3b8cc;
+            font-size: 1.5rem;
+            cursor: pointer;
+            width: auto;
+            padding: 0;
+            box-shadow: none;
+        }
+
+        .close-modal:hover {
+            transform: none;
+            box-shadow: none;
+            color: #fff;
+        }
+
+        .modal-content h4 {
+            color: #ffd700;
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+        }
+
+        .modal-content p {
+            color: #a3b8cc;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .modal-content input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            background: #0d0d18;
+            color: #fff;
+            font-size: 1rem;
+            text-align: center;
+            outline: none;
+        }
+
+        .modal-content input:focus {
+            border-color: #ffd700;
+            box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.15);
+        }
+
+        .modal-content button.btn-ingresar {
+            width: 100%;
+            padding: 12px;
+            border-radius: 50px;
+            border: none;
+            background: linear-gradient(135deg, #ffd700 0%, #d4af37 100%);
+            color: #09130e;
+            font-weight: 800;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .modal-content button.btn-ingresar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.5);
+        }
+
+        .modal-content button.btn-ingresar:disabled {
+            background: #555;
+            color: #999;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Badge de usuario autenticado */
+        .user-badge {
+            display: none;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #4caf50, #2e7d32);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-left: auto;
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+        }
+
+        .user-badge.show {
+            display: inline-flex;
+        }
+
+        .user-badge i {
+            font-size: 0.9rem;
+        }
         
         @media (max-width: 768px) {
             .container {
@@ -606,15 +872,25 @@
             .action-buttons button {
                 width: 100%;
             }
+
+            .premium-badge {
+                font-size: 1.4rem;
+                letter-spacing: 2px;
+            }
+
+            .premium-message {
+                font-size: 0.85rem;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1><i class=""></i> "Guacharo Activo"</h1>
-         <strong>Nota: la herramienta funciona para todas las operadoras pequeñas.</strong>
-        <strong>Lotto activo, La Granjita, Granja Millonaria, Granjazo millonario, etc.</strong>
-        <br>
+        <div class="nota-operadoras">
+            <strong>Nota: la herramienta funciona para todas las operadoras pequeñas.</strong><br>
+            <strong>Lotto activo, La Granjita, Granja Millonaria, Granjazo millonario, etc.</strong>
+        </div>
         
         <!-- ==================== PANEL DE INSTRUCCIONES ==================== -->
         <div class="instructions-panel">
@@ -660,13 +936,37 @@
             <button id="clearAll" class="clear-button">
                 <i class="fas fa-trash-alt"></i> Limpiar Todo
             </button>
+
+            <!-- Badge de usuario Premium (oculto por defecto) -->
+            <span class="user-badge" id="userBadge">
+                <i class="fas fa-crown"></i> PREMIUM
+            </span>
         </div>
         
         <div class="result-container">
             <h2><i class=""><img src="animalitos/animalitos_guacharo/.png" height="100px" width="100px"/></i> Pronosticos Generados:</h2>
-            <div id="sequence" class="sequence">
-                <div class="placeholder-text">
-                    <i class="fas fa-image"></i> Las secuencias e imágenes aparecerán aquí...
+            
+            <!-- ==================== CONTENEDOR CON BLOQUEO PREMIUM ==================== -->
+            <div class="premium-wrapper" id="premiumWrapper">
+                <!-- Overlay Premium -->
+                <div class="premium-overlay" id="premiumOverlay">
+                    <div class="premium-badge">
+                        <i class="fas fa-crown"></i> CONTENIDO PREMIUM
+                    </div>
+                    <p class="premium-message">
+                        <strong>🔒 Secuencias Bloqueadas</strong><br>
+                        Ingresa tu clave de suscripción para ver las secuencias generadas
+                    </p>
+                    <button class="unlock-btn" id="unlockBtn">
+                        <i class="fas fa-unlock-fill"></i> Desbloquear Ahora
+                    </button>
+                </div>
+                
+                <!-- Contenido de secuencias (bloqueado visualmente) -->
+                <div id="sequence" class="sequence locked-grid">
+                    <div class="placeholder-text">
+                        <i class="fas fa-image"></i> Las secuencias e imágenes aparecerán aquí...
+                    </div>
                 </div>
             </div>
         </div>
@@ -674,6 +974,17 @@
     
     <div class="footer">
         <p>Datos Super Fijos Para Hoy</p>
+    </div>
+
+    <!-- ==================== MODAL DE LOGIN ==================== -->
+    <div class="modal-login" id="modalLogin">
+        <div class="modal-content">
+            <button class="close-modal" id="closeModalBtn">&times;</button>
+            <h4><i class="fas fa-shield-lock"></i> Acceso Premium</h4>
+            <p>Ingresa tu código de suscripción para desbloquear las secuencias:</p>
+            <input type="password" id="claveAcceso" placeholder="Ingresa tu clave aquí" autocomplete="off">
+            <button class="btn-ingresar" id="btnIngresar">Validar Clave</button>
+        </div>
     </div>
 
     <script>
@@ -686,8 +997,22 @@
             const instructionsToggle = document.getElementById('instructionsToggle');
             const instructionsContent = document.getElementById('instructionsContent');
             
+            // Elementos Premium
+            const premiumOverlay = document.getElementById('premiumOverlay');
+            const unlockBtn = document.getElementById('unlockBtn');
+            const modalLogin = document.getElementById('modalLogin');
+            const closeModalBtn = document.getElementById('closeModalBtn');
+            const btnIngresar = document.getElementById('btnIngresar');
+            const claveAcceso = document.getElementById('claveAcceso');
+            const userBadge = document.getElementById('userBadge');
+            
             // Base path para las imágenes
             const baseImagePath = 'animalitos/animalitos_guacharo/';
+            
+            // ==================== ESTADO DE AUTENTICACIÓN ====================
+            let usuarioAutenticado = false;
+            const STORAGE_KEY = 'gsm_premium_unlocked';
+            const TOKEN_KEY = 'gsm_premium_token';
             
             // ==================== TOGGLE INSTRUCCIONES ====================
             instructionsToggle.addEventListener('click', function() {
@@ -773,7 +1098,6 @@
                 const imageContainer = document.createElement('div');
                 imageContainer.classList.add('image-container');
                 
-                // Botón de eliminar
                 const deleteBtn = document.createElement('button');
                 deleteBtn.classList.add('delete-step');
                 deleteBtn.innerHTML = '<i class="fas fa-times"></i>';
@@ -817,7 +1141,6 @@
             
             // ==================== GENERAR SECUENCIA ====================
             function generateSequence(seed) {
-                // Secuencia de incremento: +1, +2, +3 (hasta máximo 75)
                 let incrementResults = [];
                 let current = seed;
                 
@@ -830,7 +1153,6 @@
                     }
                 }
                 
-                // Secuencia de decremento: -1, -2, -3 (hasta mínimo 0)
                 let decrementResults = [];
                 current = seed;
                 
@@ -843,26 +1165,16 @@
                     }
                 }
                 
-                // Combinar todos los resultados
-                const allResults = [
-                    ...incrementResults,
-                    ...decrementResults
-                ];
-                
-                // Eliminar duplicados
+                const allResults = [...incrementResults, ...decrementResults];
                 const uniqueResults = [...new Set(allResults)];
-                
-                // Mezclar los resultados
                 const shuffledResults = shuffleArray([...uniqueResults]);
                 
-                // Mostrar la secuencia
                 sequenceOutput.innerHTML = '';
                 
                 if (uniqueResults.length > 0) {
                     const combinedContainer = document.createElement('div');
                     combinedContainer.classList.add('sequence-container');
                     
-                    // ==================== INDICADOR DE CICLO ====================
                     let cycleClass = '';
                     let cycleText = '';
                     let cycleIcon = '';
@@ -919,7 +1231,6 @@
                     
                     combinedContainer.appendChild(combinedDisplay);
                     
-                    // Botones de acción
                     const actionButtons = document.createElement('div');
                     actionButtons.classList.add('action-buttons');
                     
@@ -980,18 +1291,20 @@
                     sequenceOutput.appendChild(combinedContainer);
                 }
                 
-                showNotification('Para la información "VIP" 04248671967');
+                if (!usuarioAutenticado) {
+                    showNotification('🔒 Desbloquea para ver las secuencias', true);
+                } else {
+                    showNotification('Para la información "VIP" 04248671967');
+                }
             }
             
             // ==================== EVENTOS ====================
             generateButton.addEventListener('click', function() {
                 if (!validateSeed()) return;
-                
                 const seed = parseInt(seedInput.value);
                 generateSequence(seed);
             });
 
-            // ==================== LIMPIAR TODO ====================
             clearAllButton.addEventListener('click', function() {
                 if (confirm('¿Está seguro de que desea eliminar todos los pronósticos generados?')) {
                     sequenceOutput.innerHTML = `
@@ -1002,12 +1315,160 @@
                     showNotification('Todos los pronósticos han sido eliminados');
                 }
             });
+
+            // ============================================================
+            // 🔐 SISTEMA DE BLOQUEO PREMIUM
+            // ============================================================
             
-            // Generar secuencia inicial
+            // Abrir modal
+            unlockBtn.addEventListener('click', function() {
+                modalLogin.classList.add('show');
+                claveAcceso.value = '';
+                setTimeout(() => claveAcceso.focus(), 100);
+            });
+
+            // Cerrar modal
+            closeModalBtn.addEventListener('click', function() {
+                modalLogin.classList.remove('show');
+            });
+
+            // Cerrar modal al hacer click fuera
+            modalLogin.addEventListener('click', function(e) {
+                if (e.target === modalLogin) {
+                    modalLogin.classList.remove('show');
+                }
+            });
+
+            // Cerrar con ESC
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && modalLogin.classList.contains('show')) {
+                    modalLogin.classList.remove('show');
+                }
+            });
+
+            // Validar código contra Firestore
+            async function validarCodigo(codigo) {
+                if (!codigo) return false;
+                const hoyStr = new Date().toISOString().split('T')[0];
+                
+                try {
+                    const { initializeApp } = await import("firebase-app");
+                    const { getFirestore, collection, query, where, getDocs } = await import("firebase-firestore");
+                    
+                    const firebaseConfig = {
+                        apiKey: "AIzaSyBVx1XqO0HOOrgT6CIV5JJ4NujwGx2iZS4",
+                        authDomain: "dato-animalitos.firebaseapp.com",
+                        projectId: "dato-animalitos",
+                        storageBucket: "dato-animalitos.firebasestorage.app",
+                        messagingSenderId: "759403364736",
+                        appId: "1:759403364736:web:c686aea85758245a7f4165"
+                    };
+                    
+                    const app = initializeApp(firebaseConfig, 'gsm-app');
+                    const db = getFirestore(app);
+                    
+                    const q = query(
+                        collection(db, "clientes"),
+                        where("codigo", "==", codigo),
+                        where("activo", "==", true)
+                    );
+                    
+                    const querySnapshot = await getDocs(q);
+                    let esValido = false;
+                    
+                    querySnapshot.forEach(docSnap => {
+                        const data = docSnap.data();
+                        if (data.fecha_egreso && data.fecha_egreso >= hoyStr) {
+                            esValido = true;
+                        }
+                    });
+                    
+                    return esValido;
+                } catch (e) {
+                    console.error("Error al consultar Firebase:", e);
+                    return false;
+                }
+            }
+
+            // Autenticar usuario
+            btnIngresar.addEventListener('click', async function() {
+                const clave = claveAcceso.value.trim();
+
+                if (clave === '') {
+                    alert('Por favor, ingresa una clave válida.');
+                    return;
+                }
+
+                btnIngresar.innerText = 'Verificando...';
+                btnIngresar.disabled = true;
+
+                try {
+                    const esValido = await validarCodigo(clave);
+                    
+                    if (esValido) {
+                        usuarioAutenticado = true;
+                        desbloquearPremium();
+                        modalLogin.classList.remove('show');
+                        localStorage.setItem(STORAGE_KEY, 'true');
+                        localStorage.setItem(TOKEN_KEY, clave);
+                        showNotification('✅ Acceso Premium concedido');
+                    } else {
+                        alert('❌ Código inválido o expirado. Comunícate por WhatsApp para renovar tu suscripción.');
+                    }
+                } catch (error) {
+                    console.error('Error al verificar:', error);
+                    alert('⚠️ Error de conexión. Inténtalo de nuevo.');
+                } finally {
+                    btnIngresar.innerText = 'Validar Clave';
+                    btnIngresar.disabled = false;
+                }
+            });
+
+            // Permitir Enter en el input
+            claveAcceso.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    btnIngresar.click();
+                }
+            });
+
+            // Desbloquear Premium
+            function desbloquearPremium() {
+                usuarioAutenticado = true;
+
+                // Ocultar overlay
+                if (premiumOverlay) premiumOverlay.classList.add('hidden');
+
+                // Quitar blur del grid
+                if (sequenceOutput) {
+                    sequenceOutput.classList.remove('locked-grid');
+                    sequenceOutput.classList.add('locked-grid-desbloqueado');
+                }
+
+                // Mostrar badge de usuario Premium
+                if (userBadge) userBadge.classList.add('show');
+            }
+
+            // Verificar sesión previa
+            async function verificarSesionPrevia() {
+                const tokenGuardado = localStorage.getItem(TOKEN_KEY);
+                if (tokenGuardado) {
+                    const esValido = await validarCodigo(tokenGuardado);
+                    if (esValido) {
+                        desbloquearPremium();
+                    } else {
+                        localStorage.removeItem(TOKEN_KEY);
+                        localStorage.removeItem(STORAGE_KEY);
+                        usuarioAutenticado = false;
+                    }
+                }
+            }
+            
+            // ==================== INICIALIZACIÓN ====================
             generateSequence(parseInt(seedInput.value));
-            
-            // Validar inicialmente
             validateSeed();
+            
+            // Verificar sesión previa (después de un pequeño delay)
+            setTimeout(verificarSesionPrevia, 500);
         });
 
         // ==================== MEDIDAS DE SEGURIDAD ====================
@@ -1025,14 +1486,8 @@
             document.querySelectorAll('img').forEach(img => { img.addEventListener('dragstart', function(e) { e.preventDefault(); return false; }); });
             document.addEventListener('copy', function(e) { e.preventDefault(); return false; });
             document.addEventListener('cut', function(e) { e.preventDefault(); return false; });
-            (function detectDevTools() {
-                const element = new Image();
-                Object.defineProperty(element, 'id', { get: function() { console.clear(); console.log('%c🚫 Acceso no autorizado detectado', 'color: #fe2c55; font-size: 16px; font-weight: bold;'); } });
-                console.log(element);
-            })();
             setInterval(function() { console.clear(); }, 1000);
         })();
-        
     </script>
 </body>
 </html>
