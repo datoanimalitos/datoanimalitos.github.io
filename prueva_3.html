@@ -1433,7 +1433,7 @@
                     cortesiaEstatica = null;
                 }
 
-                    function mostrarCortesia(items) {
+                          function mostrarCortesia(items) {
             const contenedor = document.getElementById('cortesia-contenido');
 
             if (!items || items.length === 0) {
@@ -1446,21 +1446,29 @@
             let html = '<div class="numeros-grid-5">';
             shuffled.forEach(r => {
                 let numDisplay, nombreAnimal, rutaImagen;
+                let esCeroReal = false;
+                let esDobleCeroReal = false;
 
-                if (r.esDobleCero) {
-                    // AQUÍ ESTÁ LA CORRECCIÓN PARA EL 00
+                // 1. Identificar exactamente qué tipo de cero es
+                if (r.esDobleCero === true) {
+                    esDobleCeroReal = true;
+                } else if (r.numero === 0) {
+                    esCeroReal = true;
+                }
+
+                // 2. Asignar nombres e imágenes según la validación estricta
+                if (esDobleCeroReal) {
                     numDisplay = "00";
                     nombreAnimal = "ballena"; 
                     rutaImagen = 'animalitos/animalitos_loto/00.png';
-                } else if (r.numero === 0) {
-                    // AQUÍ ESTÁ LA CORRECCIÓN PARA EL 0
-                    numDisplay = "00"; // Para que se vea como 00 o "0" según prefieras
+                } else if (esCeroReal) {
+                    numDisplay = "0"; // Lo mostramos como 0 para diferenciarlo visualmente
                     nombreAnimal = "delfín";
                     rutaImagen = 'animalitos/animalitos_loto/0.png';
                 } else {
                     // Números normales del 1 al 36
                     numDisplay = String(r.numero).padStart(2, '0');
-                    nombreAnimal = animales[r.numero];
+                    nombreAnimal = animales[r.numero] || 'desconocido';
                     rutaImagen = `animalitos/animalitos_loto/${r.numero}.png`;
                 }
 
